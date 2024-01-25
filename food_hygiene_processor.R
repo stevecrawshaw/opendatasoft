@@ -57,14 +57,12 @@ make_df <- function(fhr_detail){
 
 la_establishment_list <- map(food_files, extract_establishments)
 
+
 food_hygiene_tbl <- la_establishment_list %>% 
   map(~map(.x, make_df) %>%
         bind_rows()
       ) %>% 
   bind_rows()
-
-food_hygiene_tbl %>% 
-  distinct(LocalAuthorityCode)
 
 write_rds(food_hygiene_tbl, "data/food_hygiene_raw_tbl.rds")
 

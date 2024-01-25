@@ -4,6 +4,7 @@ pacman::p_load(tidyverse,
                httr2)
 
 # get food hygiene data using the API
+# this is the same as food_hygiene_processor, just using FSA's API
 
 # get an ID for a given LA Name
 get_authority_id <- function(la_name) {
@@ -115,4 +116,28 @@ combined_tbl <- tibble(la_names = la_names,
 
 out_data <- combined_tbl$data %>%
   bind_rows()
+
+fh_clean_tbl <- out_data %>% 
+  clean_names() %>% 
+  select(-scheme_type,
+         -rating_key,
+         -local_authority_code,
+         -local_authority_web_site,
+         -local_authority_email_address,
+         -business_type_id) %>% 
+  mutate(across(.cols = c("hygiene",
+                          "structural",
+                          "confidence_in_management"),
+                as.integer),
+         across(.cols = c("longitude", "latitude"),
+                as.double),
+         rating_date = as.Date(rating_date),
+         geo_point_2d = glue("{latitude}, {longitude}")) %>%
+  relocate(
+    business_name, business_type, address_line1, address_line2, address_line3, address_line4, post_code, rating_date, hygiene, structural, confidence_in_management, rating_date, rating_value, new_rating_pending, local_authority_name, everything()
+  ) %>% 
+  select(-c(distance, right_to_reply, changes_by_server_id, phone)) #%>% 
+
+fh_clean_tbl %>%   
+write_delim(file = "data/food_hygiene_woe.csv", delim = ";", na = "")
 
