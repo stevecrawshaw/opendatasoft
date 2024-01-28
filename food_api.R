@@ -141,3 +141,7 @@ fh_clean_tbl <- out_data %>%
 fh_clean_tbl %>%   
 write_delim(file = "data/food_hygiene_woe.csv", delim = ";", na = "")
 
+fh_clean_tbl %>% 
+  count(hygiene)
+
+
