@@ -23,7 +23,7 @@ get_authority_id <- function(la_name) {
     data <- response |> resp_body_json(simplifyVector = TRUE)
     local_authorities <- data$authorities
     
-    # Find the ID for Bristol
+    # Find the IDs
     la_id <-
       local_authorities[local_authorities$Name == la_name, "LocalAuthorityId"]
     return(la_id)
@@ -75,7 +75,6 @@ get_data <- function(la_id, count_rec, api_url) {
     
   }
   
-  # Print the first few rows of the data
   if (!is.null(establishments)) {
     out <- establishments %>%
       as_tibble() %>%
@@ -131,12 +130,20 @@ fh_clean_tbl <- out_data %>%
                 as.integer),
          across(.cols = c("longitude", "latitude"),
                 as.double),
-         rating_date = as.Date(rating_date),
-         geo_point_2d = glue("{latitude}, {longitude}")) %>%
+         rating_date = if_else(str_starts(rating_date, "20"), 
+                               as.Date(rating_date),
+                               NA_Date_),
+         no_rating_reason = if_else(is.na(as.integer(rating_value)),
+                                    rating_value,
+                                    NA_character_),
+         rating_value = as.integer(rating_value),
+         geo_point_2d = if_else(is.na(latitude) | is.na(longitude),
+                                NA_character_,
+                                glue("{latitude}, {longitude}"))) %>%
   relocate(
-    business_name, business_type, address_line1, address_line2, address_line3, address_line4, post_code, rating_date, hygiene, structural, confidence_in_management, rating_date, rating_value, new_rating_pending, local_authority_name, everything()
+    business_name, business_type, address_line1, address_line2, address_line3, address_line4, post_code, hygiene, structural, confidence_in_management, rating_date, rating_value, no_rating_reason, new_rating_pending, local_authority_name, everything()
   ) %>% 
-  select(-c(distance, right_to_reply, changes_by_server_id, phone)) #%>% 
+  select(-c(distance, right_to_reply, changes_by_server_id, phone)) 
 
 fh_clean_tbl %>%   
 write_delim(file = "data/food_hygiene_woe.csv", delim = ";", na = "")
