@@ -60,3 +60,6 @@ bwi_clean <- bwi_raw %>%
 bwi_clean %>% 
   write_csv("data/bwi_clean.csv", na = "")
 
+bwi_clean %>% 
+  write_rds("data/bwi_clean.rds")
+
