@@ -1,0 +1,52 @@
+body {
+    font-family: 'DIN 2014';
+}
+
+@font-face {
+    font-family: 'DIN 2014';
+    src: url('/assets/theme_font/DIN2014-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN 2014';
+    src: url('/assets/theme_font/DIN2014-Bold.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DIN 2014';
+    src: url('/assets/theme_font/DIN2014-Italic.ttf');
+    font-weight: normal;
+    font-style: italic;
+}
+
+
+
+.ods-front-header__menu-item-link {
+    position: relative;
+    display: inline-block;
+}
+
+.ods-front-header__menu-item-link::before {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 5px; 
+    background-color: #6bc9df;
+    transition: width 0.3s;
+}
+
+.ods-front-header__menu-item-link:hover::before {
+    width: 100%;
+}
+
+.ods-front-header__menu-item-link--active {
+    border-bottom: 5px solid #6bc9df;
+    color: #354753;
+    opacity: 1;
+}

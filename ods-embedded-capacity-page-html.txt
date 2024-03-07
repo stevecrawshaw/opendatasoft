@@ -1,0 +1,262 @@
+<ods-dataset-context context="ctx"
+                     ctx-domain="westofengland-ca.trial.opendatasoft.com"
+                     ctx-dataset="embedded-capacity-register-december-2022"
+                     >
+
+    <section class="home-header">
+    </section>
+    <!-- Welcome card and KPI cards -->
+    <section class="container">
+        <div class="row row-equal-height">
+            <div class="col-md-6">
+                <div class="welcome-card">
+                    <h1 class="welcome-card-title">
+                        Embedded Capacity Register of WECA - Dashboard
+                    </h1>
+                    <p class="welcome-card-description">
+                        Provide information on generation and storage resources (>1MW) that are connected, or accepted to connect across the West of England.
+                    </p>
+                    <div class="filter-by">
+                        Filter by:
+                    </div>
+                    <div class="shared-width-ods-selects">
+                        <div ods-facet-results="date_connected"
+                             ods-facet-results-facet-name="date_connected"
+                             ods-facet-results-context="ctx"
+                             ods-facet-results-sort="alphanum">
+                            <ods-select options="date_connected"
+                                        selected-values="ctx.parameters['refine.date_connected']"
+                                        label-modifier="name"
+                                        value-modifier="name"
+                                        placeholder="Year"></ods-select>
+                        </div>
+                        <div ods-facet-results="county"
+                             ods-facet-results-facet-name="county"
+                             ods-facet-results-context="ctx"
+                             ods-facet-results-sort="alphanum">
+                            <ods-select options="county"
+                                        selected-values="ctx.parameters['refine.county']"
+                                        label-modifier="name"
+                                        value-modifier="name"
+                                        placeholder="County"></ods-select>
+                        </div>
+                    </div>
+                    <div ng-if="ctx.parameters['refine.date_connected'].length>0 ||
+                                ctx.parameters['refine.county'].length>0">
+                        <button class="clear-filters-button"
+                                ng-click="ctx.parameters['refine.date_connected'] = undefined;
+                                          ctx.parameters['refine.county'] = undefined;">
+                            Reset
+                            <i class="fa fa-times-circle" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Layouts -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box white flat" style="background-color: transparent; box-shadow:none;">
+                    <div class="summary-box">
+                        <p class="key-takeaways">
+                            Key Takeaways
+                        </p>
+                      <p class="welcome-card-context">
+                        There is a huge volume of proposed electrical capacity approved to connect to the region’s electricity grid. Partly driven by the escalating value of electricity, the region has over 2,000MW accepted to connect – over five times our region’s current generating capacity. 1,326MW of this is electricity storage, with the remaining majority being 650MW of solar PV.
+                    </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box white flat">
+                    <div class="advanced-kpi">
+                        <div class="advanced-kpi--top">
+                            <h3 class="title">
+                                Connection per Energy Source
+                            </h3>
+                        </div>
+                        <div class="advanced-kpi--middle no-bg mb-0">
+                            <div>
+                                <ods-chart  scientific-display="false" align-month="true">
+                                    <ods-chart-query context="ctx" field-x="energy_source_1" maxpoints="0">
+                                        <ods-chart-serie expression-y="export_mpan_msid" chart-type="treemap" function-y="COUNT" color="range-PuBu" scientific-display="true">
+                                        </ods-chart-serie>
+                                    </ods-chart-query>
+                                </ods-chart>
+
+                            </div>
+                        </div>
+                        <div class="advanced-kpi--bottom">
+                            <div class="advanced-kpi--bottom-second-stage">
+                                <span class="date"></span>
+                                <a class="source"
+                                   href="https://westofengland-ca.trial.opendatasoft.com/explore/dataset/embedded-capacity-register-december-2022/information/"
+                                   title="Title">
+                                    Source <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box white flat">
+                    <div class="advanced-kpi">
+                        <div class="advanced-kpi--top">
+                            <h3 class="title">
+                                Accepted / Connected DG by Energy Source
+                            </h3>
+                        </div>
+                        <div class="advanced-kpi--middle no-bg mb-0">
+                            <div>
+                                <div>
+                                    <ods-chart single-y-axis="true" scientific-display="false" align-month="true">
+                                        <ods-chart-query context="ctx" field-x="energy_source_1" maxpoints="0" stacked="normal" series-breakdown="connection_status"  category-colors="{'Connected':'#6BC8DF','Accepted to connect':'#354653'}">
+                                            <ods-chart-serie expression-y="export_mpan_msid" chart-type="column" function-y="COUNT" color="range-Accent" scientific-display="true">
+                                            </ods-chart-serie>
+                                        </ods-chart-query>
+                                    </ods-chart>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="advanced-kpi--bottom">
+                            <div class="advanced-kpi--bottom-second-stage">
+                                <span class="date"></span>
+                                <a class="source"
+                                   href="https://westofengland-ca.trial.opendatasoft.com/explore/dataset/embedded-capacity-register-december-2022/information/"
+                                   title="Title">
+                                    Source <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row full-height">
+                    <div class="col-md-12">
+                        <div class="box white flat">
+                            <div class="advanced-kpi">
+                                <div class="advanced-kpi--top">
+                                    <h3 class="title">
+                                        Connected
+                                    </h3>
+                                </div>
+                                <div class="advanced-kpi--middle centered">
+                                    <p class="value"
+                                       ods-adv-analysis="analysis"
+                                       ods-adv-analysis-context="ctx"
+                                       ods-adv-analysis-select="count(connection_status) as connected"
+                                       ods-adv-analysis-where="connection_status LIKE 'Connected'">
+                                        {{ analysis[0].connected }}
+                                    </p>
+                                </div>
+                                <div class="advanced-kpi--bottom">
+                                    <div class="advanced-kpi--bottom-second-stage">
+                                        <span class="date"></span>
+                                        <a class="source"
+                                           href="https://westofengland-ca.trial.opendatasoft.com/explore/dataset/embedded-capacity-register-december-2022/information/"
+                                           title="Title">
+                                            Source <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 no-mb">
+                        <div class="box white flat">
+                            <div class="advanced-kpi">
+                                <div class="advanced-kpi--top">
+                                    <h3 class="title">
+                                        Accepted 
+                                    </h3>
+                                </div>
+                                <div class="advanced-kpi--middle centered">
+                                    <p class="value"
+                                       ods-adv-analysis="analysis"
+                                       ods-adv-analysis-context="ctx"
+                                       ods-adv-analysis-select="count(connection_status) as connected"
+                                       ods-adv-analysis-where="connection_status LIKE 'Accepted to connect'">
+                                        {{ analysis[0].connected }}
+                                    </p>
+                                </div>
+                                <div class="advanced-kpi--bottom">
+                                    <div class="advanced-kpi--bottom-second-stage">
+                                        <span class="date"></span>
+                                        <a class="source"
+                                           href="https://westofengland-ca.trial.opendatasoft.com/explore/dataset/embedded-capacity-register-december-2022/information/"
+                                           title="Title">
+                                            Source <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="box white flat">
+                    <div class="advanced-kpi">
+                        <div class="advanced-kpi--top">
+                            <h3 class="title">
+                                Accepted / Connected by Local Authority
+                            </h3>
+                        </div>
+                        <div class="advanced-kpi--middle no-bg mb-0">
+                            <div>
+                                <ods-chart single-y-axis="true" scientific-display="false" align-month="true">
+                                    <ods-chart-query context="ctx" field-x="town_city" maxpoints="0" stacked="normal" series-breakdown="connection_status" category-colors="{'Connected':'#6BC8DF','Accepted to connect':'#354653'}">
+                                        <ods-chart-serie expression-y="export_mpan_msid" chart-type="column" function-y="COUNT" color="range-Accent" scientific-display="true">
+                                        </ods-chart-serie>
+                                    </ods-chart-query>
+                                </ods-chart>
+
+                            </div>
+                        </div>
+                        <div class="advanced-kpi--bottom">
+                            <div class="advanced-kpi--bottom-second-stage">
+                                <span class="date"></span>
+                                <a class="source"
+                                   href="https://westofengland-ca.trial.opendatasoft.com/explore/dataset/embedded-capacity-register-december-2022/information/"
+                                   title="Title">
+                                    Source <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box white flat">
+                    <div>
+                        <ods-map no-refit="true" scroll-wheel-zoom="false" search-box="true" toolbar-fullscreen="true" toolbar-geolocation="true" basemap="jawg.streets" location="9,51.78993,-2.48016">
+                            <ods-map-layer-group>
+                                <ods-map-layer context="ctx" color-categories="{'Connected':'#6BC8DF'}" color-by-field="connection_status" color-categories-other="#354653" picto="ods-circle" show-marker="true" display="categories" shape-opacity="0.5" point-opacity="1" border-color="#FFFFFF" border-opacity="1" border-size="1" border-pattern="solid" caption-picto-color="#E5E5E5" title="Connected & Accepted to Connect" size="4"></ods-map-layer>
+                            </ods-map-layer-group>
+                        </ods-map>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ods-dataset-context>

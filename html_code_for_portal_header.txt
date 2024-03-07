@@ -1,0 +1,17 @@
+##skip-to-content-link##
+<nav class="ods-front-header" ods-responsive-menu breakpoint="1000">
+    <ods-responsive-menu-placeholder>
+        <a class="ods-front-header__portal-brand" href="/">
+            ##logo##
+        </a>
+    </ods-responsive-menu-placeholder>
+    <ods-responsive-menu-collapsible>
+        ##language##
+        <a class="ods-front-header__portal-brand" href="/">
+            ##logo##
+            ##brand##
+        </a>
+        ##menu##
+        ##secondary-menu##
+    </ods-responsive-menu-collapsible>
+</nav>

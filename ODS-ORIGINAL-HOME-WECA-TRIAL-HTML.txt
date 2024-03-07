@@ -1,0 +1,232 @@
+<!--
+     The <ods-catalog-context> allows other widgets in this page to access the catalog of datasets in this platform.
+     Check the ods-widgets documentation to learn more about ods-catalog-context.
+-->
+<ods-catalog-context context="catalog">
+    <!-- Header Image
+      Check the .home-header class to change the background image
+    -->
+    <section class="home-header"></section>
+    <!-- Welcome card and KPI cards -->
+    <section class="container">
+        <div class="row row-equal-height">
+            <div class="col-md-6">
+                <div class="welcome-card">
+                    <h1 class="welcome-card-title">
+                        Welcome to the West of England Local Nature Recovery Strategy Portal
+                    </h1>
+                    <p class="welcome-card-description">
+                        Together, we’re creating a better, greener future for all our residents.
+                    </p>
+                    <a href="/explore/"
+                       class="welcome-card-link">
+                        Explore catalog <i class="fa fa-long-arrow-right fa-fw" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <!-- KPI box component -->
+                <div class="kpi-card">
+                    <img class="kpi-img" src="/assets/theme_image/energy-cost.png"/>
+                    <p class="kpi-title">
+                        950
+                    </p>
+                    <p class="kpi-description">
+                        homes have solar PV panels installed through <b>Solar Together</b> Program
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <!-- KPI box component -->
+                <div class="kpi-card">
+                    <img class="kpi-img" src="/assets/theme_image/tree-plant.png"/>
+                    <p class="kpi-title">
+                        50,000
+                    </p>
+                    <p class="kpi-description">
+                        trees across 113 acres <b>have been planted</b> last year 
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+    <!-- Catalog Search Box -->
+    <section class="container">
+        <!-- Search box card -->
+        <div class="search-card">
+            <h2 class="search-card-title">
+                What data are you looking for?
+            </h2>
+            <div class="search-card-container">
+                <ods-searchbox class="search-card-searchbox"
+                               form-id="search-form"
+                               translate="placeholder"
+                               placeholder="Search for a dataset">
+                </ods-searchbox>
+                <button type="submit" form="search-form" class="search-card-submit-button">
+                    Search
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- Image cards with links -->
+    <section class="container">
+        <h2 class="home-subtitle">
+            Our priorities
+        </h2>
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Image card -->
+                <a href="#"
+                   class="image-card image-card-mobility" style="border-bottom: solid 3px #6bc9df;">
+                    <div class="image-content">
+                        <h3 class="image-title">
+                            Transport
+                        </h3>
+                        <p class="image-description">
+                            Decarbonise the transport system; reduce car dependency; manage demand; increase cycling, walking, wheeling and public transport
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <!-- Image card -->
+                <a href="#"
+                   class="image-card image-card-garden" style="border-bottom: solid 3px #F7859B;">
+                    <div class="image-content">
+                        <h3 class="image-title">
+                            Buildings & places 
+                        </h3>
+                        <p class="image-description">
+                            Increase the energy performance, climate resilience and environmental benefits of buildings and places
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <!-- Image card -->
+                <a href="#"
+                   class="image-card image-card-gastronomy" style="border-bottom: solid 3px #79DDCC;">
+                    <div class="image-content">
+                        <h3 class="image-title">
+                            Nature Recovery
+                        </h3>
+                        <p class="image-description">
+                            Deliver new habitats for our region’s wildlife and invest in improving quality and connectivity of existing spaces for nature on land and in water
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <!-- Image card -->
+                <a href="#"
+                   class="image-card image-card-sport" style="border-bottom: solid 3px #F7859B;">
+                    <div class="image-content">
+                        <h3 class="image-title">
+                            Business & Skills
+                        </h3>
+                        <p class="image-description">
+                            Help all businesses become more sustainable and resilient to meet our 2030 objectives
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <!-- Image card -->
+                <a href="https://westofengland-ca.trial.opendatasoft.com/pages/embedded-capacity-register-map"
+                   class="image-card image-card-culture" style="border-bottom: solid 3px #FED800;">
+                    <div class="image-content">
+                        <h3 class="image-title">
+                            Net Zero Energy
+                        </h3>
+                        <p class="image-description">
+                            Work to decarbonise the energy system and increase local renewable energy
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <!-- Image card -->
+                <a href="#"
+                   class="image-card image-card-education" style="border-bottom: solid 3px #6bc9df;">
+                    <div class="image-content">
+                        <h3 class="image-title">
+                            Climate Resilience
+                        </h3>
+                        <p class="image-description">
+                            Take action to accelerate and ensure we are adapting to a changing climate and increase climate resilience across our region
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+
+        <div class="row">
+            <div class="col-md-7">
+                <!-- Content card -->
+                <div class="content-card">
+                    <h2 class="content-card-title" >
+                        Forecast low carbon job opportunities by sector, 2030
+                    </h2>
+                    <ods-dataset-context context="forecastlowcarbonjobopportunitiesbysector2030" forecastlowcarbonjobopportunitiesbysector2030-dataset="forecast-low-carbon-job-opportunities-by-sector-2030">
+                        <ods-chart scientific-display="false" labels-x-length="20" align-month="true">
+                            <ods-chart-query context="forecastlowcarbonjobopportunitiesbysector2030" field-x="sector" maxpoints="50" sort="serie1-1">
+                                <ods-chart-serie expression-y="forecast_2030" chart-type="pie" function-y="SUM" color="range-PuBu" display-units="false" scientific-display="true">
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+
+                    </ods-dataset-context>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <!-- Content card -->
+                <div class="content-card">
+                    <h2 class="content-card-title">
+                        Share of Renewable electricity in the West of England
+                    </h2>
+                    <ods-dataset-context context="shareofelectricityconsumptiongeneratedfromrenewablesourceswithinthewe0" shareofelectricityconsumptiongeneratedfromrenewablesourceswithinthewe0-dataset="share-of-electricity-consumption-generated-from-renewable-sources-within-the-we0">
+    <ods-chart timescale="year" scientific-display="false" display-legend="false" align-month="true">
+        <ods-chart-query context="shareofelectricityconsumptiongeneratedfromrenewablesourceswithinthewe0" field-x="year" maxpoints="0" timescale="year">
+            <ods-chart-serie label-y="Share" expression-y="share" chart-type="column" function-y="AVG" color="#344653" scientific-display="true" display-units="true" display-values="true">
+            </ods-chart-serie>
+        </ods-chart-query>
+    </ods-chart>
+
+</ods-dataset-context>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Most Popular Datasets -->
+                <h2 class="home-subtitle">
+                    Most popular data
+                </h2>
+                <ods-most-popular-datasets context="catalog"></ods-most-popular-datasets>
+            </div>
+            <div class="col-md-4">
+                <!-- Last modified datasets -->
+                <h2 class="home-subtitle">
+                    Last updated data
+                </h2>
+                <ods-last-datasets-feed context="catalog"></ods-last-datasets-feed>
+            </div>
+            <div class="col-md-4">
+                <!-- Twitter feed -->
+                <h2 class="home-subtitle">
+                    On twitter
+                </h2>
+                <div class="twitter-timeline-container">
+                    <!-- To change the Twitter profile to display go to https://publish.twitter.com/# -->
+                    <a class="twitter-timeline" data-height="392" href="https://twitter.com/WestofEnglandCA?ref_src=twsrc%5Etfw">Tweets by West of England Combined Authority</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                </div>
+            </div>
+        </div>
+    </section>
+</ods-catalog-context>

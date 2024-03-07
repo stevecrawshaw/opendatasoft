@@ -1,0 +1,3 @@
+<div class="ods-front-footer">
+	##ods-logo## ##legal## ##language## ##manage-cookies##
+</div>
