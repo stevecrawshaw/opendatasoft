@@ -53,9 +53,12 @@ bwi_clean <- bwi_raw %>%
   pivot_longer(cols = starts_with("x"),
                names_to = "year",
                values_to = "value") %>% 
-  mutate(year = str_sub(year, 2, 5) %>% as.integer(),
-         across(everything(), ~na_if(.x, "NA"))) %>%
+  mutate(year = str_sub(year, 2, 5) %>% as.integer()) %>%
+  mutate(across(where(is.character), ~na_if(.x, "NA"))) %>% 
   filter(!is.na(value))
+
+bwi_clean %>% view()
+
 
 bwi_clean %>% 
   write_csv("data/bwi_clean.csv", na = "")
