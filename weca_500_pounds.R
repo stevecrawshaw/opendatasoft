@@ -48,7 +48,7 @@ ods_out_tbl <- all_tbl |>
   filter(!is.na(TransNo)) |> 
   clean_names()
 
-ods_out_tbl$service_area |> unique()
+ods_out_tbl |> write_csv("data/weca_500_pounds.csv", na = "")
 
 # issues: empty columns, over 1m empty rows in June 2019 batch
 # Irrecoverable VAT appearing in some batches
