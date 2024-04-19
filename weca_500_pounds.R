@@ -2,7 +2,7 @@
 # read them all in as a list of tibbles with guessed col types
 # convert to all character types
 # bind rows
-# clean and rename
+# clean and rename according to https://validator.opendata.esd.org.uk/Spend
 # filter out rows with no transno
 
 pacman::p_load(tidyverse, janitor, glue, rvest)
@@ -33,24 +33,37 @@ all_tbl <- raw_tbl_list |>
 
 ods_out_tbl <- all_tbl |>
   mutate(across(where(~is.na(.x) |> all()), ~NULL)) |> 
-  mutate(supplier = coalesce(Supplier, `Supplier Name`),
-         date = coalesce(Date, `Doc Date`) |>
-           as.Date(format = "%d/%m/%Y"),
+  mutate(BeneficiaryName = coalesce(Supplier, `Supplier Name`),
+         PaymentDate = coalesce(Date, `Doc Date`) |>
+           parse_date_time(orders = c("dmy")),
          Supplier = NULL,
          `Supplier Name` = NULL,
          Date = NULL,
          `Doc Date` = NULL,
-         `Irrecoverable VAT` = NULL,
           `Ap/Ar ID(T)` = NULL,
          Amount = as.numeric(Amount),
-         TransNo = as.integer(TransNo)
+         IrrecoverableVATAmount = as.numeric(`Irrecoverable VAT`),
+         `Irrecoverable VAT` = NULL,
+         TransactionNumber = as.integer(TransNo),
+         TransNo = NULL
          ) |> 
-  filter(!is.na(TransNo)) |> 
-  clean_names()
+  filter(!is.na(TransactionNumber)) |>
+  rename(Purpose = `Summary of Purpose`,
+         ServiceCategoryLabel = `Service Area`) %>% 
+  relocate(ServiceCategoryLabel,
+           BeneficiaryName,
+           PaymentDate,
+           TransactionNumber,
+           Amount, 
+           IrrecoverableVATAmount,
+           Purpose)
+
 
 ods_out_tbl |> write_csv("data/weca_500_pounds.csv", na = "")
 
+
 # issues: empty columns, over 1m empty rows in June 2019 batch
-# Irrecoverable VAT appearing in some batches
-# `Ap/Ar ID(T)` appearing in some batches
+# Irrecoverable VAT appearing in some batches - needs keeping but only present in one batch
+# `Ap/Ar ID(T)` ?? appearing in some batches
 # inconsistent names for date and supplier columns
+# inconsistent date formatting in 1st quarter of 2018 - 2 digit years hence use parse_date_time()
