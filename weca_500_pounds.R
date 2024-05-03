@@ -23,15 +23,17 @@ if(inherits(page, "try-error")) return()
 links <- html_nodes(page, "a") %>% html_attr("href")
 csv_links <- links[grepl("\\.csv$", links, ignore.case = TRUE)]
 
+csv_links
+
 # make a list of tibbles from the csv links
 raw_tbl_list <- if_else(str_starts(csv_links, "http"),
         csv_links, 
         glue("{domain}{csv_links}")) |> 
     map(read_csv) 
 
-# Introspect the tibbles to see the sizes
+# Introspect the tibbles to see the sizes, number of rows and columns
 sizes_tbl <- raw_tbl_list |> 
-  map(~tibble(nrow = nrow(.x), ncol = ncol(.x))) |> 
+  map(~tibble(nrow = nrow(.x), ncol = ncol(.x), size = lobstr::obj_size(.x))) |> 
   bind_rows()
 
 # make a table to show the key aspects of the tibbles
@@ -42,6 +44,23 @@ diagnostics_tbl <- csv_links %>%
   cbind(sizes_tbl)
 
 diagnostics_tbl %>% view()
+
+
+
+
+
+
+
+
+
+
+
+# issues: empty columns, over 1m empty rows in June 2019 batch
+# Irrecoverable VAT appearing in some batches - needs keeping but only present in one batch
+# `Ap/Ar ID(T)` ?? appearing in some batches
+# inconsistent names for date and supplier columns
+# inconsistent date formatting in 1st quarter of 2018 - 2 digit years hence use parse_date_time()
+
 
 # combine all the tibbles into one
 
@@ -89,8 +108,4 @@ ods_out_tbl <- all_tbl |>
 ods_out_tbl |> write_csv("data/weca_500_pounds.csv", na = "")
 
 
-# issues: empty columns, over 1m empty rows in June 2019 batch
-# Irrecoverable VAT appearing in some batches - needs keeping but only present in one batch
-# `Ap/Ar ID(T)` ?? appearing in some batches
-# inconsistent names for date and supplier columns
-# inconsistent date formatting in 1st quarter of 2018 - 2 digit years hence use parse_date_time()
+

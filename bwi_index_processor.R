@@ -7,6 +7,8 @@ pacman::p_load(tidyverse,
 # Ingest the BWI sample data from chris clements
 # transform to a dataset that can be published on ODS
 
+# Can't publish as BTO restricts re - use
+
 path <-  "data/BWI data 2024 - Copy.xlsx"
 sheets_vec <-
   readxl::excel_sheets(path)
@@ -27,12 +29,13 @@ names(sheets_list)
 
 bwi_raw <- sheets_list %>% pluck("bristol_index_example")
 
+bwi_raw %>% glimpse()
+
 bwi_clean <- bwi_raw %>% 
   mutate(across(starts_with("username"), ~NULL),
-         across(c(replicate, #to logical
-                  continuing_collection,
-                  inside_city_limits,
+         across(c(continuing_collection,
                   specific_location,
+                  inside_city_limits,
                   invasive,
                   migratory,
                   resident,
@@ -45,6 +48,7 @@ bwi_clean <- bwi_raw %>%
          across(starts_with("x"), as.numeric),
          across(ends_with("tude"), as.numeric),
          source_year = as.integer(source_year),
+         replicate = as.integer(replicate),
          date_created = as.Date(date_created, format = "%d/%m/%Y"),
          status = NULL, # zero variance fields
          notes = NULL,
