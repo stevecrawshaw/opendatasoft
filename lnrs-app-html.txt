@@ -15,7 +15,10 @@
                 <div class="map-drawer-container__map">
                     <div class="map-drawer-container__backdrop"
                          ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
-                                   drawer.status = false"
+                                   apmg.parameters['refine.level_of_ambition'] = undefined;
+                                   apmg.parameters['refine.land_type'] = undefined;
+                                   apmg.parameters['refine.stakeholder'] = undefined;
+                                   drawer.status = false;"
                          ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name'] }">
                     </div>
                     <div ng-if="!areasgroupedtbl.parameters['refine.area_name'];">
@@ -191,9 +194,10 @@
                                  ods-adv-analysis-context="apmg"
                                  ods-adv-analysis-group-by="measure"
                                  ods-adv-analysis-order-by="measure">
+                                <!--
                                 <ul>
                                     <li ng-repeat="record in measuresgrants">
-                                       <strong>{{ record['measure']}}  
+                                        <strong>{{ record['measure']}}  
                                             <div ods-adv-analysis="linkgrants"
                                                  ods-adv-analysis-context="apmg"
                                                  ods-adv-analysis-group-by="grant_id, grant_name, url"
@@ -206,6 +210,40 @@
                                         </strong>
                                     </li>
                                 </ul>
+                                -->
+
+                                <div class="table-module">
+                                    <table class="table-basic">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Measure</strong></td>
+                                                <td><strong>Grants</strong></td>
+                                            </tr>
+
+                                            <tr ng-repeat="record in measuresgrants">
+                                                <td >{{ record['measure']}}</td>
+
+                                                <td>
+                                                    <div ods-adv-analysis="linkgrants"
+                                                         ods-adv-analysis-context="apmg"
+                                                         ods-adv-analysis-group-by="grant_id, grant_name, url"
+                                                         ods-adv-analysis-where="measure like '{{record['measure']}}'"
+                                                         ods-adv-analysis-order-by="grant_id">
+                                                        <a ng-repeat="link in linkgrants"
+                                                           ng-href="{{ link.url }}" target="_blank"
+                                                           ods-tooltip="{{link.grant_name}}"> {{link.grant_id}} <br> </a>
+                                                    </div>   
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+
+
+
                             </div>
                         </div>
                     </div>
