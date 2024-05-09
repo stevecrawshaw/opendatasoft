@@ -1,0 +1,216 @@
+<!-- template here https://codelibrary.opendatasoft.com/page-templates/map-refine/#code-use-a-map-as-a-selector-and-display-results-on-the-side-css-content-->
+<div class="container-fluid">
+    <ods-dataset-context context="areasgroupedtbl, areafundingschemestbl, apmg"
+                         areasgroupedtbl-dataset="areas-grouped-tbl"
+                         areafundingschemestbl-dataset="lnrs-area-funding-schemes-tbl"
+                         apmg-dataset="areas-priorities-measures-grants-tbl">
+        <div class="ods-box donotcopy-specific"
+             ng-init="donotcopy = { 'simulaterefineonclick' : false}">
+            <div class="map-drawer-container"
+                 ng-class="{
+                           'map-drawer-container--active': areasgroupedtbl.parameters['refine.area_name'],
+                           'map-drawer-container--active-full': drawer.status}"
+                 ng-init="drawer = {'status':false}">
+                <!--  this was in the dive before ng-class -->
+                <div class="map-drawer-container__map">
+                    <div class="map-drawer-container__backdrop"
+                         ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
+                                   drawer.status = false"
+                         ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name'] }">
+                    </div>
+                    <div ng-if="!areasgroupedtbl.parameters['refine.area_name'];">
+                        <h2>
+                            Local Nature Recovery Strategy: Select a Focus Area to see improvement measures and grants
+                        </h2>
+                        <!--h2>
+                            <strong> Click a focus area to filter improvement measures by land type, stakeholder and ambition.</strong>
+                        </h2 --> 
+                    </div>
+                    <ods-map scroll-wheel-zoom="true"
+                             location="10,51.47716,-2.63609"
+                             basemap="jawg.streets">
+                        <ods-map-layer context="areasgroupedtbl"
+                                       display="raw"
+                                       shape-opacity="0.4"
+                                       caption="false"
+                                       refine-on-click-context="[areasgroupedtbl, areafundingschemestbl, apmg]"
+                                       refine-on-click-areasgroupedtbl-context-field="area_name"
+                                       refine-on-click-areasgroupedtbl-map-field="area_name"
+                                       refine-on-click-areasgroupedtbl-replace-refine="true"
+                                       refine-on-click-apmg-context-field="area_name"
+                                       refine-on-click-apmg-map-field="area_name"
+                                       refine-on-click-apmg-replace-refine="true"
+                                       refine-on-click-areafundingschemestbl-context-field="area_name"
+                                       refine-on-click-areafundingschemestbl-map-field="area_name"
+                                       refine-on-click-areafundingschemestbl-replace-refine="true">
+                        </ods-map-layer>
+                    </ods-map>
+                    <!--ng-click="donotcopy.simulaterefineonclick = false" \ drawer.status = false -->
+                    <div class="ods-button"
+                         ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
+                                   apmg.parameters['refine.level_of_ambition'] = undefined;
+                                   apmg.parameters['refine.land_type'] = undefined;
+                                   apmg.parameters['refine.stakeholder'] = undefined;
+                                   drawer.status = false;"> 
+                        Reset
+                    </div>
+                </div>
+                <div class="map-drawer-container__drawer map-drawer-container__drawer__partial">
+                    <div class="map-drawer-container__drawer__close"
+                         ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
+                                   drawer.status = false">
+                        <i class="fa fa-times"></i>
+                    </div>
+                    <p class="kpi-value">
+                        Focus Area
+                    </p>
+                    <h5>
+                        <div ods-adv-analysis="area"
+                             ods-adv-analysis-context="areasgroupedtbl"
+                             ods-adv-analysis-select="area_name, area_description, area_link"
+                             ods-adv-analysis-limit="1">
+                            <div class="table-module facet-text">
+                                <table class="table-basic">
+                                    <tbody>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td><strong>{{area[0].area_name}}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Description</td>
+                                            <td >
+                                                <div class="description">
+                                                    {{area[0].area_description }}
+                                                </div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Links</td>
+                                            <td><!-- {{area[0].area_link}} This is the link related to the area - suggest we just want one source of funding links-->
+                                                <div ods-results="arealinks"
+                                                     ods-results-context="areafundingschemestbl"
+                                                     ods-results-max="10">
+                                                    <ul>
+                                                        <li ng-repeat="record in arealinks">
+                                                            <a ng-href="{{ record.fields.funding_schemes }}" target="_blank">Area funding</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </h5>
+                    <div class="ods-button"
+                         ng-click="drawer.status = !drawer.status">
+                        Priorities and Measures
+                    </div>
+                </div>
+                <div class="map-drawer-container__drawer map-drawer-container__drawer__full">
+                    <ods-facets context="apmg"> <!-- change to apmg -->
+                        <div class="box-container">
+                            <div class="column box-column"> 
+                                <p class="kpi-value">
+                                    Land Type
+                                </p>
+                                <ods-facet name="land_type">
+                                    <div ng-non-bindable>
+                                        {{category.name}}
+                                    </div>
+                                </ods-facet>
+                            </div>
+                            <div class="column box-column">
+                                <p class="kpi-value"
+                                   ods-tooltip="Level 1 = highest ambition">
+                                    Level of Ambition
+                                </p>
+                                <ods-facet name="level_of_ambition"
+                                           disjunctive="true">
+                                    <div ng-non-bindable>
+                                        {{category.name}}
+                                    </div>
+                                </ods-facet>
+                            </div> 
+                            <div class="column box-column"> 
+                                <p class="kpi-value">
+                                    Stakeholder
+                                </p>
+                                <ods-facet name="stakeholder">
+                                    <div ng-non-bindable>
+                                        {{category.name}}
+                                    </div>
+                                </ods-facet>
+                            </div> 
+                        </div>
+                    </ods-facets>    
+                    <div ng-if="apmg.parameters['refine.level_of_ambition'] || apmg.parameters['refine.land_type'] || apmg.parameters['refine.stakeholder']"
+                         class="fillwide">
+                        <!-- code below runs when filter(s) applied -->
+                        <div class="row" > 
+                            <div class="column"> 
+                                <p class="kpi-value">
+                                    Themes
+                                </p>
+                                <div ods-adv-analysis="themes"
+                                     ods-adv-analysis-context="apmg"
+                                     ods-adv-analysis-select="theme"
+                                     ods-adv-analysis-group-by="theme">
+                                    <div class="theme-container">
+                                        <div class="theme-box" ng-repeat="item in themes"> {{item.theme}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row fillwide">
+                                <div class="column" >
+                                    <p class="kpi-value">
+                                        Priorities
+                                    </p>
+                                    <div>
+                                        <div ods-adv-analysis="priorities"
+                                             ods-adv-analysis-context="apmg"
+                                             ods-adv-analysis-select="biodiversity_priority"
+                                             ods-adv-analysis-group-by="biodiversity_priority">
+                                            <div> 
+                                                <ul>
+                                                    <li ng-repeat="item in priorities"> {{item.biodiversity_priority}}</li>
+                                                </ul>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="box-container theme-box-container column fillwide">
+                            <p class="kpi-value"
+                               ods-results="nmeasures",
+                               ods-results-context="apmg">
+                                Measures and grants
+                            </p>
+                            <div ods-adv-analysis="measuresgrants"
+                                 ods-adv-analysis-context="apmg"
+                                 ods-adv-analysis-group-by="measure"
+                                 ods-adv-analysis-order-by="measure">
+                                <ul>
+                                    <li ng-repeat="record in measuresgrants">
+                                       <strong>{{ record['measure']}}  
+                                            <div ods-adv-analysis="linkgrants"
+                                                 ods-adv-analysis-context="apmg"
+                                                 ods-adv-analysis-group-by="grant_id, grant_name, url"
+                                                 ods-adv-analysis-where="measure like '{{record['measure']}}'"
+                                                 ods-adv-analysis-order-by="grant_id">
+                                                <a ng-repeat="link in linkgrants"
+                                                   ng-href="{{ link.url }}" target="_blank"
+                                                   ods-tooltip="{{link.grant_name}}"> {{link.grant_id}}</a>
+                                            </div>                                        
+                                        </strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ods-dataset-context>
+</div>
