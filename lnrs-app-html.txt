@@ -62,7 +62,7 @@
                 <div class="map-drawer-container__drawer map-drawer-container__drawer__partial">
                     <div class="map-drawer-container__drawer__close"
                          ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
-                                   drawer.status = false">
+                                   drawer.status = false;">
                         <i class="fa fa-times"></i>
                     </div>
                     <p class="kpi-value">
@@ -73,37 +73,36 @@
                              ods-adv-analysis-context="areasgroupedtbl"
                              ods-adv-analysis-select="area_name, area_description, area_link"
                              ods-adv-analysis-limit="1">
-                            <div class="table-module facet-text">
-                                <table class="table-basic">
-                                    <tbody>
-                                        <tr>
-                                            <td>Name</td>
-                                            <td><strong>{{area[0].area_name}}</strong></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Description</td>
-                                            <td >
-                                                <div class="description">
-                                                    {{area[0].area_description }}
-                                                </div></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Links</td>
-                                            <td><!-- {{area[0].area_link}} This is the link related to the area - suggest we just want one source of funding links-->
-                                                <div ods-results="arealinks"
-                                                     ods-results-context="areafundingschemestbl"
-                                                     ods-results-max="10">
-                                                    <ul>
-                                                        <li ng-repeat="record in arealinks">
-                                                            <a ng-href="{{ record.fields.funding_schemes }}" target="_blank">Area funding</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <!-- <div class="table-module facet-text"> -->
+                            <table class="table-module table-basic">
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td><strong>{{area[0].area_name}}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Description</td>
+                                        <td class="description">
+                                            {{area[0].area_description }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Links</td>
+                                        <td><!-- {{area[0].area_link}} This is the link related to the area - suggest we just want one source of funding links-->
+                                            <div ods-results="arealinks"
+                                                 ods-results-context="areafundingschemestbl"
+                                                 ods-results-max="10">
+                                                <ul>
+                                                    <li ng-repeat="record in arealinks">
+                                                        <a ng-href="{{ record.fields.funding_schemes }}" target="_blank">Area funding</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--/div -->
                         </div>
                     </h5>
                     <div class="ods-button"
@@ -115,32 +114,31 @@
                     <ods-facets context="apmg"> <!-- change to apmg -->
                         <div class="box-container">
                             <div class="column box-column"> 
-                                <p class="kpi-value">
-                                    Land Type
-                                </p>
-                                <ods-facet name="land_type">
+                                <ods-facet name="land_type"
+                                           title="Land Type" 
+                                           sort="alphanum">
                                     <div ng-non-bindable>
                                         {{category.name}}
                                     </div>
                                 </ods-facet>
                             </div>
                             <div class="column box-column">
-                                <p class="kpi-value"
-                                   ods-tooltip="Level 1 = highest ambition">
-                                    Level of Ambition
-                                </p>
                                 <ods-facet name="level_of_ambition"
-                                           disjunctive="true">
+                                           title="Level of Ambition"
+                                           disjunctive="true"
+                                           sort="alphanum"
+                                           ods-tooltip="Level 1 = highest ambition"
+                                           >
                                     <div ng-non-bindable>
                                         {{category.name}}
                                     </div>
                                 </ods-facet>
                             </div> 
                             <div class="column box-column"> 
-                                <p class="kpi-value">
-                                    Stakeholder
-                                </p>
-                                <ods-facet name="stakeholder">
+
+                                <ods-facet name="stakeholder"
+                                           title="Stakeholder"
+                                           sort="alphanum">
                                     <div ng-non-bindable>
                                         {{category.name}}
                                     </div>
@@ -151,7 +149,9 @@
                     <div ng-if="apmg.parameters['refine.level_of_ambition'] || apmg.parameters['refine.land_type'] || apmg.parameters['refine.stakeholder'];"
                          class="fillwide">
                         <!-- code below runs when filter(s) applied -->
-                        <div class="row" > 
+
+                        <!--
+                            < hide themes for now to make more space 
                             <div class="column"> 
                                 <p class="kpi-value">
                                     Themes
@@ -164,9 +164,10 @@
                                         <div class="theme-box" ng-repeat="item in themes"> {{item.theme}}</div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row fillwide">
-                                <div class="column" >
+                            </div -->
+                            
+                        
+                                <div class="box-container theme-box-container column fillwide" >
                                     <p class="kpi-value">
                                         Priorities
                                     </p>
@@ -183,14 +184,8 @@
                                         </div> 
                                     </div>
                                 </div>
-                            </div> 
-                        </div>
+                          
                         <div class="box-container theme-box-container column fillwide">
-                            <p class="kpi-value"
-                               ods-results="nmeasures",
-                               ods-results-context="apmg">
-                                Measures and grants
-                            </p>
                             <div ods-adv-analysis="measuresgrants"
                                  ods-adv-analysis-context="apmg"
                                  ods-adv-analysis-group-by="measure"
@@ -199,8 +194,7 @@
                                     <table class="table-basic">
                                         <tbody>
                                             <thead>
-
-                                                <tr>
+                                                <tr class="kpi-value">
                                                     <th>Measure</th>
                                                     <th>Grants</th>
                                                 </tr>
