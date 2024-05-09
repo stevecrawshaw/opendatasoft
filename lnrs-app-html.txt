@@ -12,6 +12,7 @@
                            'map-drawer-container--active-full': drawer.status}"
                  ng-init="drawer = {'status':false}">
                 <!--  this was in the dive before ng-class -->
+
                 <div class="map-drawer-container__map">
                     <div class="map-drawer-container__backdrop"
                          ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
@@ -20,15 +21,15 @@
                                    apmg.parameters['refine.stakeholder'] = undefined;
                                    drawer.status = false;"
                          ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name'] }">
+
                     </div>
-                    <div ng-if="!areasgroupedtbl.parameters['refine.area_name'];">
-                        <h2>
-                            Local Nature Recovery Strategy: Select a Focus Area to see improvement measures and grants
-                        </h2>
-                        <!--h2>
-                            <strong> Click a focus area to filter improvement measures by land type, stakeholder and ambition.</strong>
-                        </h2 --> 
-                    </div>
+                    <!-- 
+                    "!areasgroupedtbl.parameters['refine.area_name'] || areasgroupedtbl.parameters['refine.area_name'] == undefined;"
+                    -->
+                    <h2 ng-if='drawer.status == false;'>
+                        Local Nature Recovery Strategy: Select a Focus Area to see improvement measures and grants
+                    </h2>
+
                     <ods-map scroll-wheel-zoom="true"
                              location="10,51.47716,-2.63609"
                              basemap="jawg.streets">
@@ -147,7 +148,7 @@
                             </div> 
                         </div>
                     </ods-facets>    
-                    <div ng-if="apmg.parameters['refine.level_of_ambition'] || apmg.parameters['refine.land_type'] || apmg.parameters['refine.stakeholder']"
+                    <div ng-if="apmg.parameters['refine.level_of_ambition'] || apmg.parameters['refine.land_type'] || apmg.parameters['refine.stakeholder'];"
                          class="fillwide">
                         <!-- code below runs when filter(s) applied -->
                         <div class="row" > 
@@ -194,35 +195,18 @@
                                  ods-adv-analysis-context="apmg"
                                  ods-adv-analysis-group-by="measure"
                                  ods-adv-analysis-order-by="measure">
-                                <!--
-                                <ul>
-                                    <li ng-repeat="record in measuresgrants">
-                                        <strong>{{ record['measure']}}  
-                                            <div ods-adv-analysis="linkgrants"
-                                                 ods-adv-analysis-context="apmg"
-                                                 ods-adv-analysis-group-by="grant_id, grant_name, url"
-                                                 ods-adv-analysis-where="measure like '{{record['measure']}}'"
-                                                 ods-adv-analysis-order-by="grant_id">
-                                                <a ng-repeat="link in linkgrants"
-                                                   ng-href="{{ link.url }}" target="_blank"
-                                                   ods-tooltip="{{link.grant_name}}"> {{link.grant_id}}</a>
-                                            </div>                                        
-                                        </strong>
-                                    </li>
-                                </ul>
-                                -->
-
                                 <div class="table-module">
                                     <table class="table-basic">
                                         <tbody>
-                                            <tr>
-                                                <td><strong>Measure</strong></td>
-                                                <td><strong>Grants</strong></td>
-                                            </tr>
+                                            <thead>
 
+                                                <tr>
+                                                    <th>Measure</th>
+                                                    <th>Grants</th>
+                                                </tr>
+                                            </thead>
                                             <tr ng-repeat="record in measuresgrants">
                                                 <td >{{ record['measure']}}</td>
-
                                                 <td>
                                                     <div ods-adv-analysis="linkgrants"
                                                          ods-adv-analysis-context="apmg"
@@ -238,12 +222,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-
-
-
-
-
-
                             </div>
                         </div>
                     </div>
