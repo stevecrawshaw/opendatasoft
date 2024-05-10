@@ -5,14 +5,12 @@
                          areafundingschemestbl-dataset="lnrs-area-funding-schemes-tbl"
                          apmg-dataset="areas-priorities-measures-grants-tbl">
         <div class="ods-box donotcopy-specific"
-             ng-init="donotcopy = { 'simulaterefineonclick' : false}">
+             ng-init="donotcopy = {'simulaterefineonclick' : false}">
             <div class="map-drawer-container"
-                 ng-class="{
-                           'map-drawer-container--active': areasgroupedtbl.parameters['refine.area_name'],
+                 ng-class="{'map-drawer-container--active': areasgroupedtbl.parameters['refine.area_name'],
                            'map-drawer-container--active-full': drawer.status}"
                  ng-init="drawer = {'status':false}">
                 <!--  this was in the dive before ng-class -->
-
                 <div class="map-drawer-container__map">
                     <div class="map-drawer-container__backdrop"
                          ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
@@ -20,12 +18,10 @@
                                    apmg.parameters['refine.land_type'] = undefined;
                                    apmg.parameters['refine.stakeholder'] = undefined;
                                    drawer.status = false;"
-                         ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name'] }">
+                         ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name']}">
 
                     </div>
-                    <!-- 
-                    "!areasgroupedtbl.parameters['refine.area_name'] || areasgroupedtbl.parameters['refine.area_name'] == undefined;"
-                    -->
+                    
                     <h2 ng-if='drawer.status == false;'>
                         Local Nature Recovery Strategy: Select a Focus Area to see improvement measures and grants
                     </h2>
@@ -60,55 +56,44 @@
                     </div>
                 </div>
                 <div class="map-drawer-container__drawer map-drawer-container__drawer__partial">
+
                     <div class="map-drawer-container__drawer__close"
                          ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
                                    drawer.status = false;">
                         <i class="fa fa-times"></i>
                     </div>
-                    <p class="kpi-value">
-                        Focus Area
-                    </p>
-                    <h5>
-                        <div ods-adv-analysis="area"
-                             ods-adv-analysis-context="areasgroupedtbl"
-                             ods-adv-analysis-select="area_name, area_description, area_link"
-                             ods-adv-analysis-limit="1">
-                            <!-- <div class="table-module facet-text"> -->
-                            <table class="table-module table-basic">
-                                <tbody>
-                                    <tr>
-                                        <td>Name</td>
-                                        <td><strong>{{area[0].area_name}}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Description</td>
-                                        <!--some angular styling to reinstate line breaks -->
-                                        <td class="description"
-                                            id="area_description"
-                                            ng-init="{{area_desc=area[0].area_description}}"
-                                            ng-style="{'white-space': 'pre-line'}">
-                                            {{area_desc}}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Links</td>
-                                        <td><!-- {{area[0].area_link}} This is the link related to the area - suggest we just want one source of funding links-->
-                                            <div ods-results="arealinks"
-                                                 ods-results-context="areafundingschemestbl"
-                                                 ods-results-max="10">
-                                                <ul>
-                                                    <li ng-repeat="record in arealinks">
-                                                        <a ng-href="{{ record.fields.funding_schemes }}" target="_blank">Area funding</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!--/div -->
-                        </div>
-                    </h5>
+
+                    <div ods-adv-analysis="area"
+                         ods-adv-analysis-context="areasgroupedtbl"
+                         ods-adv-analysis-select="area_name, area_description, area_link"
+                         ods-adv-analysis-limit="1">
+                        <!-- <div class="table-module facet-text"> -->
+                       
+                        <dl>
+                             <h2 class="kpi-value">
+                            Focus Area
+                        </h2>
+                            <dt>Name</dt>
+                            <dd><strong>{{area[0].area_name}}</strong></dd>
+                            <dt>Description</dt>
+                            <dd class="description"
+                                id="area_description"
+                                ng-init="{{area_desc=area[0].area_description}}"
+                                ng-style="{'white-space': 'pre-line'}">
+                                {{area_desc}}
+                            </dd>
+                            <dt>Links</dt>
+                            <dd ods-results="arealinks"
+                                ods-results-context="areafundingschemestbl"
+                                ods-results-max="10">
+                                <ul>
+                                    <li ng-repeat="record in arealinks">
+                                        <a ng-href="{{ record.fields.funding_schemes }}" target="_blank">Area funding</a>
+                                    </li>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
                     <div class="ods-button"
                          ng-click="drawer.status = !drawer.status">
                         Priorities and Measures
@@ -139,7 +124,6 @@
                                 </ods-facet>
                             </div> 
                             <div class="column box-column"> 
-
                                 <ods-facet name="stakeholder"
                                            title="Stakeholder"
                                            sort="alphanum">
@@ -153,7 +137,6 @@
                     <div ng-if="apmg.parameters['refine.level_of_ambition'] || apmg.parameters['refine.land_type'] || apmg.parameters['refine.stakeholder'];"
                          class="fillwide">
                         <!-- code below runs when filter(s) applied -->
-
                         <!--
                             < hide themes for now to make more space 
                             <div class="column"> 
@@ -169,8 +152,6 @@
                                     </div>
                                 </div>
                             </div -->
-
-
                         <div class="box-container theme-box-container column fillwide" >
                             <p class="kpi-value">
                                 Priorities

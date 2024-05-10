@@ -8,13 +8,17 @@
 }
 .map-drawer-container {
     display: flex;
+    flex-direction: column-reverse;
     position: relative;
     overflow: hidden;
     height: -webkit-fill-available;
 }
+
+/* */
 .map-drawer-container__map {
     position:relative;
     width: -webkit-fill-available;
+    height: -webkit-fill-available;
 }
 .map-drawer-container__info {
     width: var(--drawer-width);
@@ -73,7 +77,8 @@
 }
 /* DO NOT COPY */
 .donotcopy-specific .map-drawer-container {
-    height: 500 px;
+    display: flex;
+    height: -webkit-fill-available;
     text-align: center;
 }
 .donotcopy-specific .map-drawer-container__info,
@@ -116,24 +121,24 @@
 
 /* Columns */
 .container {
-  display: flex;
+    display: flex;
 }
 
 .column {
-  flex: 1;
-  padding: 10px; /* Adjust padding as needed */
-  border: 1px solid #ccc; /* Optional border */
-  margin: 5px; /* Space between columns */
+    flex: 1;
+    padding: 10px; /* Adjust padding as needed */
+    border: 1px solid #ccc; /* Optional border */
+    margin: 5px; /* Space between columns */
 }
 
 /* UL formatting ------------------------ */
 
 ul {
-  
-  list-style-type: disc;      /* Type of bullet point */
-  list-style-position: inside; /* Position of bullet inside the list content */
-  padding-left: 0;            /* Remove default padding */
-  margin-left: 0;             /* Aligns the list to the left edge of its container */
+
+    list-style-type: disc;      /* Type of bullet point */
+    list-style-position: inside; /* Position of bullet inside the list content */
+    padding-left: 0;            /* Remove default padding */
+    margin-left: 0;             /* Aligns the list to the left edge of its container */
 }
 
 li {
@@ -142,48 +147,48 @@ li {
 
 
 /* Table Module Basic
-   ========================================================================== */
+========================================================================== */
 .table-module {
-  height: 300px;
-  overflow-y: auto;
-  overflow-x: auto;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 .table-basic {
-  display: table;
-  border-collapse: collapse;
-  width: 100%;
-  white-space: normal; /* Change to 'normal' to allow text wrapping */
-  background-color: transparent; /* Change to 'transparent' for transparent background */
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+    white-space: normal; /* Change to 'normal' to allow text wrapping */
+    background-color: transparent; /* Change to 'transparent' for transparent background */
 }
 
 .table-basic thead th {
-  color: var(--titles);
-  background-color: #ffffff;
-  font-weight: 500;
-  padding: 13px 3px;
-  position: sticky;
-  top: 0;
-  z-index: 1;
+    color: var(--titles);
+    background-color: #ffffff;
+    font-weight: 500;
+    padding: 13px 3px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 
 .table-basic thead th:first-child,
 .table-basic tbody th {
-  padding-left: 13px;
+    padding-left: 13px;
 }
 
 .table-basic tbody th {
-  font-weight: normal;
-  border-top: 1px solid #dee5ef;
+    font-weight: normal;
+    border-top: 1px solid #dee5ef;
 }
 
 .table-basic tr td {
-  padding: 13px 13px;
-  white-space: normal;
-  border-bottom: 1px solid #eee;
-  /* Add word-break property to ensure words can break and wrap to the next line */
- /* word-break: break-word;*/
+    padding: 13px 13px;
+    white-space: normal;
+    border-bottom: 1px solid #eee;
+    /* Add word-break property to ensure words can break and wrap to the next line */
+    /* word-break: break-word;*/
 }
 
 
@@ -212,6 +217,8 @@ h2 {
     border-radius: var(--boxes-radius);
 }
 
+
+
 @keyframes bounce {
     from {
         margin-left: 6px;
@@ -232,7 +239,7 @@ h2 {
 
 /* */
 .description{
-    height: 200px;
+    height: 350px;
     overflow: scroll;
 }
 .box-column{
@@ -244,11 +251,17 @@ h2 {
     padding: 0 30px;
 }
 .odswidget-map {
-height:-webkit-fill-available;
+    height:-webkit-fill-available;
+    min-height: 800px;
+}
+
+.odswidget-map__map {
+height: 100%;
+min-height: 800px;
 }
 
 .ods-box{
-        height: 800px;
+    height: 700px;
 }
 
 .theme-box-container{
@@ -262,12 +275,12 @@ height:-webkit-fill-available;
 
 }
 .theme-box{
-        background-color: #CCD5F3;
+    background-color: #CCD5F3;
     border-radius: 10px;
     padding: 10px;
 }
 .theme-container{
-        display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
@@ -276,4 +289,21 @@ height:-webkit-fill-available;
 
 .fillwide {
     width: -webkit-fill-available;
+}
+
+dl {
+    height: 550px;
+}
+
+dt {
+    text-align: left;
+}
+
+dd {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.area-div {
+    height: 650px;
 }
