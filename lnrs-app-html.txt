@@ -82,8 +82,12 @@
                                     </tr>
                                     <tr>
                                         <td>Description</td>
-                                        <td class="description">
-                                            {{area[0].area_description }}
+                                        <!--some angular styling to reinstate line breaks -->
+                                        <td class="description"
+                                            id="area_description"
+                                            ng-init="{{area_desc=area[0].area_description}}"
+                                            ng-style="{'white-space': 'pre-line'}">
+                                            {{area_desc}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -165,26 +169,26 @@
                                     </div>
                                 </div>
                             </div -->
-                            
-                        
-                                <div class="box-container theme-box-container column fillwide" >
-                                    <p class="kpi-value">
-                                        Priorities
-                                    </p>
-                                    <div>
-                                        <div ods-adv-analysis="priorities"
-                                             ods-adv-analysis-context="apmg"
-                                             ods-adv-analysis-select="biodiversity_priority"
-                                             ods-adv-analysis-group-by="biodiversity_priority">
-                                            <div> 
-                                                <ul>
-                                                    <li ng-repeat="item in priorities"> {{item.biodiversity_priority}}</li>
-                                                </ul>
-                                            </div>
-                                        </div> 
+
+
+                        <div class="box-container theme-box-container column fillwide" >
+                            <p class="kpi-value">
+                                Priorities
+                            </p>
+                            <div>
+                                <div ods-adv-analysis="priorities"
+                                     ods-adv-analysis-context="apmg"
+                                     ods-adv-analysis-select="biodiversity_priority"
+                                     ods-adv-analysis-group-by="biodiversity_priority">
+                                    <div> 
+                                        <ul>
+                                            <li ng-repeat="item in priorities"> {{item.biodiversity_priority}}</li>
+                                        </ul>
                                     </div>
-                                </div>
-                          
+                                </div> 
+                            </div>
+                        </div>
+
                         <div class="box-container theme-box-container column fillwide">
                             <div ods-adv-analysis="measuresgrants"
                                  ods-adv-analysis-context="apmg"
