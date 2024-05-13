@@ -21,9 +21,9 @@
                          ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name']}">
 
                     </div>
-                    
+
                     <h2 ng-if='drawer.status == false;'>
-                        Local Nature Recovery Strategy: Select a Focus Area to see improvement measures and grants
+                        Local Nature Recovery Strategy: Select a Sub Area to see improvement measures and grants
                     </h2>
 
                     <ods-map scroll-wheel-zoom="true"
@@ -60,6 +60,7 @@
                     <div class="map-drawer-container__drawer__close"
                          ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
                                    drawer.status = false;">
+                        <!-- close the partial map drawer with the X top right -->
                         <i class="fa fa-times"></i>
                     </div>
 
@@ -67,19 +68,30 @@
                          ods-adv-analysis-context="areasgroupedtbl"
                          ods-adv-analysis-select="area_name, area_description, area_link"
                          ods-adv-analysis-limit="1">
-                        <!-- <div class="table-module facet-text"> -->
-                       
+                        <!-- Select One of the areas - there can be multiple polygons with the same ID -->
                         <dl>
-                             <h2 class="kpi-value">
-                            Focus Area
-                        </h2>
+                            <h2 class="kpi-value">
+                                Sub Area
+                            </h2>
                             <dt>Name</dt>
-                            <dd><strong>{{area[0].area_name}}</strong></dd>
+                            <dd>
+                                <strong>
+                                    <a ng-href="{{area[0].area_link}}"
+                                       target="_blank"
+                                       ods-tooltip="Area Guidance">
+                                        {{area[0].area_name}}
+                                        <i class="fa fa-external-link"
+                                           aria-hidden="true">
+                                        </i>
+                                    </a>
+                                </strong>
+                            </dd>
                             <dt>Description</dt>
                             <dd class="description"
                                 id="area_description"
                                 ng-init="{{area_desc=area[0].area_description}}"
                                 ng-style="{'white-space': 'pre-line'}">
+                                <!-- ng-style converts line feeds /n to <br> -->
                                 {{area_desc}}
                             </dd>
                             <dt>Links</dt>
@@ -88,13 +100,14 @@
                                 ods-results-max="10">
                                 <ul>
                                     <li ng-repeat="record in arealinks">
+                                        
                                         <a ng-href="{{ record.fields.funding_schemes }}" target="_blank">Area funding</a>
                                     </li>
                                 </ul>
                             </dd>
                         </dl>
                     </div>
-                    <div class="ods-button"
+                    <div class="ods-button column"
                          ng-click="drawer.status = !drawer.status">
                         Priorities and Measures
                     </div>
@@ -138,7 +151,7 @@
                          class="fillwide">
                         <!-- code below runs when filter(s) applied -->
                         <!--
-                            < hide themes for now to make more space 
+                            < hide themes and priorities for now to make more space 
                             <div class="column"> 
                                 <p class="kpi-value">
                                     Themes
@@ -151,7 +164,7 @@
                                         <div class="theme-box" ng-repeat="item in themes"> {{item.theme}}</div>
                                     </div>
                                 </div>
-                            </div -->
+                            </div >
                         <div class="box-container theme-box-container column fillwide" >
                             <p class="kpi-value">
                                 Priorities
@@ -168,23 +181,25 @@
                                     </div>
                                 </div> 
                             </div>
-                        </div>
-
+                        </div -->
+                        <!--spare classes..       -->
                         <div class="box-container theme-box-container column fillwide">
                             <div ods-adv-analysis="measuresgrants"
                                  ods-adv-analysis-context="apmg"
-                                 ods-adv-analysis-group-by="measure"
+                                 ods-adv-analysis-group-by="biodiversity_priority, measure"
                                  ods-adv-analysis-order-by="measure">
                                 <div class="table-module">
                                     <table class="table-basic">
                                         <tbody>
                                             <thead>
                                                 <tr class="kpi-value">
+                                                    <th>Priority</th>
                                                     <th>Measure</th>
                                                     <th>Grants</th>
                                                 </tr>
                                             </thead>
                                             <tr ng-repeat="record in measuresgrants">
+                                                <td>{{ record['biodiversity_priority']}}</td>
                                                 <td >{{ record['measure']}}</td>
                                                 <td>
                                                     <div ods-adv-analysis="linkgrants"

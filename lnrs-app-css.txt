@@ -133,12 +133,13 @@
 
 /* UL formatting ------------------------ */
 
-ul {
+ol, ul {
 
     list-style-type: disc;      /* Type of bullet point */
     list-style-position: inside; /* Position of bullet inside the list content */
     padding-left: 0;            /* Remove default padding */
     margin-left: 0;             /* Aligns the list to the left edge of its container */
+    overflow-y: auto;
 }
 
 li {
@@ -149,7 +150,8 @@ li {
 /* Table Module Basic
 ========================================================================== */
 .table-module {
-    height: 300px;
+    height: -webkit-fill-available;
+    min-height: 300px;
     overflow-y: auto;
     overflow-x: auto;
 }
@@ -240,7 +242,7 @@ h2 {
 /* */
 .description{
     height: 350px;
-    overflow: scroll;
+    overflow-y: auto;
 }
 .box-column{
     min-width: 200px;
@@ -256,8 +258,8 @@ h2 {
 }
 
 .odswidget-map__map {
-height: 100%;
-min-height: 800px;
+    height: 100%;
+    min-height: 800px;
 }
 
 .ods-box{
@@ -271,9 +273,8 @@ min-height: 800px;
     justify-content: center;
     flex-direction: column;
     margin:20px 0;
-
-
 }
+
 .theme-box{
     background-color: #CCD5F3;
     border-radius: 10px;
@@ -307,3 +308,5 @@ dd {
 .area-div {
     height: 650px;
 }
+
+
