@@ -55,7 +55,7 @@
 
 }
 .map-drawer-container__drawer__full {
-    overflow: scroll;
+    overflow: hidden;
     right: calc(-1 * var(--map-width));
     width: calc(var(--map-width) - var(--backdrop-width-when-modal-active));
     z-index: 10;
@@ -160,6 +160,7 @@ li {
     display: table;
     border-collapse: collapse;
     width: 100%;
+    overflow-y: auto;
     white-space: normal; /* Change to 'normal' to allow text wrapping */
     background-color: transparent; /* Change to 'transparent' for transparent background */
 }
@@ -169,7 +170,6 @@ li {
     background-color: #ffffff;
     font-weight: 500;
     padding: 13px 3px;
-    position: sticky;
     top: 0;
     z-index: 1;
 }
@@ -183,6 +183,8 @@ li {
 .table-basic tbody th {
     font-weight: normal;
     border-top: 1px solid #dee5ef;
+    overflow: auto;
+    
 }
 
 .table-basic tr td {
@@ -235,6 +237,7 @@ h2 {
         margin-right: 0;
     }
 }
+
 .no-bg rect.highcharts-background {
     fill: transparent !important;
 }
@@ -276,9 +279,9 @@ h2 {
 }
 
 .theme-box{
-    background-color: #CCD5F3;
-    border-radius: 10px;
-    padding: 10px;
+    background-color: #ccd5f333;
+    border-radius: 5px;
+    padding: 5px;
 }
 .theme-container{
     display: flex;
@@ -305,8 +308,23 @@ dd {
     padding-left: 20px;
 }
 
+/*ods-facets {
+    position: sticky;
+}
+*/
+
 .area-div {
     height: 650px;
 }
 
+/* Sticky Content
+   ========================================================================== */
+.sticky-content {
+    position: sticky;
+    top: 0;
+    z-index: 12;
+    background-color: #FFF;
+    color: #FFFFFF;
+    padding: 3rem 20px;
+}
 
