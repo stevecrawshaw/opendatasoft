@@ -38,7 +38,7 @@
 }
 .map-drawer-container__backdrop--active {
     visibility: visible;
-    opacity: .25; /* make a more or less darker backdrop, 1:totally dark, 0:totally transparent (invisibile) */
+    opacity: .15; /* make a more or less darker backdrop, 1:totally dark, 0:totally transparent (invisibile) */
 }
 .map-drawer-container__drawer {
     position: absolute;
@@ -167,11 +167,16 @@ li {
 
 .table-basic thead th {
     color: var(--titles);
-    background-color: #ffffff;
     font-weight: 500;
-    padding: 13px 3px;
+    /*padding: 13px 3px;
     top: 0;
-    z-index: 1;
+    z-index: 1; */
+    top: 0;
+    z-index: 2;
+    background-color: #ffffff;
+    border-bottom: 2px solid #ccc;
+    padding: 13px 3px;
+    position: sticky;
 }
 
 
@@ -195,6 +200,11 @@ li {
     /* word-break: break-word;*/
 }
 
+.table-container {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: auto;
+    position: relative;
+}
 
 
 /* Dashboard layout css -----------------------------------*/
@@ -206,7 +216,10 @@ body, main {
 
 
 h2 {
-    font-weight: 500;
+    color: #354753;
+    font-size: 2rem;
+    font-weight: 400;
+    margin: 0;
 }
 
 .box {
@@ -296,7 +309,7 @@ h2 {
 }
 
 dl {
-    height: 550px;
+    height: 500px;
 }
 
 dt {
@@ -316,15 +329,3 @@ dd {
 .area-div {
     height: 650px;
 }
-
-/* Sticky Content
-   ========================================================================== */
-.sticky-content {
-    position: sticky;
-    top: 0;
-    z-index: 12;
-    background-color: #FFF;
-    color: #FFFFFF;
-    padding: 3rem 20px;
-}
-
