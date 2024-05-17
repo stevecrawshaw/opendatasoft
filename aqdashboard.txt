@@ -1,0 +1,1065 @@
+<div class="airquality"
+     ng-init="sensorsinfo = {
+              '215': {'name':'Parson Street', 'coords': '51.4326742393224, -2.6049601085130245'},
+              '501': {'name':'Colston Avenue', 'coords': '51.455267735390684, -2.5966507180541925'},
+              '270': {'name':'Wells Road', 'coords': '51.427862178807004, -2.563742255135503'},
+              '463': {'name':'Fishponds Road', 'coords': '51.478043411849846, -2.535231102620708'},
+              '203': {'name':'Brislington Depot', 'coords': '51.44174549248616, -2.5599573582772006'},
+              '452': {'name':'Bristol St. Pauls', 'coords': '51.46282815275512, -2.58454237'},
+              '500': {'name':'Bristol Temple Way', 'coords': '51.45794827448552, -2.58399068'},
+              '672': {'name':'Marlborough Street', 'coords': '51.4591419715, -2.595432718'}
+              };
+              info = { 'lastyear' : undefined }">
+
+    <h1>
+        Air Quality Dashboard
+    </h1>
+    <p style="text-align:center; font-size:1.5rem">
+        This dashboard will help you access real-time and historic <a href="/explore/?q=air+quality&sort=modified" target="_blank">air quality data.<i class="fa fa-external-link" aria-hidden="true"></i></a> <br />Map, plot and download the data using the tabs to navigate. </p>
+    <ods-dataset-context context="nox,continuoustubes,airqualitymanagementareas,airqualitymonitoringsites,sitesmap,no2diffusiontubedatacy,no2map,no2geomap,pm10"
+                         nox-domain="bristol"
+                         nox-dataset="air-quality-data-continuous"
+                         nox-parameters="{
+                                         'q':'date_time > #now(hours=-2)',
+                                         'disjunctive.siteid':true,
+                                         'refine.siteid':['270','463','203','501','215','452','500','672']}"
+                         continuoustubes-dataset="air-quality-data-continuous"
+                         continuoustubes-domain="bristol"
+                         continuoustubes-parameters="{'q':'NOT #null(no2)'}"
+
+                         airqualitymanagementareas-domain="bristol"
+                         airqualitymanagementareas-dataset="air-quality-management-areas"
+                         airqualitymonitoringsites-domain="bristol"
+                         airqualitymonitoringsites-dataset="air-quality-monitoring-sites" 
+                         airqualitymonitoringsites-parameters="{
+                                                               'disjunctive.pollutants':true,
+                                                               'refine.current':'True',
+                                                               'refine.instrumenttype':'Continuous (Reference)'}"
+                         sitesmap-domain="bristol"
+                         sitesmap-dataset="air-quality-monitoring-sites" 
+                         sitesmap-parameters="{}"
+                         no2diffusiontubedatacy-domain="bristol"
+                         no2diffusiontubedatacy-dataset="no2-diffusion-tube-data"
+                         no2diffusiontubedatacy-parameters="{
+                                                            'disjunctive.location':true,
+                                                            'sort':'year'}"
+                         no2map-domain="bristol"
+                         no2map-dataset="no2-diffusion-tube-data"
+                         no2map-parameters="{'sort':'year'}"
+                         no2geomap-domain="bristol"
+                         no2geomap-dataset="no2-diffusion-tube-data"
+                         no2geomap-parameters="{'disjunctive.siteid':true}"
+                         pm10-dataset="air-quality-data-continuous"
+                         pm10-parameters="{
+                                          'q':'date_time > #now(hours=-24)',
+                                          'disjunctive.siteid':true,
+                                          'refine.siteid':['501','452','500']}">
+        <!-- 'refine.pollutants':['NOX','NOX PM10','NOX PM2.5 PM10 O3','PM10 PM2.5']}" -->
+
+        <span ods-results="lastyearresults"
+              ods-results-context="no2diffusiontubedatacy"
+              ods-results-max="1">
+            {{ info.lastyear = lastyearresults[0].fields.year ; '' }}
+            <!-- gets the last current year from the results object -->
+        </span>
+
+        <div class="container">
+            <ods-tabs class="maintabs" layout="simple-nav">
+                <ods-pane title="Air quality now" pane-auto-unload="true">
+                    <div class="content">
+                        <h2>
+                            Current air quality at continuous analysers according to the <a href="https://uk-air.defra.gov.uk/air-pollution/daqi" target="_blank">National Air Quality Index <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                        </h2>
+                        <div class="kpis"
+                             ods-analysis="sensors"
+                             ods-analysis-context="nox"
+                             ods-analysis-x="siteid"
+                             ods-analysis-serie-no2="MAX(no2)"
+                             >
+                            <!--                         separate analysis for PM10 as the averaging period is 24 hours not hourly ------------------------------>
+                            <div ods-analysis="pmsensors"
+                                 ods-analysis-context="pm10"
+                                 ods-analysis-x="siteid"
+                                 ods-analysis-serie-pm10="AVG(pm10)">
+
+                                <div class="kpi-margin col-md-4 col-sm-6 col-xs-12"
+                                     ng-repeat="sensor in sensors.results"
+                                     ng-if="sensor.no2"
+                                     ng-init="pop = {'state':false}">
+                                    {{ sensor.grade = (sensor.no2>600?'VERY HIGH':(sensor.no2>400?'HIGH':(sensor.no2>200?'MODERATE':'LOW'))) ; '' }}
+                                    <!-- ternary assignment of sensor grades to values of instantaneous NO2 -->
+                                    <div class="ods-pop-in" 
+                                         ng-if="pop.state">
+                                        <div class="ods-pop-in__container iframe-container">
+                                            <!--iframe ng-src="{{ 'https://opendata.bristol.gov.uk/pages/aqcontinuoussites/?q=siteid:' + sensor.x }}" width="100%" height="calc(100vh - 200px)"/-->
+                                            <!-- This bit pops in the drawer of the site page if selected from the link - the page is refernced below-->
+                                            <iframe ng-src="{{ '/pages/aqcontinuoussites/?headless=true&q=siteid:' + sensor.x }}" 
+                                                    width="100%" height="calc(100vh - 300px)" frameBorder="0"/>
+                                        </div>
+                                        <div class="ods-pop-in__backdrop" ng-click="pop.state = close"></div>
+                                        <!--if the user clicks on the background, the pop.state goes to close and the page disappears -->
+                                    </div>
+                                    <div class="kpi {{ (sensor.grade | slugify) + 'grade' }}"
+                                         ng-click="pop.state = true"
+                                         style="{{ 'background: linear-gradient( rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75) );' }}"> 
+                                        <!-- , url(http://maps.bristol.gov.uk/media/airquality/full/' + sensor.x + '.jpg)  This bit makes the photos as background-->
+                                        <!-- {{ (sensor.grade | slugify) + 'grade' }} converts LOWgrade to lowgrade using slugify and sets the KPI class i.e. green for lowgrade-->
+                                        <div class="kpi-title">
+                                            <ods-geotooltip coords="sensorsinfo[sensor.x].coords">
+                                                {{ sensorsinfo[sensor.x].name }}
+                                                <!-- the name of the site derived from the odsAnalysis -->
+                                            </ods-geotooltip>
+                                        </div>
+                                        <div class="kpi-subtitle">
+                                            Air Quality Index (pollution) is <span class="kpi-sensorgrade">{{ sensor.grade }}</span>
+                                        </div>
+                                        <div ng-if="sensor.no2" class="kpi-value">
+                                            <div class="kpi-value-metric">
+                                                {{ sensor.no2 | number: 0 }} &mu;gm<sup>-3</sup>
+                                            </div>
+                                            <div class="kpi-value-description">
+                                                Hourly mean NO<sub>2</sub>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <ods-gauge display-mode="bar" value="sensor.no2" max="800"></ods-gauge>
+                                        </div>
+                                        <div class="gauge-scale">
+                                            <div class="gauge-scale-veryhigh" ods-tooltip="Very High band: above 600 &mu;gm<sup>-3</sup>">
+                                                V H
+                                            </div>
+                                            <div class="gauge-scale-high" ods-tooltip="High band: from 400 to 600 &mu;gm<sup>-3</sup>">
+                                                H
+                                            </div>
+                                            <div class="gauge-scale-moderate" ods-tooltip="Moderate band: from 200 to 400 &mu;gm<sup>-3</sup>">
+                                                M
+                                            </div>
+                                            <div class="gauge-scale-low" ods-tooltip="Low band: from 0 to 200 &mu;gm<sup>-3</sup>">
+                                                L
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-if="!sensor.no2" class="kpi-value">
+                                        NO<sub>2</sub> analyser is temporarily offline
+                                    </div>
+                                </div>
+                        
+                                <!---------------------------------------------------------- PM10 sensor below  --------------------------->
+                                <div class="kpi-margin col-md-4 col-sm-6 col-xs-12"
+                                     ng-repeat="pmsensor in pmsensors.results"
+                                     ng-if="pmsensor.pm10"
+                                     ng-init="pop = {'state':false}">
+                                    {{ sensor.grade = (pmsensor.pm10>200?'FAULT':(pmsensor.pm10>100?'VERY HIGH':(pmsensor.pm10>75?'HIGH':(pmsensor.pm10>50?'MODERATE':'LOW')))) ; '' }}
+                                    <!-- ternary operators to determine banding of PM10 from the sensors odsAnalysis -->
+                                    <div class="ods-pop-in" 
+                                         ng-if="pop.state">
+                                        <div class="ods-pop-in__container iframe-container">
+                                            <!--iframe ng-src="{{ 'https://opendata.bristol.gov.uk/pages/aqcontinuoussites/?q=siteid:' + sensor.x }}" width="100%" height="calc(100vh - 200px)"/-->
+                                            <iframe ng-src="{{ '/pages/aqcontinuoussites/?headless=true&q=siteid:' + pmsensor.x }}" 
+                                                    width="100%" height="calc(100vh - 300px)" frameBorder="0"/>
+                                        </div>
+                                        <div class="ods-pop-in__backdrop" ng-click="pop.state = close"></div>
+                                    </div>
+                                    <div class="kpi {{ (sensor.grade | slugify) + 'grade' }}"
+                                         ng-click="pop.state = true"
+                                         style="{{ 'background: linear-gradient( rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75) );' }}">
+                                        <!-- , url(http://maps.bristol.gov.uk/media/airquality/full/' + pmsensor.x + '.jpg) background pthotos -->
+                                        <div class="kpi-title">
+                                            <ods-geotooltip coords="sensorsinfo[pmsensor.x].coords">
+                                                {{ sensorsinfo[pmsensor.x].name }}
+                                            </ods-geotooltip> 
+                                        </div>
+                                        <div class="kpi-subtitle">
+                                            <div ng-if="sensor.grade != 'FAULT'">
+                                                Air Quality Index (pollution) is <span class="kpi-sensorgrade" >{{ sensor.grade }}</span>
+                                            </div>
+
+                                            <div ng-if="sensor.grade == 'FAULT'">
+                                                <b>PM<sub>10</sub> Instrument Fault</b>
+                                            </div>
+                                        </div>
+                                        <div ng-if="pmsensor.pm10" class="kpi-value">
+                                            <div class="kpi-value-metric">
+                                                {{ pmsensor.pm10 | number: 0 }} &mu;gm<sup>-3</sup>
+                                            </div>
+                                            <div class="kpi-value-description">
+                                                24 Hour mean PM<sub>10</sub>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <ods-gauge display-mode="bar" value="pmsensor.pm10" max="225"></ods-gauge>
+                                        </div>
+                                        <div class="gauge-scale pm10">
+                                            <div class="gauge-scale-fault" ods-tooltip="Instrument Fault">
+                                                F
+                                            </div>
+                                            <div class="gauge-scale-veryhigh" ods-tooltip="Very High band: from 100 to 200 &mu;gm<sup>-3</sup>">
+                                                V H
+                                            </div>
+                                            <div class="gauge-scale-high" ods-tooltip="High band: from 75 to 100 &mu;gm<sup>-3</sup>">
+                                                H
+                                            </div>
+                                            <div class="gauge-scale-moderate" ods-tooltip="Moderate band: from 50 to 75 &mu;gm<sup>-3</sup>">
+                                                M
+                                            </div>
+                                            <div class="gauge-scale-low" ods-tooltip="Low band: from 0 to 50 &mu;gm<sup>-3</sup>">
+                                                L
+                                            </div>
+                                        </div>
+                                        <div ng-if="!pmsensor.pm10" class="kpi-value">
+                                            PM<sub>10</sub> analyser is temporarily offline
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ods-pane>
+                <ods-pane title="Map" pane-auto-unload="true">
+                    {{ no2diffusiontubedatacy.parameters['refine.year'] = info.lastyear ; '' }}
+                    <!-- refine the no2 tubes context so that we just have the last year -->
+                    <div class="content">
+                        <div class="map-drawer-container"
+                             ng-class="{
+                                       'map-drawer-container--active': 
+                                       no2map.parameters['refine.siteid'] || 
+                                       sitesmap.parameters['refine.siteid'] ||
+                                       no2geomap.parameters['refine.siteid'],
+                                       'map-drawer-container--active-full': drawer.status}"
+                             ng-init="drawer = {'status':false};
+                                      layerselection = {'areas':true, 'monitors':true, 'tubes':true}">    
+                            <div class="map-drawer-container__map">
+                                <div class="map-drawer-container__backdrop"
+                                     ng-click="sitesmap.parameters['refine.siteid'] = undefined;
+                                               no2map.parameters['refine.siteid'] = undefined;"
+                                     ng-class="{'map-drawer-container__backdrop--active': no2map.parameters['refine.siteid'] || sitesmap.parameters['refine.siteid']}">
+                                </div>
+                                <ods-map no-refit="true"
+                                         scroll-wheel-zoom="true"
+                                         display-control="false"
+                                         toolbar-fullscreen="false"
+                                         toolbar-geolocation="true" 
+                                         basemap="jawg.light" location="13,51.45296,-2.5701">
+                                    <ods-map-layer-group>
+                                        <ods-map-layer show-if="layerselection.tubes" 
+                                                       context="no2diffusiontubedatacy"
+                                                       picto="dot"
+                                                       show-marker="false"
+                                                       display="raw"
+                                                       color-ranges="green;40;red;60;purple"
+                                                       color-by-field="conc_ugm3"
+                                                       point-opacity="1"
+                                                       caption-picto-color="#E5E5E5"
+                                                       size="6"
+                                                       title="NO2 diffusion tubes"
+                                                       refine-on-click-context="no2map"
+                                                       refine-on-click-map-field="siteid"
+                                                       refine-on-click-context-field="siteid"
+                                                       refine-on-click-replace-refine="true"> 
+                                        </ods-map-layer>
+                                    </ods-map-layer-group>
+                                    <ods-map-layer-group>
+                                        <ods-map-layer show-if="layerselection.monitors"
+                                                       context="airqualitymonitoringsites"
+                                                       title="Continuous Air Quality Monitors"
+                                                       refine-on-click-context="sitesmap"
+                                                       refine-on-click-map-field="siteid"
+                                                       refine-on-click-context-field="siteid"
+                                                       refine-on-click-replace-refine="true"
+                                                       color="#336179">
+                                        </ods-map-layer>
+                                    </ods-map-layer-group>
+                                    <ods-map-layer-group>
+                                        <ods-map-layer show-if="layerselection.areas" color="#336179" 
+                                                       context="airqualitymanagementareas" title="Air Quality Management Area"
+                                                       shape-opacity="0.5">
+                                        </ods-map-layer>                     
+
+                                    </ods-map-layer-group>
+                                </ods-map>
+                                <div class="map-control">
+                                    <ul class="odswidget-map-display-control__groups" style="max-height: calc(464px);">
+                                        <li class="ng-scope odswidget-map-display-control__group"
+                                            ng-click="layerselection.tubes = !layerselection.tubes"
+                                            ng-class="{'odswidget-map-display-control__group--disabled': !layerselection.tubes}" 
+                                            style="border-left-color: rgb(229, 229, 229);">
+                                            <span class="odswidget-map-display-control__group-title" ods-tooltip="Small, passive devices that measure NO2 over a month">NO2 diffusion tubes</span>
+                                            <div class="map-control-icons">
+                                                <svg id="dot-icon" width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" 
+                                                     xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                                     xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" 
+                                                     style="fill: green; width: 35px; height: 35px;">
+                                                    <path d="M13,9.50004202 C13,11.4330618 11.4329777,13.000084 9.49995798,13.000084 C7.56693813,13.000084 5.99991595,11.4330618 5.99991595,9.50004202 C5.99991595,7.56702218 7.56693813,6 9.49995798,6 C11.4329777,6 13,7.56702218 13,9.50004202 L13,9.50004202 Z" 
+                                                          fill="#000000" style="fill: green;"></path>
+                                                </svg>
+                                                <svg id="dot-icon" width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" 
+                                                     xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                                     xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" 
+                                                     style="fill: red; width: 35px; height: 35px;">
+                                                    <path d="M13,9.50004202 C13,11.4330618 11.4329777,13.000084 9.49995798,13.000084 C7.56693813,13.000084 5.99991595,11.4330618 5.99991595,9.50004202 C5.99991595,7.56702218 7.56693813,6 9.49995798,6 C11.4329777,6 13,7.56702218 13,9.50004202 L13,9.50004202 Z" 
+                                                          fill="#000000" style="fill: red;"></path>
+                                                </svg>
+                                                <svg id="dot-icon" width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" 
+                                                     xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                                     xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" 
+                                                     style="fill: purple; width: 35px; height: 35px;">
+                                                    <path d="M13,9.50004202 C13,11.4330618 11.4329777,13.000084 9.49995798,13.000084 C7.56693813,13.000084 5.99991595,11.4330618 5.99991595,9.50004202 C5.99991595,7.56702218 7.56693813,6 9.49995798,6 C11.4329777,6 13,7.56702218 13,9.50004202 L13,9.50004202 Z" 
+                                                          fill="#000000" style="fill: purple;"></path>
+                                                </svg>
+                                            </div>
+                                        </li>
+                                        <li class="ng-scope odswidget-map-display-control__group"
+                                            ng-click="layerselection.monitors = !layerselection.monitors"
+                                            ng-class="{'odswidget-map-display-control__group--disabled': !layerselection.monitors}" 
+                                            style="border-left-color: rgb(229, 229, 229);">
+                                            <span class="odswidget-map-display-control__group-title" ods-tooltip="Sophisticated instruments that measure pollution every 15 minutes">Continuous Air Quality Monitors</span>
+                                            <div class="leaflet-vectormarker" tabindex="0" style="width: 24px; height: 41px; position: relative;">
+                                                <svg id="svg-vectormarker-marker" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 56">
+                                                    <g id="svg-vectormarker" fill-rule="nonzero" fill="none">
+                                                        <path fill="rgb(51,97,121)" fill-rule="evenodd" d="M16 0C7.222 0 0 7.217 0 16.157c0 4.86 1.03 8.446 2.66 12.027L16 56l13.34-27.816c1.63-3.58 2.66-7.167 2.66-12.027C32 7.217 24.778 0 16 0z"></path>
+                                                        <path stroke="rgb(157,202,229)" d="M16 54.844l12.886-26.868c1.79-3.933 2.614-7.42 2.614-11.82C31.5 7.52 24.527.5 16 .5 7.473.5.5 7.52.5 16.157c0 4.4.824 7.886 2.61 11.81L16 54.844z"></path>
+                                                    </g>
+                                                </svg>
+                                                <div class="leaflet-vectormarker-iconoverlay" style="opacity: 1; top: 4px"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+                                                    <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" 
+                                                         xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" 
+                                                         style="fill: white; width: 14px; height: 14px;">
+                                                        <path d="M18,9.50004182 C18,14.1944851 14.1944015,18.0000836 9.49995818,18.0000836 C4.80551469,18.0000836 0.99991635,14.1944851 0.99991635,9.50004182 C0.99991635,4.80559834 4.80551469,1 9.49995818,1 C14.1944015,1 18,4.80559834 18,9.50004182 L18,9.50004182 Z" 
+                                                              fill="#000000" style="fill: white;"></path>
+                                                        <rect style="opacity: 0; fill: white;" x="0" y="0" width="19" height="19"></rect>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="ng-scope odswidget-map-display-control__group"
+                                            ng-click="layerselection.areas = !layerselection.areas"
+                                            ng-class="{'odswidget-map-display-control__group--disabled': !layerselection.areas}" 
+                                            style="border-left-color: rgb(229, 229, 229);">
+                                            <span class="odswidget-map-display-control__group-title" ods-tooltip="The area that includes all polluted locations">Air Quality Management Area</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="map-legend" ng-show="layerselection.tubes">
+                                    <!-- would be good to turn off when the diffusion tube layer is deselected -->
+                                    <div class="col-md-4 col-sm-3 col-xs-4">
+                                        <i class="fa fa-circle green" aria-hidden="true"> </i>
+                                        <strong>Annual mean NO<sub>2</sub> is <b>below 40 &mu;gm<sup>-3</sup> (compliant)</b></strong> </div>
+                                    <div class="col-md-4 col-sm-3 col-xs-4">
+                                        <i class="fa fa-circle red" aria-hidden="true"> </i>
+                                        <strong>Annual mean NO<sub>2</sub> is <b>above 40 &mu;gm<sup>-3</sup> (non - compliant)</b></strong></div>
+                                    <div class="col-md-4 col-sm-3 col-xs-4">
+                                        <i class="fa fa-circle purple" aria-hidden="true"></i>
+                                        <strong> Annual mean NO<sub>2</sub> is <b>above 60 &mu;gm<sup>-3</sup></b> (risk of breaking hourly limit)</strong></div>
+                                </div>
+                            </div>
+                            <div class="map-drawer-container__info">
+                                <h2>
+                                    Select a site on the map
+                                </h2>
+                                <h3>
+                                    or
+                                </h3>
+                                <h2>
+                                    Draw a selection on the map
+                                </h2>
+                            </div>
+
+                            <div class="map-drawer-container__drawer map-drawer-container__drawer__partial">                      
+                                <div class="map-drawer-container__drawer__close"
+                                     ng-show="!(no2diffusiontubedatacy.parameters['geofilter.polygon'] || no2diffusiontubedatacy.parameters['geofilter.distance'])"
+                                     ng-click="sitesmap.parameters['refine.siteid'] = undefined;
+                                               no2map.parameters['refine.siteid'] = undefined;
+                                               drawer.status = false">
+                                    <i class="fa fa-times"></i>
+                                </div>
+                                {{ no2geomap.parameters['refine.siteid'].lenght }} <!-- ----------------TYPO--------------------- -->
+
+                                <!-- NO2 MAP Partial -->
+                                <div ng-if="no2map.parameters['refine.siteid']">
+                                    <div ods-results="sites"
+                                         ods-results-context="no2map"
+                                         ods-results-max="1"
+                                         ng-repeat="site in sites">
+                                        <h2>
+                                            {{site.fields.location}}
+                                        </h2>
+                                        <h3>
+                                            Site ID: {{ site.fields.siteid }}
+                                        </h3>
+                                        <div>
+                                            NO<sub>2</sub> annual mean concentration in {{site.fields.year}} is 
+                                            <span ng-class="{'green': site.fields.conc_ugm3 <=40,
+                                                            'red': site.fields.conc_ugm3 >40}">
+                                                {{site.fields.conc_ugm3.toFixed(1)}} &mu;gm<sup>-3</sup>
+                                            </span> 
+                                        </div>
+                                    </div>
+                                    <div class="ods-button"
+                                         ng-click="drawer.status = !drawer.status">
+                                        View historical data
+                                    </div>
+                                </div>
+
+                                <!-- SITE MAP Partial -->
+                                <div ng-if="sitesmap.parameters['refine.siteid']">
+                                    <div ods-results="sites"
+                                         ods-results-context="sitesmap"
+                                         ods-results-max="1"
+                                         ng-repeat="site in sites">
+                                        <h2>
+                                            {{site.fields.location}}
+                                        </h2>
+                                        <h3>
+                                            Site ID: {{ site.fields.siteid }}
+                                        </h3>
+                                        <h4>Pollutants measured: {{site.fields.pollutants}}</h4>
+                                    </div>
+                                    <div class="ods-button"
+                                         ng-click="drawer.status = !drawer.status">
+                                        View site
+                                    </div>
+                                </div>
+
+                                <!-- GEOFilter PArtial -->
+                                <div ng-if="no2diffusiontubedatacy.parameters['geofilter.polygon'] || no2diffusiontubedatacy.parameters['geofilter.distance']"
+                                     ng-init="sites = { 'ids': []}">
+                                    <h3>
+                                        Selected SiteIDs
+                                    </h3>
+                                    <span ods-facet-results="facets"
+                                          ods-facet-results-context="no2diffusiontubedatacy"
+                                          ods-facet-results-facet-name="siteid"
+                                          style="opacity:0">
+                                        {{ sites.ids = (facets|toObject:'name'|keys) ; '' }}
+                                    </span>
+                                    <div class="id-list"
+                                         ng-if="sites.ids.length > 0">
+                                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                        <span class="id-selection" ng-repeat="site in sites.ids">{{ site }}</span>
+                                    </div>
+                                    <div class="ods-button"
+                                         ng-if="sites.ids.length > 0"
+                                         ng-click="drawer.status = !drawer.status">
+                                        View historical chart and table
+                                    </div>
+                                    <div class="id-list-warning"
+                                         ng-if="sites.ids.length <= 15">
+                                        Use the <i class="fa fa-trash" aria-hidden="true"></i> to cancel your selection
+                                    </div>
+                                    <div class="id-list-warning"
+                                         ng-if="sites.ids.length > 15">
+                                        You selected a large list of sites, we strongly advise you to reduce it (by drawing a smaller selection, or deleting the current one with <i class="fa fa-trash" aria-hidden="true"></i>) for more visibility
+                                    </div>
+                                    {{ no2geomap.parameters['refine.siteid'] = 
+                                    (no2diffusiontubedatacy.parameters['geofilter.polygon']||no2diffusiontubedatacy.parameters['geofilter.distance']?
+                                    sites.ids:undefined); '' }}
+                                </div>
+                            </div>
+                            <div class="map-drawer-container__drawer map-drawer-container__drawer__full">
+                                <!-- NO2 MAP Partial -->
+                                <div ng-if="no2map.parameters['refine.siteid']">
+                                    <ods-chart align-month="true"
+                                               single-y-axis="true">
+                                        <ods-chart-query context="no2map"
+                                                         field-x="year"
+                                                         maxpoints="0"
+                                                         timescale="year">
+                                            <ods-chart-serie expression-y="conc_ugm3"
+                                                             chart-type="line"
+                                                             label-y="NO2 ugm-3"
+                                                             function-y="AVG"
+                                                             color="#0B72B5"
+                                                             scientific-display="true">
+                                            </ods-chart-serie>
+                                            <ods-chart-serie expression-y="40"
+                                                                     chart-type="line"
+                                                                     function-y="CONSTANT"
+                                                                     label-y="Compliance Limit"
+                                                                     color="red"
+                                                                     scientific-display="true">
+                                                    </ods-chart-serie>
+                                        </ods-chart-query>
+                                    </ods-chart>
+                                    <h2>
+                                       Data table 
+                                    </h2>
+                                    <ods-table
+                                               context="no2map"
+                                              displayed-fields="siteid, location, year, conc_ugm3, count">
+                                    </ods-table>
+                                    <ul>
+                                        <li class="ods-button">
+                                            <a href="{{no2map.getDownloadURL('xls')}}">
+                                                Download Data (xls) 
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- SITE MAP Partial -->
+                                <div ng-if="sitesmap.parameters['refine.siteid']">
+                                    <div ods-results="sites"
+                                         ods-results-context="sitesmap"
+                                         ods-results-max="1"
+                                         ng-repeat="site in sites">
+                                        <img ng-src="http://maps.bristol.gov.uk/media/airquality/full/{{site.fields.photopath.filename}}"
+                                             alt="Photo of {{site.fields.location}} monitoring site"
+                                             height="300" width="450"/>
+                                        <h4 ng-if="site.fields.current='True'">
+                                            The site is operating
+                                        </h4>
+
+                                        <!-- BRISTOL SITES -->
+                                        <h3 ng-if="site.fields.siteid==463 || 
+                                                   site.fields.siteid==215 || 
+                                                   site.fields.siteid==270 || 
+                                                   site.fields.siteid==203 || 
+                                                   site.fields.siteid==501 ||
+                                                   site.fields.siteid==672">
+                                            <a href="https://opendata.bristol.gov.uk/pages/aqcontinuoussites/?q=siteid:{{site.fields.siteid}}" 
+                                               target="_blank" >
+                                                Monitor page: data and charts <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                        </h3>
+                                        <!-- AURN  -->
+                                        <h3 ng-if="site.fields.siteid==452">
+                                            National (AURN) Site run by Defra
+                                            <a href="https://uk-air.defra.gov.uk/networks/site-info?uka_id=UKA00494" 
+                                               target="_blank" >
+                                                Monitor page: External (Defra) site <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                        </h3>
+                                        <!-- Temple WAY  -->
+                                        <h3 ng-if="site.fields.siteid==500">
+                                            BCC Site Affiliated to AURN
+                                            <a href="https://uk-air.defra.gov.uk/networks/site-info?uka_id=UKA00631" 
+                                               target="_blank" >
+                                                Monitor page: External (Defra) site <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <!-- GEOFilter PArtial -->
+                                <div ng-if="no2diffusiontubedatacy.parameters['geofilter.polygon'] || no2diffusiontubedatacy.parameters['geofilter.distance']">
+                                    <div class="map-drawer-container__drawer__close"
+                                         ng-click="drawer.status = false">
+                                        <i class="fa fa-times"></i> 
+                                    </div>
+                                    <ods-tabs class="geotabs" layout="simple-nav">
+                                        <ods-pane title="Column chart" pane-auto-unload="true">
+                                            <ods-chart 
+                                                       single-y-axis="true"
+                                                       align-month="true"
+                                                       single-y-axis-label="NO2 ugm-3"
+                                                       id="chartsizemain">
+                                                <ods-chart-query
+                                                                 context="no2geomap"
+                                                                 field-x="year"
+                                                                 maxpoints="0"
+                                                                 timescale="year" >
+                                                    <ods-chart-serie expression-y="40"
+                                                                     chart-type="line"
+                                                                     function-y="CONSTANT"
+                                                                     label-y="Compliance Limit"
+                                                                     color="red"
+                                                                     scientific-display="true">
+                                                    </ods-chart-serie>
+                                                    <ods-chart-serie expression-y="conc_ugm3"
+                                                                     chart-type="line"
+                                                                     function-y="AVG"
+                                                                     color="blue"
+                                                                     label-y="Trend"
+                                                                     scientific-display="true" >
+                                                    </ods-chart-serie>
+                                                </ods-chart-query>
+                                                <ods-chart-query context="no2geomap"
+                                                                 field-x="year"
+                                                                 maxpoints="0"
+                                                                 timescale="year"
+                                                                 series-breakdown="location" >
+                                                    <ods-chart-serie expression-y="conc_ugm3"
+                                                                     chart-type="column"
+                                                                     function-y="AVG"
+                                                                     color="range-Accent"
+                                                                     scientific-display="true">
+                                                    </ods-chart-serie>
+                                                </ods-chart-query>
+                                            </ods-chart>
+                                        </ods-pane>
+                                        <ods-pane title="Table" pane-auto-unload="true">
+                                            <ods-table context="no2geomap"></ods-table>
+                                        </ods-pane>
+                                        <ods-pane title="Export" pane-auto-unload="true">
+                                            <div class="geoexport">
+                                                <h2>Download air quality data for selected sites</h2>
+                                                <div class="geoexport-buttons">
+                                                    <a class="ods-button" href="{{no2geomap.getDownloadURL('csv')}}">CSV file</a> 
+                                                    <a class="ods-button" href="{{no2geomap.getDownloadURL('json')}}">JSON file</a> 
+                                                    <a class="ods-button" href="{{no2geomap.getDownloadURL('xls')}}}">Excel file</a> 
+                                                </div>  
+                                            </div>
+                                        </ods-pane>
+                                    </ods-tabs>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </ods-pane>
+                <ods-pane title="Statistics" pane-auto-unload="true">
+                    {{ no2diffusiontubedatacy.parameters['refine.year'] = undefined }}
+                    <div class="content stats"
+                         ng-init="selector = {'switch':false,
+                                  'selectedyear':undefined}">
+                        <div class="row selectors">
+                            <!-- The switch -->
+                            <div class="col-xs-6 control-toggle">
+                                <div class="toggle-button-label" ng-class="{'toggle-button-label--selected': !selector.switch}" ods-tooltip="Small, passive devices that measure NO2 over a month">
+                                    Diffusion tubes
+                                </div>
+                                <div class="switch">
+                                    <input id="values-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="values-toggle-1" ng-click="selector.switch=!selector.switch;
+                                                                           selector.selectedyear = undefined"></label>
+                                    <!-- very important to reset selected year here : if you switch from on dataset to another, 
+                                        and if the selected year doesn't exists in the other dataset, keeping the selection might lead 
+                                        to strange behavior, ie empty tabs because sometimes to tab loads faster than the new date selector
+                                         and keep the old date selection -->
+                                </div>
+                                <div class="toggle-button-label" ng-class="{'toggle-button-label--selected': selector.switch}" ods-tooltip="Sophisticated instruments that measure pollution every 15 minutes">
+                                    Continuous monitors
+                                </div>
+                            </div>
+
+                            <!-- diffusion tube select -->
+                            <div ng-if="!selector.switch"
+                                 class="col-xs-6 date-controler">
+                                <div ods-facet-results="years"
+                                     ods-facet-results-context="no2diffusiontubedatacy"
+                                     ods-facet-results-facet-name="year">
+
+                                    <!-- feed the select/list with the year list then --> 
+                                    <div class="controler" 
+                                         ng-if="years"
+                                         ng-init="max = years.length-1;
+                                                  selection = max;">
+                                        <div class="input-range-with-button">
+                                            <div class="controler-button" 
+                                                 ng-class="{'disabled': selection == 0}"
+                                                 ng-click="selection = (selection<1?selection:selection-1)">
+                                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="controler-button controler-selection">
+                                                <select ng-model="selection">
+                                                    <option ng-repeat="(i,year) in years"
+                                                            ng-selected="selection == i"
+                                                            value="{{ 1*i }}">
+                                                        {{ year.name }} - {{ year.count }} sites
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="controler-button" 
+                                                 ng-class="{'disabled': selection == max}"
+                                                 ng-click="selection = (selection>=max?1*selection:1*selection+1)">
+                                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                            </div>
+                                            {{ selector.selectedyear = years[selection].path ; '' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- continuous tube select -->
+                            <div ng-if="selector.switch"
+                                 class="col-xs-6 date-controler">
+                                <div ods-facet-results="years"
+                                     ods-facet-results-context="continuoustubes"
+                                     ods-facet-results-facet-name="date_time">
+
+                                    <!-- feed the select/list with the year list then --> 
+                                    <div class="controler" 
+                                         ng-if="years"
+                                         ng-init="max = years.length-1;
+                                                  selection = max;">
+                                        <div class="input-range-with-button">
+                                            <div class="controler-button" 
+                                                 ng-class="{'disabled': selection == 0}"
+                                                 ng-click="selection = (selection<1?selection:selection-1)">
+                                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="controler-button controler-selection">
+                                                <select ng-model="selection">
+                                                    <option ng-repeat="(i,year) in years"
+                                                            ng-selected="selection == i"
+                                                            value="{{ 1*i }}">
+                                                        {{ year.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="controler-button" 
+                                                 ng-class="{'disabled': selection == max}"
+                                                 ng-click="selection = (selection>=max?1*selection:1*selection+1)">
+                                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                            </div>
+                                            {{ selector.selectedyear = years[selection].path ; '' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-if="!selector.switch && selector.selectedyear">
+                            <ods-dataset-context context="stats40,stats60,statsdatacapture"
+                                                 stats40-dataset="no2-diffusion-tube-data"
+                                                 stats40-parameters="{'sort':'conc_ugm3', 
+                                                                     'q':'conc_ugm3>40',
+                                                                     'refine.year':selector.selectedyear}"
+                                                 stats60-dataset="no2-diffusion-tube-data"
+                                                 stats60-parameters="{'q':'conc_ugm3>60',
+                                                                     'refine.year':selector.selectedyear}"
+                                                 statsdatacapture-dataset="no2-diffusion-tube-data"
+                                                 statsdatacapture-parameters="{'q':'count<9',
+                                                                              'refine.year':selector.selectedyear}">
+                                <div ods-aggregation="morethan40,morethan60,datacapture"
+                                     ods-aggregation-morethan40-context="stats40"
+                                     ods-aggregation-morethan40-function="COUNT"
+                                     ods-aggregation-morethan60-context="stats60"
+                                     ods-aggregation-morethan60-function="COUNT"
+                                     ods-aggregation-datacapture-context="statsdatacapture"
+                                     ods-aggregation-datacapture-function="COUNT"
+                                     ng-init="select = {'sites':0, 'stat': 'stats40'}">
+
+                                    {{ stats40.parameters['refine.year'] = selector.selectedyear;
+                                    stats60.parameters['refine.year'] = selector.selectedyear;
+                                    statsdatacapture.parameters['refine.year'] = selector.selectedyear; "" }}
+
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <div class="kpi"
+                                                 ng-class="{'kpi-selected': select.stat == 'stats40'}"
+                                                 ng-click="select.stat = 'stats40'">
+                                                <div class="kpi-title">
+                                                    Number of sites &gt; 40 &mu;gm<sup>-3</sup>
+                                                    <div class="kpi-title-lower">(annual compliance limit)</div>
+                                                </div>
+
+                                                <div class="kpi-value">
+                                                    <div class="kpi-value-metric">
+                                                        {{ morethan40 | number}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <div class="kpi"
+                                                 ng-class="{'kpi-selected': select.stat == 'stats60'}"
+                                                 ng-click="select.stat = 'stats60'">
+                                                <div class="kpi-title">
+                                                    Number of sites &gt; 60 &mu;gm<sup>-3</sup>
+                                                    <div class="kpi-title-lower">(risk of breaking hourly limit)</div>
+                                                </div>
+                                                <div class="kpi-value">
+                                                    <div class="kpi-value-metric">
+                                                        {{ morethan60 | number}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <div class="kpi"
+                                                 ng-class="{'kpi-selected': select.stat == 'statsdatacapture'}"
+                                                 ng-click="select.stat = 'statsdatacapture'">
+                                                <div class="kpi-title">
+                                                    Number of sites &lt; 75% Data Capture
+                                                    <div class="kpi-title-lower">(minimum data capture)</div>
+                                                   </div>
+                                                <div class="kpi-value">
+                                                    <div class="kpi-value-metric">
+                                                        {{ datacapture | number}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row stats-table-and-export"
+                                         ng-if="select.stat == 'stats40'">
+                                        <h3>
+                                            Sites exceeding 40 &mu;gm<sup>-3</sup> (legal limit) in {{selector.selectedyear}}
+                                        </h3>
+                                        <ods-map no-refit="true"
+                                                 scroll-wheel-zoom="true"
+                                                 display-control="false"
+                                                 toolbar-fullscreen="false"
+                                                 toolbar-geolocation="true" 
+                                                 basemap="jawg.light" location="13,51.45296,-2.5701">
+                                            <ods-map-layer-group>
+                                                <ods-map-layer 
+                                                               context="stats40"
+                                                               picto="dot"
+                                                               show-marker="false"
+                                                               display="raw"
+                                                               color="red"
+                                                               point-opacity="1"
+                                                               caption-picto-color="#E5E5E5"
+                                                               size="6"
+                                                               title="NO2 diffusion tubes"> 
+                                                </ods-map-layer>
+                                            </ods-map-layer-group>
+                                        </ods-map>
+                                        <ods-table context="stats40"
+                                                   displayed-fields="siteid,location,conc_ugm3,year">
+                                        </ods-table>
+                                        <h3>Download the selected air quality data:</h3> <br /> 
+                                        <div class="row download-buttons">
+                                            <a class="myButton" href="{{stats40.getDownloadURL('csv')}}">CSV</a> 
+                                            <a class="myButton" href="{{stats40.getDownloadURL('json')}}">JSON</a> 
+                                            <a class="myButton" href="{{stats40.getDownloadURL('xls')}}}">Excel</a> 
+                                        </div>          
+                                    </div>
+                                    <div class="row stats-table-and-export"
+                                         ng-if="select.stat == 'stats60'">
+                                        <h3>
+                                            Sites exceeding 60 &mu;gm<sup>-3</sup> (risk of breaking hourly legal limit) in {{selector.selectedyear}}
+                                        </h3>
+                                         <ods-map no-refit="true"
+                                                 scroll-wheel-zoom="true"
+                                                 display-control="false"
+                                                 toolbar-fullscreen="false"
+                                                 toolbar-geolocation="true" 
+                                                 basemap="jawg.light" location="13,51.45296,-2.5701">
+                                            <ods-map-layer-group>
+                                                <ods-map-layer 
+                                                               context="stats60"
+                                                               picto="dot"
+                                                               show-marker="false"
+                                                               display="raw"
+                                                               color="purple"
+                                                               point-opacity="1"
+                                                               caption-picto-color="#E5E5E5"
+                                                               size="6"
+                                                               title="NO2 diffusion tubes"> 
+                                                </ods-map-layer>
+                                            </ods-map-layer-group>
+                                        </ods-map>
+                                        <ods-table context="stats60"
+                                                   displayed-fields="siteid, location, conc_ugm3, year">
+                                        </ods-table>
+                                        <h3>Download the selected air quality data:</h3> <br /> 
+                                        <div class="row download-buttons">
+                                            <a class="myButton" href="{{stats60.getDownloadURL('csv')}}">CSV</a> 
+                                            <a class="myButton" href="{{stats60.getDownloadURL('json')}}">JSON</a> 
+                                            <a class="myButton" href="{{stats60.getDownloadURL('xls')}}}">Excel</a> 
+                                        </div>          
+                                    </div>
+                                    <div class="row stats-table-and-export"
+                                         ng-if="select.stat == 'statsdatacapture'">
+                                        <h3>
+                                            Sites below 75% data capture threshold (minimum data capture) in {{selector.selectedyear}}
+                                        </h3>
+                                        <h4>
+                                             Concentrations from these tubes have been annualised
+                                        </h4>
+                                        <ods-map no-refit="true"
+                                                 scroll-wheel-zoom="true"
+                                                 display-control="false"
+                                                 toolbar-fullscreen="false"
+                                                 toolbar-geolocation="true" 
+                                                 basemap="jawg.light" location="13,51.45296,-2.5701">
+                                            <ods-map-layer-group>
+                                                <ods-map-layer 
+                                                               context="statsdatacapture"
+                                                               picto="dot"
+                                                               show-marker="false"
+                                                               display="raw"
+                                                               color="black"
+                                                               point-opacity="1"
+                                                               caption-picto-color="#E5E5E5"
+                                                               size="6"
+                                                               title="NO2 diffusion tubes"> 
+                                                </ods-map-layer>
+                                            </ods-map-layer-group>
+                                        </ods-map>
+                                        <ods-table context="statsdatacapture"
+                                                   displayed-fields="siteid, location, conc_ugm3, year, count">
+                                        </ods-table>
+                                        <h3>Download the selected air quality data:</h3> <br /> 
+                                        <div class="row download-buttons">
+                                            <a class="myButton" href="{{statsdatacapture.getDownloadURL('csv')}}">CSV</a> 
+                                            <a class="myButton" href="{{statsdatacapture.getDownloadURL('json')}}">JSON</a> 
+                                            <a class="myButton" href="{{statsdatacapture.getDownloadURL('xls')}}}">Excel</a> 
+                                        </div>          
+                                    </div>
+                                </div>
+                            </ods-dataset-context>
+                        </div>
+                        <div ng-if="selector.switch && selector.selectedyear">
+                            <ods-dataset-context context="continuoustubesstats"
+                                                 continuoustubesstats-dataset="air-quality-data-continuous"
+                                                 continuoustubesstats-domain="bristol"
+                                                 continuoustubesstats-parameters="{'q':'NOT #null(no2)'}">
+                                {{continuoustubesstats.parameters['refine.date_time'] = selector.selectedyear;""}}
+                                <div ods-analysis="results"
+                                     ods-analysis-context="continuoustubesstats"
+                                     ods-analysis-max="13"
+                                     ods-analysis-x="location"
+                                     ods-analysis-serie-nox="AVG(nox)"
+                                     ods-analysis-serie-siteid="AVG(siteid)"
+                                     ods-analysis-serie-no2="AVG(no2)"
+                                     ods-analysis-serie-no="AVG(no)"
+                                     ods-analysis-serie-noxcount="COUNT(no2)"
+                                     ods-analysis-sort="siteid">
+                                    <!-- make the table using ng-repeat to iterate over the table rows -->
+                                    <table id="sites">
+                                        <h2 align="center">
+                                            Summary Data for Continuous Sites in {{ selector.selectedyear }} (&mu;gm<sup>-3</sup>)
+                                        </h2>
+                                        <thead>
+                                            <tr>
+                                                <td>Site</td>
+                                                <td>Mean NOx</td>
+                                                <td ods-tooltip="If the year is incomplete this cannot be compared to the air quality objective">Mean NO<sub>2</sub></td>
+                                                <td>Mean NO</td>
+                                                <td>Count</td>
+                                                <td ods-tooltip="Data capture is cumulative and related to number of hours in a year">Data Capture %</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="(i, result) in results.results">
+                                                <td ng-if="!sensorsinfo[result.siteid]">
+                                                    {{ result.x }}
+                                                </td>
+                                                <td ng-if="sensorsinfo[result.siteid]">
+                                                    <div class="ods-pop-in"
+                                                         ng-if="pop.state">
+                                                        <div class="ods-pop-in__container iframe-container">
+                                                            <iframe ng-src="{{ '/pages/aqcontinuoussites/?headless=true&q=siteid:' + result.siteid }}" 
+                                                                    width="100%" height="calc(100vh - 300px)" frameBorder="0"/>
+                                                        </div>
+                                                        <div class="ods-pop-in__backdrop" ng-click="pop.state = close"></div>
+                                                    </div>
+                                                    <ods-geotooltip ng-click="pop.state = true"
+                                                                    coords="sensorsinfo[result.siteid].coords">
+                                                        {{ sensorsinfo[result.siteid].name }}
+                                                    </ods-geotooltip>
+                                                </td>
+                                                <td>
+                                                    {{ result.nox | number : 0 }}
+                                                </td>
+                                                <td ng-class="{'red': result.no2 >40}">
+                                                    {{ result.no2 | number : 0 }}
+                                                </td>
+                                                <td>
+                                                    {{ result.no | number : 0 }}
+                                                </td>
+                                                <td>
+                                                    {{ result.noxcount | number : 0 }}
+                                                </td>
+                                                <!-- below statement uses ternary operator to calculate the denominator for the calculation based on whether modulo 4 of the year is zero ( a leap year) -->
+                                                {{ (data.singleSelect % 4 == 0) ? (denom=8784) : (denom=8760) ; "" }}
+                                                <td ng-class="{'red': (result.noxcount / 8760 * 100 | number: 0) <90}">
+                                                    {{ result.noxcount / denom * 100 | number: 0 }}                                 
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <h3 align="center">
+                                        The annual mean limit value for NO<sub>2</sub> is 40 microgrammes per metre cubed (&mu;gm<sup>-3</sup>).<br />
+                                        Data capture should be more than 90% for a full year.
+                                    </h3>
+                                </div>
+                            </ods-dataset-context>
+                        </div>
+                    </div>
+                </ods-pane>
+                <ods-pane title="Clean Air Plan" pane-auto-unload="true">
+                    <div class="content">
+                        <h3 style="text-align:center">
+                            Find out more about Bristol's plans for clean air
+                        </h3>
+                        <div class="row grid">
+
+                            <div class="col-xs-6">
+                                <a class="grid-cell"
+                                   href="https://www.cleanairforbristol.org/" target="_blank"
+                                   style="background: linear-gradient( rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.95) ), url(/assets/theme_image/ca4b.png)">
+                                    <div class="text-overlay">
+                                        Clean Air for Bristol website
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <a class="grid-cell"
+                                   href="https://uk-air.defra.gov.uk/air-pollution/uk-eu-limits" target="_blank"
+                                   style="background: linear-gradient( rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.95) ), url(/assets/theme_image/air-qual-limits.png)">
+                                    <div class="text-overlay">
+                                        EU and UK <b>Air Quality Objectives</b> to protect public health.
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <a class="grid-cell"
+                                   href="https://www.gov.uk/government/publications/clean-air-strategy-2019"
+                                   style="background: linear-gradient( rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.95) ), url(/assets/theme_image/CAS2019.png)">
+                                    <div class="text-overlay">
+                                        The government's Clean Air Strategy
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <a class="grid-cell"
+                                   href="https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution" target="_blank"
+                                   style="background: linear-gradient( rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.95) ), url(/assets/theme_image/cover.jpg)">
+                                    <div class="text-overlay">
+                                        Pollution and health
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <a class="grid-cell"
+                                   href="https://www.gov.uk/government/publications/air-quality-plan-for-nitrogen-dioxide-no2-in-uk-2017" target="_blank"
+                                   style="background: linear-gradient( rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.95) ), url(/assets/theme_image/ClassesTurq500.png)">
+                                    <div class="text-overlay">
+                                        National plan for roadside <b>NO<sub>2</sub></b>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <a class="grid-cell"
+                                   href="/pages/schools-air-quality-monitoring/"
+                                   style="background: linear-gradient( rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.95) ), url(/assets/theme_image/dt_closeup.JPG)">
+                                    <div class="text-overlay">
+                                        Data Story: Monitoring at Bristol's Schools
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row downloads">
+                            <h3>
+                                Go direct to the data
+                            </h3> 
+                            <div class="row download-buttons">
+                                <a class="myButton" href="/explore/dataset/no2-diffusion-tube-data/table/?disjunctive.location" target="_blank">
+                                    NO<sub>2</sub> diffusion tubes 
+                                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                                </a> 
+                                <a class="myButton" href="/explore/dataset/air-quality-data-continuous/table/?sort=date_time" target="_blank">
+                                    Real - time air quality data 
+                                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                                </a> 
+                                <a class="myButton" href="/explore/dataset/air-quality-monitoring-sites/table/?disjunctive.pollutants&sort=siteid" target="_blank">
+                                    Site metadata 
+                                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                                </a> 
+                            </div> 
+                            <br />
+                        </div>
+                    </div>
+                </ods-pane>
+            </ods-tabs>
+        </div>
+
+    </ods-dataset-context>
+</div>

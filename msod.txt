@@ -1,0 +1,595 @@
+<ods-dataset-context context="ldlocations, pm10, pm25, weather, pm25all, sitesmap"
+                     ldlocations-dataset="luftdaten_locations_bristol"
+                     pm10-dataset="luftdaten_pm_bristol"
+                     pm25-dataset="luftdaten_pm_bristol"
+                     weather-dataset="met-data-bristol-lulsgate"
+                     pm25all-dataset="luftdaten_pm_bristol"
+                     ldlocations-parameters="{'q':'sensor_id = 66963 OR
+                                             sensor_id = 66966 OR
+                                             sensor_id = 66970 OR
+                                             sensor_id = 66972 OR
+                                             sensor_id = 66974 OR
+                                             sensor_id = 66979 OR
+                                             sensor_id = 66987 OR
+                                             sensor_id = 67568 OR
+                                             sensor_id = 67655 OR
+                                             sensor_id = 67665'}"
+                     ldlocations-urlsync="false"
+                     pm10-parameters="{'q':'sensor_id = 66963 OR
+                                      sensor_id = 66966 OR
+                                      sensor_id = 66970 OR
+                                      sensor_id = 66972 OR
+                                      sensor_id = 66974 OR
+                                      sensor_id = 66979 OR
+                                      sensor_id = 66987 OR
+                                      sensor_id = 67568 OR
+                                      sensor_id = 67655 OR
+                                      sensor_id = 67665'}"
+                     pm25-parameters="{'q':'sensor_id = 66963 OR
+                                      sensor_id = 66966 OR
+                                      sensor_id = 66970 OR
+                                      sensor_id = 66972 OR
+                                      sensor_id = 66974 OR
+                                      sensor_id = 66979 OR
+                                      sensor_id = 66987 OR
+                                      sensor_id = 67568 OR
+                                      sensor_id = 67655 OR
+                                      sensor_id = 67665'}"
+                     sitesmap-domain="bristol"
+                     sitesmap-dataset="luftdaten_pm_bristol" 
+                     sitesmap-parameters="{}">
+    <!-- Header banner. To change the image, go in the CSS tab and search for the .page-header class -->
+    <div class="page-header">
+        <h1 class="page-title">
+            Making Sense of Air Quality Data
+        </h1>
+    </div>
+    <!-- Page subtitle -->
+    <!-- Some KPIs-->
+        <div class="container">
+    <section>
+        <div class="container">
+            <!-- Insert your aggregation widget code in the "three-columns" <div> below -->
+            <div class="three-columns">
+                <div class="kpi-box">
+                    <i class="kpi-icon fa fa-line-chart" aria-hidden="true"></i>
+                    <h3 class="kpi-value">
+                        <div ods-aggregation="sensor_num"
+                             ods-aggregation-context="ldlocations"
+                             ods-aggregation-expression="sensor_id"
+                             ods-aggregation-function="COUNT">
+                            {{ sensor_num | number }}
+                        </div>
+                    </h3>
+                    <p class="kpi-description">
+                        Slow the Smoke Sensors
+                    </p>
+                </div>
+                <div  class="kpi-box">
+                    <i class="kpi-icon fa fa-dashboard" aria-hidden="true"></i>
+                    <h3 class="kpi-value"> 
+                        <div ods-aggregation="avg_pm10"
+                             ods-aggregation-context="pm25all"
+                             ods-aggregation-expression="pm10"
+                             ods-aggregation-function="AVG">
+                            {{ avg_pm10 | number: 0}}
+                        </div>
+                    </h3>
+                    <p class="kpi-description">
+                        Average  PM<sub>10</sub> (&mu;gm<sup>-3</sup>)
+                    </p>
+                </div>
+                <div class="kpi-box">
+                    <i class="kpi-icon fa fa-dashboard"aria-hidden="true" ></i>
+                    <h3 class="kpi-value"> 
+                        <div ods-aggregation="avg_pm2_5"
+                             ods-aggregation-context="pm25all"
+                             ods-aggregation-expression="pm2_5"
+                             ods-aggregation-function="AVG">
+                            {{ avg_pm2_5 | number: 0}}
+                        </div>
+                    </h3>
+                    <p class="kpi-description">
+                        Average  PM<sub>2.5</sub> (&mu;gm<sup>-3</sup>)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- Section 1-->
+        <section class="page-section">
+            <h2 class="section-title">
+                Particulate Matter: Sources
+            </h2>
+            <div class="row">
+                <div class="col-md-4 text-box">
+                    <ul>
+                        <li>PM<sub>10</sub> and PM<sub>2.5</sub></li>
+                        <li>15% - natural (pollen \ sea spray \ salt)</li>
+                        <li>~30% - Long range (Europe \ sahara)</li>
+                        <li>The rest is from UK - man made. Burning, tyre dust exhausts</li>
+                        <li>Domestic combustion is an important local and controllable source</li>
+                    </ul>
+                </div>
+                <div class="col-md-8">
+                    <img src="/assets/theme_image/trends_in_pm25_emissions_2020_resized.png"><img />
+                </div>
+                <div class="small-link">
+                    <a href="https://www.gov.uk/government/statistical-data-sets/env01-emissions-of-air-pollutants">-- link to source --</a>
+                </div>
+            </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    Slow the Smoke Sensors
+                </h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        <ods-map context="ldlocations" scroll-wheel-zoom="true" location="15,51.469,-2.581" basemap="jawg.streets"></ods-map>
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>The sensors are all located in or near the Ashley Ward</li>
+                            <li>They are low cost sensors indicating levels of PM<sub>10</sub> and PM<sub>2.5</sub> pollution</li>
+                            <li>They are operated by citizen scientists for the Slow the Smoke project</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h2 class="section-title">
+                    How do the Slow the Smoke Sensors compare to others in the city?
+                </h2>
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <img src="/assets/theme_image/datacapture_STS_barplot.png"><img />
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="/assets/theme_image/exceedences_STS_barplot.png"><img />
+                    </div>
+                </div>
+            </section>
+            <!-- End of the first section -->
+            <!-- Section 2 -->
+            <section class="page-section">
+                <h1 class="section-title">
+                    Inspect the hourly data
+                </h1>
+                <div class="row">
+                    <div class="col-md-4 text-box">
+                        <ul>
+                           <li>Select \ deselect sensors by clicking on sensor ID's under the graph</li>
+                           <li>Missing data?</li>
+                           <li>Compare PM<sub>2.5</sub> levels</li>
+                           <li>Do you notice anything else about the trace?</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-8">
+                        <ods-chart align-month="true">
+                            <ods-chart-query context="pm25" field-x="date" maxpoints="0" timescale="hour" series-breakdown="sensor_id">
+                                <ods-chart-serie expression-y="pm2_5" chart-type="line" function-y="AVG" color="range-Accent" scientific-display="true">
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Section 3 -->
+            <section class="page-section">
+                <h1 class="section-title">
+                    January episode (daily data)
+                </h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        {{pm10.parameters['q.timerange.date']='date:[2022-01-07T00:00:00Z TO 2022-01-20T23:59:59Z]';""}}
+                        <ods-chart align-month="true">
+                            <!--  {{pm10.parameters['q']= 'date:[2022-01-07T00:00:00Z TO 2022-01-20T23:59:59Z]';""}} -->
+                            <ods-chart-query context="pm10" field-x="date" maxpoints="0" timescale="day" series-breakdown="sensor_id">
+                                <ods-chart-serie expression-y="pm10" chart-type="line" function-y="AVG" color="range-Accent" scientific-display="true">
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+                        <div class="small-link">
+                            <a href="#">-- link to source --</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>From the 10<sup>th</sup> to the 19<sup>th</sup> January 2022 there was a pollution "episode".</li>
+                            <li>Notice how all the lines move together</li>
+                            <li>This indicates either a regional source dominating</li>
+                            <li>Or still, cold weather slowing mixing.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    Weather during the episode
+                </h1>
+                <div class="row">
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>Wind speed and temperature dropped on the 10<sup>th</sup> January</li>
+                            <li>..and didn't rise much again until the 19<sup>th</sup>.</li>
+                            <li>This means that pollution doesn't move away from where it's emitted</li>
+                            <li>..leading to higher than normal levels everywhere</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-8">
+                        <!-- Remove this placeholder and replace it with the visualization of your choice (map, chart, table, etc.) -->
+                        <ods-chart single-y-axis="true" align-month="true">
+                            {{weather.parameters['q.timerange.date_time']='date_time:[2022-01-07T00:00:00Z TO 2022-01-20T23:59:59Z]';""}}
+                            <ods-chart-query context="weather" field-x="date_time" maxpoints="0" timescale="day">
+                                <ods-chart-serie expression-y="temp" chart-type="line" function-y="MIN" color="#CC516D" scientific-display="true">
+                                </ods-chart-serie>
+                                <ods-chart-serie expression-y="ws" chart-type="line" function-y="AVG" color="#6978AF" scientific-display="true">
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+                        <div class="small-link">
+                            <a href="/explore/dataset/met-data-bristol-lulsgate">-- link to source --</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    More weather...
+                </h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        <img src="https://mesonet.agron.iastate.edu/cgi-bin/mywindrose.py?nsector=36&station=EGGD&network=GB__ASOS&day1=10&day2=18&month1=1&month2=1&year1=2022&year2=2022&hour1=0&hour2=12&minute1=0&minute2=0&units=mph&fmt=png&dpi=100"
+                             height="400" width="400"><img />
+                        <div class="small-link">
+                            <a href="https://mesonet.agron.iastate.edu/sites/dyn_windrose.phtml?station=EGGD&network=GB__ASOS&bin0=2&bin1=5&bin2=7&bin3=10&bin4=15&bin5=20&units=mph&nsector=36&fmt=png&dpi=100&year1=2022&month1=1&day1=10&hour1=0&minute1=0&year2=2022&month2=1&day2=18&hour2=12&minute2=0">-- link to source --</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>The wind rose shows that no single wind direction dominated in this period.</li>
+                            <li>Wind speeds were low, even calm at times.</li>
+                            <li>Pollution doesn't disperse well in these conditions</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    A single sensor: PM<sub>2.5</sub>
+                </h1>
+                <div class="row">
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>PM<sub>2.5</sub> from sensor 66963 looks "peakier" than others.</li>
+                            <li>Turn off the others (click on them) to see this.</li>
+                            <li>Lets investigate.</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-8">
+                        <ods-chart align-month="true">
+                            <ods-chart-query context="pm25" field-x="date" maxpoints="0" timescale="hour" series-breakdown="sensor_id">
+                                <ods-chart-serie expression-y="pm2_5" chart-type="line" function-y="AVG" color="range-Accent" scientific-display="true">
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    66963: Locations and sources
+                </h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- {{ldlocations.parameters['q']='sensor_id=66963';""}} -->
+                        <ods-map context="ldlocations" scroll-wheel-zoom="true" location="17,51.47402,-2.57603" basemap="jawg.streets"></ods-map>
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_locations_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>This is the only sensor (on the OD portal) at The Yard</li>
+                            <li>It is "downwind" of the office block</li>
+                            <li>But is the location correct?</li>
+                            <li>Possible sources: Biomass boiler, domestic burning, trains..</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    Introducing polar plots
+                </h1>
+                <div class="row">
+                    <div class="col-md-4 text-box" >
+                        <ul>
+                            <li>Wind direction (from)</li>
+                            <li>Wind speed (circles)</li>
+                            <li>Colours (statistic \ concentration)</li>
+                            <li>Shows wind direction and speed that influences concentrations at this sensor</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Remove this placeholder and replace it with the visualization of your choice (map, chart, table, etc.) -->
+                        <img src="/assets/theme_image/od_plot_66963.png"><img />
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    Split the data by daily period
+                </h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        <a href="/assets/theme_image/od_plot_66963_period.png" target="_blank"><img src="/assets/theme_image/od_plot_66963_period.png"><img /></a>
+                        <div class="small-link">
+                            <a href="/assets/theme_image/od_plot_66963_period.png" target="_blank">-- link to source --</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>Easterly wind in the evening brings pollution</li>
+                            <li>Also some from the South West (evening)</li>
+                            <li>Afternoon is less well defined</li>
+                            <li>Some pollution from the West in morning</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    Compare with another sensor
+                </h1>
+                <div class="row">
+                    <div class="col-md-4" text-box>
+                        <ul>
+                            <li>Same pattern with Easterly winds (evening)</li>
+                            <li>66970 has a morning hotspot North North East</li>
+                            <li>Afternoon and evening similar to 66963</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Remove this placeholder and replace it with the visualization of your choice (map, chart, table, etc.) -->
+                        <img src="/assets/theme_image/od_plot_66963_period.png"><img />
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Remove this placeholder and replace it with the visualization of your choice (map, chart, table, etc.) -->
+                        <img src="/assets/theme_image/od_plot_66970_period.png"><img />
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    Polar Plot: daily animation
+                </h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        <img src="/assets/theme_image/66963.gif"><img />
+                        <div class="small-link">
+                            <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-box">
+                        <ul>
+                            <li>We can see how wind speed and direction affect PM<sub>2.5</sub></li>
+                            <li>Christmas</li>
+                            <li>January episode</li>
+                            <li>February storms</li>
+                            <li>Short episode in early March</li>
+                            <li>Difficult to see evidence of individual source(s)</li>
+                        </ul>                
+                    </div>
+                </div>
+            </section>
+            <!--  <section class="page-section">
+            <h1 class="section-title">
+                Polar plot animations for all sensors
+            </h1>
+            <div class="row">
+                <div class="col-md-4" text-box>
+                    <ul>
+                        <li>Youtube playlist</li>
+                        <li>Nov 2021 - March 2022</li>
+                    </ul>
+
+                </div>
+                <div class="col-md-8">
+
+                    <iframe width="315" height="315" src="https://www.youtube.com/embed/videoseries?list=PLkqsB8F5btXEf1gdKuxx2J_iO5gBuvgsF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="small-link">
+                        <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+            <section class="page-section">
+                <h1 class="section-title">
+                    Conclusions
+                </h1>
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-8 text-box">
+                        <h2>
+                            <ul>
+                                <li>Ashley doesn't appear to be more polluted than elsewhere in Bristol</li>
+                                <li>Sensors are consistent</li>
+                                <li>Episodes can be identified</li>
+                                <li>Regional air movements are important</li>
+                                <li>Weather strongly influences concentrations</li>
+                                <li>Polar plots provide insight about source direction and winds</li>
+                                <li>There may be a "burning" signal in the evenings - more data needed</li>
+                                <li>But difficult to identify individual, local sources</li>
+                            </ul>  
+                        </h2>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </section>
+            <section class="page-section">
+                <h1 class="section-title">
+                    Your turn to explore the data!
+                </h1>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8 text-box">
+                        <h3>
+                            <a href="/pages/luftdaten-sitepage/" target="_blank">Sensor Dashboard<i class="fa fa-external-link" aria-hidden="true"></i></a>
+                        </h3>
+                        <h2>
+                            <ul>
+                                <li>Locate your sensor on the map</li>
+                                <li>Click to open the page for your sensor</li>
+                                <li>Use the date slider to look at a time period</li>
+                                <li>Use the charts to inspect the data</li>
+                                <li>Are there missing data?</li>
+                                <li>When were there breaches of WHO guidelines?</li>
+                                <li>Identify episodes for your sensor</li>
+                                <li>What were the winds like at this time? (use Wind Rose)</li>
+                                <li>Was pollution higher in the evening or morning?</li>
+                            </ul>
+
+                        </h2>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </section>
+            <!--
+        <section class="page-section">
+            <h2 class="section-title">
+                section
+            </h2>
+            <div class="row">
+                <div class="col-md-4" text-box>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+
+                </div>
+                <div class="col-md-8">
+
+                    <div class="placeholder"></div>
+                    <div class="small-link">
+                        <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+         <section class="page-section">
+            <h2 class="section-title">
+                -- Section title --
+            </h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="placeholder"></div>
+                    <div class="small-link">
+                        <a href="#">-- link to source --</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-box">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>                </div>
+            </div>
+        </section>
+        <section class="page-section">
+            <h2 class="section-title">
+                section
+            </h2>
+            <div class="row">
+                <div class="col-md-4" text-box>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+
+                </div>
+                <div class="col-md-8">
+
+                    <div class="placeholder"></div>
+                    <div class="small-link">
+                        <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+         <section class="page-section">
+            <h2 class="section-title">
+                -- Section title --
+            </h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="placeholder"></div>
+                    <div class="small-link">
+                        <a href="#">-- link to source --</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-box">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>                </div>
+            </div>
+        </section>
+        <section class="page-section">
+            <h2 class="section-title">
+                section
+            </h2>
+            <div class="row">
+                <div class="col-md-4" text-box>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+
+                </div>
+                <div class="col-md-8">
+
+                    <div class="placeholder"></div>
+                    <div class="small-link">
+                        <a href="/explore/dataset/luftdaten_pm_bristol">-- link to source --</a>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+    </div>
+        </ods-dataset-context>

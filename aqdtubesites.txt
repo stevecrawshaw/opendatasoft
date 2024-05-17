@@ -1,0 +1,270 @@
+<ods-dataset-context
+                     context="airqualitymonitoringsites, no2tubes, no2tubescy"
+                     airqualitymonitoringsites-dataset="air-quality-monitoring-sites"
+                     airqualitymonitoringsites-urlsync="true"
+                     no2tubes-dataset="no2-diffusion-tube-data"
+                     no2tubes-parameters="{'sort':'-year'}"
+                     no2tubescy-dataset="no2-diffusion-tube-data"
+                     no2tubescy-parameters="{'disjunctive.location':true,'sort':'year'}">
+    <!-- <div ng-if="airqualitymonitoringsites.parameters['refine.current':'Yes']"> -->
+    <div ng-if="airqualitymonitoringsites.parameters['q']">
+        <div ods-results="sites"
+             ods-results-context="airqualitymonitoringsites"
+             ods-results-max="1"
+             ng-repeat="site in sites">
+            <div class="row block-section">
+                <div class="header-title">
+                    {{site.fields.location}}
+                </div>
+                <div class="header-subtitle">
+                    {{site.fields.locationclass}} diffusion tube air quality monitoring site
+                </div> 
+                {{no2tubes.parameters['q']='siteid:' + (site.fields.siteid);""}}
+            </div>
+
+            <!-- ------------------------------------------------------KPI FOR MOST RECENT YEAR ------------------------------------------ -->
+            {{no2tubescy.parameters['q']='siteid:' + (site.fields.siteid);""}}
+            {{ no2tubescy.parameters['refine.year'] = info.lastyear ; '' }}
+            <span ods-results="lastyearresults"
+                  ods-results-context="no2tubescy"
+                  ods-results-max="1">
+                {{ info.lastyear = lastyearresults[0].fields.year ; ''}}
+                {{ info.lastconc = lastyearresults[0].fields.conc_ugm3; '' }}
+                {{ sensor.grade = (info.lastconc>60?'Risked breaking hourly legal limit':(info.lastconc>40?'Broke legal yearly limit':'Met legal yearly limit (compliant)')) ; '' }}
+                <!--{{ chart.color = (info.lastconc>60?'#9900ff':(info.lastconc>40?'#ff0000':'#00cc00')) ; '' }} -->
+                <!-- gets the last current year from the results object -->
+                <div ng-if="!info.lastconc">
+                    <h2 class="block-subtitle red">
+                        This monitor has no reported data, probably because it is recently established
+                    </h2>
+                </div>
+                <div ng-if="info.lastconc">
+
+
+                    <h2 class="block-subtitle">
+                        Most recent air quality reading for {{site.fields.location}}
+                    </h2>
+                    <div class="kpis">
+                        <div class="kpi-margin col-md-4 col-sm-6 col-xs-12">
+                            <div class="kpi" style="{{ 'background: linear-gradient( rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75) ), url(http://maps.bristol.gov.uk/media/airquality/thumbs/' + site.fields.siteid + '.jpg);' }}"> 
+                                <div class="kpi-title">
+                                    <strong>Air Quality (nitrogen dioxide) annual mean</strong> 
+                                </div>
+                                <div class="kpi-value-metric">
+                                    {{ info.lastconc | number: 0 }} &mu;gm<sup>-3</sup>
+                                </div>
+                                <div ng-class="{'greentext':info.lastconc<40,
+                                               'redtext':info.lastconc>=40 && info.lastconc<60,
+                                               'purpletext':info.lastconc>60}">
+                                    <div><span class="kpi-sensorgrade">{{ sensor.grade }} in {{info.lastyear}}</span></div>
+                                </div>
+                                <div ng-if="info.lastconc" class="kpi-value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+            <!-- ---------------------------------------------------METADATA TABLE SECTION-------------------------------------------------------------- -->
+
+            <div class="row block-section">                     
+                <div class="col-xs-12 col-md-12">
+                    <table id="sites">
+                        <h2 class="block-subtitle" >
+                            <!-- do some string operations to derive latitude and longitude in nice formats -->
+                            {{lat = site.fields.geo_point_2d[0].toString().substring(0,7);""}}
+                            {{long = site.fields.geo_point_2d[1].toString().substring(0,7);""}}
+                            <!-- {{lats = lat.substring(0,15);""}}  {{longs = long.substring(0,15);""}} -->
+                            {{site.fields.location}} key facts
+                        </h2>
+                        <thead>
+                            <tr>
+                                <td>Parameter</td>
+                                <td>Value</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Site ID
+                                </td>
+                                <td>
+                                    {{site.fields.siteid}}
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td>
+                                    Pollutant Monitored
+                                </td>
+                                <td>
+                                    <a href="https://www.cleanairforbristol.org/?post_type=avada_faq&p=1590&preview=true" target="_blank">NO<sub>2</sub>
+                                        <i class="fa fa-external-link" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Is site still monitoring?
+                                </td>
+                                <td>
+                                    {{site.fields.current}}
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td>
+                                    Sample distance from kerb
+                                </td>
+                                <td>
+                                    {{site.fields.tube_kerb_distance_m}}m
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Receptor distance from kerb
+                                </td>
+                                <td>
+                                    {{site.fields.rec_kerb_distance_m}}m
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Site is in the AQMA?
+                                </td>
+                                <td ng-if="aqma='Yes'">
+                                    Yes
+                                </td>
+                                <td ng-if="!aqma='Yes'">
+                                    No
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Sample height
+                                </td>
+                                <td>
+                                    {{site.fields.sample_height}}m
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Elevation
+                                </td>
+                                <td>
+                                    {{site.fields.elevation}}m
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Site classification
+                                </td>
+                                <td>
+                                    {{site.fields.locationclass}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Latitude
+                                </td>
+                                <td>
+                                    {{lat}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Longitude
+                                </td>
+                                <td>
+                                    {{long}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- ---------------------------------------------------------------PHOTO SECTION----------------------------------------------------------------- -->
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <img src="http://maps.bristol.gov.uk/media/airquality/full/{{site.fields.photopath.filename}}"
+                         alt="Photo of {{site.fields.location}} monitoring site" class="center"/>
+                </div>
+            </div>
+            <!-- ----------------------------------------------------------HERE STARTS THE CHART----------------------------------------------------------- -->
+            <div class="row block-section" ng-if="info.lastconc">
+                <div class="col-xs-12 col-md-12 block-section-chart">
+                    <h2 class="block-subtitle">
+                        Chart of annual bias adjusted NO<sub>2</sub> readings from {{site.fields.location}} monitoring site
+                    </h2>
+                    <ods-chart 
+                               single-y-axis="true"
+                               align-month="true"
+                               single-y-axis-label="NO2 ugm-3"
+                               id="chartsizemain"
+                               display-legend="true">
+                        <ods-chart-query context="no2tubes"
+                                         field-x="year"
+                                         maxpoints="0"
+                                         timescale="year">
+                            <ods-chart-serie expression-y="conc_ugm3"
+                                             chart-type="column"
+                                             function-y="AVG"
+                                             color-thresholds="[{'value': 10, 'color': '#00cc00'},{'value': 40, 'color': '#ff0000'},{'value': 60, 'color': '#9900ff'}]"
+                                             scientific-display="true">
+                            </ods-chart-serie>
+                        </ods-chart-query>
+                        <ods-chart-query context="no2tubes"
+                                         field-x="year"
+                                         maxpoints="0"
+                                         timescale="year">
+                            <ods-chart-serie expression-y="40"
+                                             chart-type="line"
+                                             function-y="CONSTANT"
+                                             label-y="Compliance Limit"
+                                             color="black"
+                                             scientific-display="true">
+                            </ods-chart-serie>
+                        </ods-chart-query>
+                    </ods-chart>
+
+
+                    <!-- ------------------------------------------- CHART LEGEND TABLE ----------------------------------------------- -->
+                    <table id="sites">
+                        <tr>
+                            <td><div class="rectangle green"></div></td>
+                            <td><strong>Annual mean NO<sub>2</sub> is <b>below 40 &mu;gm<sup>-3</sup> </b>(compliant)</strong></td> 
+                        </tr>
+                        <tr>
+                            <td><div class="rectangle red"></div></td>
+                            <td><strong>Annual mean NO<sub>2</sub> is <b>above 40 &mu;gm<sup>-3</sup> </b>(non - compliant)</strong></td> 
+                        </tr>
+                        <tr>
+                            <td><div class="rectangle purple"></div></td>
+                            <td><strong>Annual mean NO<sub>2</sub> is <b>above 60 &mu;gm<sup>-3</sup></b> (risk of breaking hourly limit)</strong></td> 
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- -----------------------------------------------------------------TABLE SECTION-------------------------------------------------------- -->
+            <div class="row block-section" ng-if="info.lastconc">
+                <div class="col-md-12 block-section-table">
+                    <!-- HERE STARTS THE TABLE -->
+                    <div>
+                        <h2 class="block-subtitle">
+                            Data table for {{site.fields.location}} monitoring site
+                        </h2>
+                        <!-- include pm25 field if site is colston avenue -->
+                        <ods-table context="no2tubes"
+                                   displayed-fields="year, conc_ugm3, count">
+                        </ods-table>
+                    </div>
+                </div>
+                <div class="header-subtitle">
+                    <a href="https://www.cleanairforbristol.org/" target="_blank" >More about Air Quality in Bristol
+                        <i class="fa fa-external-link" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            </span>
+        </div>
+            
+    </div>
+</ods-dataset-context>

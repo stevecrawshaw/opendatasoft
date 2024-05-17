@@ -1,0 +1,354 @@
+<!-- <div class="row ods-box">
+    <div class="col-md-2 col-sm-6 col-xs-12">
+        <div class="kpi">
+            <div>
+               There are {{airqualitymonitoringsites.nhits}} continuous air monitoring sites in Bristol. These <a href="/assets/theme_image/Nox_PM10_site.jpg" target="_blank">continuous analysers</a> use sophisticated techniques to give accurate real-time readings of <a href="https://en.wikipedia.org/wiki/NOx" target="_blank">NOx <i class="fa fa-external-link" aria-hidden="true"></i></a> and <a href="https://en.wikipedia.org/wiki/Nitrogen_dioxide">NO<sub>2</sub> <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </div>
+           </div>
+    </div>
+    <div class="col-md-2 col-sm-6 col-xs-12">
+        <div class="kpi">
+            <div>
+                NO<sub>2</sub> is also monitored using <a href="/assets/theme_image/dt_closeup.JPG" target="_blank">diffusion tubes</a> - small passive devices that give a monthly concentration that can be averaged to a year
+            </div>
+           </div>
+    </div>
+    <div class="col-md-2 col-sm-6 col-xs-12">
+        <div class="kpi">
+            <div>
+                Monitoring is usually done near roads, as NO<sub>2</sub> is a traffic pollutant
+            </div>
+           </div>
+    </div>
+    <div class="col-md-2 col-sm-6 col-xs-12">
+        <div class="kpi">
+            <div>
+                UK government monitors both NO<sub>2</sub> and <a href="https://uk-air.defra.gov.uk/assets/documents/reports/aqeg/pm-summary.pdf" target="_blank">PM<sub>10 </sub><i class="fa fa-external-link" aria-hidden="true"></i></a> (fine particles) in Bristol. <a href="https://uk-air.defra.gov.uk/networks/find-sites.php?group_id=4&postcode=BS1+&radius=10000&latitude=51.453000&longitude=-2.593000&action=results&view=location&search=Search+Network" target="_blank">Link to sites <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </div>
+           </div>
+    </div>
+    <div class="col-md-2 col-sm-6 col-xs-12">
+        <div class="kpi">
+            <div>
+                BCC is developing a <a href="https://www.cleanairforbristol.org/" target="_blank">Clean Air Plan <i class="fa fa-external-link" aria-hidden="true"></i></a> that will reduce the illegal levels of NO<sub>2</sub> in Bristol quickly, and deal with other sources such as solid fuel burning.
+            </div>
+           </div>
+    </div>
+    <div class="col-md-2 col-sm-6 col-xs-12">
+        <div class="kpi">
+            <div>
+                The government and EU set <a href="https://uk-air.defra.gov.uk/air-pollution/uk-eu-limits" target="_blank">Air Quality Objectives <i class="fa fa-external-link" aria-hidden="true"></i></a> for the UK.
+            </div>
+           </div>
+    </div>
+
+</div> -->
+
+
+<ods-dataset-context context="airqualitymonitoringsites" airqualitymonitoringsites-dataset="air-quality-monitoring-sites" airqualitymonitoringsites-parameters="{'disjunctive.pollutants':true,'sort':'siteid','q':'siteid=502 OR siteid=503 OR siteid=504 OR siteid=505 OR siteid=506 OR siteid=507 OR siteid=508 OR siteid=509 OR siteid=510 OR siteid=511 OR siteid=513 OR siteid=514 OR siteid=516 OR siteid=517 OR siteid=518 OR siteid=519 OR siteid=520 OR siteid=521 OR siteid=522 OR siteid=523 OR siteid=524 OR siteid=526 OR siteid=527 OR siteid=528 OR siteid=529 OR siteid=530 OR siteid=531 OR siteid=532 OR siteid=533 OR siteid=534 OR siteid=535 OR siteid=536 OR siteid=537 OR siteid=540 OR siteid=541 OR siteid=542 OR siteid=543 OR siteid=544 OR siteid=546 OR siteid=547 OR siteid=548 OR siteid=551'}">
+    <ods-map context="airqualitymonitoringsites" scroll-wheel-zoom="false" location="13,51.49173,-2.63334" basemap="jawg.streets"></ods-map>
+
+    <ods-table context="airqualitymonitoringsites" sort="siteid"></ods-table>
+</ods-dataset-context>
+
+
+
+Part 3
+<!-- <ods-dataset-context context="airqualitymonitoringsites, no2diffusiontubedata"
+                     airqualitymonitoringsites-dataset="air-quality-monitoring-sites"
+                     no2diffusiontubedata-dataset="no2-diffusion-tube-data">
+
+    debugging purposes:<br />
+    parameters of map context: {{airqualitymonitoringsites.parameters}}<br />
+    parameters of graph context: {{no2diffusiontubedata.parameters}}
+    <ods-map location="11,51.45109,-2.61201">
+        <ods-map-layer context="airqualitymonitoringsites"
+                       display="raw"
+                       refine-on-click-context="no2diffusiontubedata">
+        </ods-map-layer> 
+        <ods-table context="no2diffusiontubedata"></ods-table>
+    </ods-map>
+
+</ods-dataset-context> -->
+
+<ods-dataset-context context="airqualitymonitoringsites, no2diffusiontubedata"
+                     airqualitymonitoringsites-dataset="air-quality-monitoring-sites"
+                     no2diffusiontubedata-dataset="no2-diffusion-tube-data">
+
+
+    <a ng-click="airqualitymonitoringsites.parameters['q']='siteid:'+ item.fields.siteid">item.fields.location</a> 
+
+</ods-dataset-context>  
+
+
+<!--
+Part 2 KPI's and Air Quality Index for live NOx sites
+
+
+
+<!--Part 1
+
+<ods-dataset-context context="airqualitymonitoringsites" airqualitymonitoringsites-dataset="air-quality-monitoring-sites" airqualitymonitoringsites-parameters="{'disjunctive.pollutants':true}">
+
+    {{airqualitymonitoringsites.parameters}}
+     {{item}} / result enumerator / widget
+    {{agregationresults}}
+    {{record}} / you're in a map tab / this is for the map
+    1) ods aggregation, ods analysis, ods dataset context / I am choosing the name of my object
+    2) map tab, ods map, result enumerator / the name is set in the code of the ods library (item/record)
+    3) Using Angular, ng-init. (ng-repeat, ng-if, ng-show, ng-class) ng-init / initiates a variable. ng-init="whatever" {{whatever=4}} 
+ods result enumerator = ods results + ng-repeat
+<ods-result-enumerator> = <div ods-results="results" ng-repeat="result in results" (exactly the same, but we favor the right hand side)
+
+
+
+
+<div class="container-fluid">
+        <div class="ods-box">
+            <ods-result-enumerator context="airqualitymonitoringsites">
+                <h3>
+                    Name of the location
+                </h3>
+                <li>
+                    <b>{{item.fields.location}}</b>
+                </li>
+            </ods-result-enumerator>
+        </div>
+        <div class="ods-box" >
+
+            <ods-map location="10,51.50731,-2.60436">
+                <ods-map-layer context="airqualitymonitoringsites">
+                    <h3>
+                        I want a link towards a page monitoring that side in particular
+                    </h3>
+                    <div>the site started on : {{record.fields.datestart}}</div>
+                    <a href="https://opendata.bristol.gov.uk/pages/aqcontinuoussites/?q=siteid:{{record.fields.siteid}}" target="_blank">Link toward the site monitoring page</a>
+                </ods-map-layer>
+            </ods-map>
+
+        </div>
+    </div>
+
+</ods-dataset-context> -->
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="ods-box">
+        <ods-dataset-context context="noxwide"
+                             noxwide-dataset="nox_wide"
+                             ng-init="dates = {'to': '', 'from': ''}"
+                             >
+            <!-- field names must be lower case as in dataset schema -->
+            <div class="row">
+                <!-- place filters in left hand 3 columns -->
+                <div class="col-md-3">
+                    <div class="ods-box">
+                        <div ods-datetime="now">
+                            <!-- {{dates.to='01/01/2017' | date}} <br />
+                            {{dates.from='01/01/2018' | date}}  <br />  -->
+                            <!--really need a dropdown box for year selection rather than a date time selector -->
+                            <h4>
+                                You must select one calendar year: <br />
+                                01/01/YYYY to 31/12/YYYY
+                            </h4>
+                            <ods-timerange display-time="false"
+                                           date-format="YYYY"
+                                           context="noxwide"
+                                           default-from=" {{ '01/01/' + ((now | momentadd : 'year' : -1) | date: 'yyyy' )}}"
+                                           default-to=" {{ '12/31/' + ((now | momentadd : 'year' : -1) | date: 'yyyy' )}}"
+                                           to="dates.to"
+                                           from="dates.from">
+                            </ods-timerange>
+                            {{dates.to.substring(5,10);""}} <br />
+                            {{ nbhours = (dates.to | momentdiff : dates.from : 'hours');""}} <br />
+                            {{ now | momentadd : 'year' : -1;""}} 
+                        </div>
+
+
+                        <ods-facets context="noxwide">
+                            <h2>
+                                Date
+                            </h2>
+                            <ods-facet name="date_time"></ods-facet>
+                            <h2>
+                                Site
+                            </h2>
+                            <ods-facet name="location"></ods-facet>
+                        </ods-facets>
+                        <ods-clear-all-filters context="noxwide"></ods-clear-all-filters>
+                    </div>
+                </div>
+                <div class="col-md-9"
+                     ng-if="dates.to.substring(5,10) == '12-31' && dates.from.substring(5,10) == '01-01' && nbhours < 8785">
+                    <!-- the bit below will only display if a calendar year is selected -->
+                    <div class="ods-box"> 
+                        <!--                         {{noxwide.parameters['q']='no2>0';""}} -->
+                        {{noxwide.parameters['q']='NOT #null(no2)';""}}
+                        <!-- HOW TO GET THE FIRST AND LAST DATES? MIN(date_time) doesn't work VVV -->
+                        <div ods-analysis="results"
+                             ods-analysis-context="noxwide"
+                             ods-analysis-max="13"
+                             ods-analysis-x="location"
+                             ods-analysis-serie-nox="AVG(nox)"
+                             ods-analysis-serie-no2="AVG(no2)"
+                             ods-analysis-serie-no="AVG(no)"
+                             ods-analysis-serie-noxcount="COUNT(no2)"
+                             ods-analysis-sort="siteid">
+                            <!-- make the table using ng-repeat to iterate over the table rows -->
+                            <table id="sites">
+                                <h2 align="center">
+                                    Summary Data for Continuous Sites
+                                </h2>
+                                <thead>
+                                    <tr>
+                                        <td>Position</td>
+                                        <td>Site</td>
+                                        <td>Mean NOx</td>
+                                        <td>Mean NO<sub>2</sub></td>
+                                        <td>Mean NO</td>
+                                        <td>Count</td>
+                                        <td>Data Capture</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="(i, result) in results.results">
+                                        <td>
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td>
+                                            {{ result.x }}
+                                        </td>
+                                        <td>
+                                            {{ result.nox | number : 0 }}
+                                        </td>
+                                        <td ng-class="{'red': result.no2 >40,'yellow': result.no2 > 20 && result.no2 <= 30, }">
+                                            {{ result.no2 | number : 0 }}
+                                        </td>
+                                        <td>
+                                            {{ result.no | number : 0 }}
+                                        </td>
+                                        <td>
+                                            {{ result.noxcount | number : 0 }}
+                                        </td>
+                                        <td>
+                                            <!--<a ng-if="nameofcontext.parameters['refine.datefield']">{{ result.noxcount / 8760 * 100 | number: 2}}</a>-->
+                                            {{ result.noxcount / nbhours * 100 | number: 0}}
+                                        </td>
+                                        <!-- <td>
+                                            {{ result.datestart | date ;""}}
+                                        </td>
+                                        <td>
+                                            {{ result.dateend | date :""}}
+                                        </td> -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul>
+                <!-- <ods-result-enumerator context="noxwide">
+                      <li>
+                     {{item.fields.no}}
+                     </li> 
+                         </ods-result-enumerator> -->
+            </ul>
+        </ods-dataset-context> 
+        <div class="ods-box">
+            <h3>
+                Annual Mean Chart for Currently Operating Continuous Sites
+            </h3>
+            <ods-dataset-context context="noxwide" noxwide-dataset="nox_wide" noxwide-parameters="{'sort':'-date_time','refine.location':['Parson Street School','Brislington Depot','Fishponds Road','Wells Road A37 Airport Road Junction'],'disjunctive.location':true}">
+                <div ods-datetime="now">
+                    <ods-timerange display-time="false"
+                                   date-format="DD/MM/YYYY"
+                                   context="noxwide"
+                                   default-from="01/01/2001"
+                                   default-to="{{ now | momentadd : 'years' : -1 }}">
+                    </ods-timerange>
+                </div>
+                <ods-chart align-month="true">
+                    <ods-chart-query context="noxwide" field-x="date_time" maxpoints="0" timescale="year" series-breakdown="location">
+                        <ods-chart-serie expression-y="no2" chart-type="column" function-y="AVG" color="range-custom" 
+                                         scientific-display="true">
+                        </ods-chart-serie>
+                    </ods-chart-query>
+                </ods-chart>
+                <div class="ods-box">
+                    <a  href="{{ noxwide.getDownloadURL('csv') }}"
+                       class="ods-button ods-button--primary">
+                        Download this selection
+                    </a>
+                </div>
+            </ods-dataset-context>
+        </div>
+        <div class="ods-box">
+            <h3>
+                Trends for the top five diffusion tube sites in 2017
+            </h3>
+            <ods-dataset-context
+                                 context="no2diffusiontubedata"
+                                 no2diffusiontubedata-dataset="no2-diffusion-tube-data"
+                                 no2diffusiontubedata-parameters="{'disjunctive.location':true,'sort':'conc_ugm3','refine.location':['Anchor Road opp Swan hotel','Colston Avenue','Lamppost   16 Ashley Road St. Pauls','Newfoundland Way','Parson St. A38 East']}">
+                <ods-chart single-y-axis="true" align-month="true" single-y-axis-label="NO2 ugm-3">
+                    <ods-chart-query context="no2diffusiontubedata" field-x="year" maxpoints="0" timescale="year" >
+                        <ods-chart-serie expression-y="40" chart-type="line" function-y="CONSTANT" label-y="Compliance Limit" color="red" scientific-display="true">
+                        </ods-chart-serie>
+                        <ods-chart-serie expression-y="conc_ugm3" chart-type="line" function-y="AVG" color="blue" scientific-display="true" >
+                        </ods-chart-serie>
+                    </ods-chart-query>
+                    <ods-chart-query context="no2diffusiontubedata" field-x="year" maxpoints="0" timescale="year" series-breakdown="location" >
+                        <ods-chart-serie expression-y="conc_ugm3" chart-type="column" function-y="AVG" color="range-custom" scientific-display="true">
+                        </ods-chart-serie>
+                    </ods-chart-query>
+                </ods-chart>
+            </ods-dataset-context>
+        </div>
+        <div class="ods-box">
+        </div>
+        <div class="ods-box">
+            <ods-dataset-context context="no2diffusiontubedata"
+                                 no2diffusiontubedata-dataset="no2-diffusion-tube-data"
+                                 no2diffusiontubedata-domain="bristol">    
+                <ods-dataset-json-schema context="no2diffusiontubedata"></ods-dataset-json-schema>
+            </ods-dataset-context>
+        </div>
+        <div class="ods-box">
+            <ods-dataset-context context="no2diffusiontubedata"
+                                 no2diffusiontubedata-dataset="no2-diffusion-tube-data"
+                                 no2diffusiontubedata-domain="bristol">    
+                <ods-record-image
+                                  context="no2diffusiontubedata"
+                                  record="3"
+                                  field="conc_ugm3">              
+                    NO2
+                </ods-record-image>
+            </ods-dataset-context>
+        </div>
+        <div class="ods-box">
+            <ods-dataset-context context="no2diffusiontubedata"
+                                 no2diffusiontubedata-dataset="no2-diffusion-tube-data"
+                                 no2diffusiontubedata-domain="bristol">    
+                <ul>
+                    <ods-result-enumerator context="no2diffusiontubedata">
+                        <li>
+                            <strong>{{item.fields.siteid}}</strong>
+                            <strong>{{item.fields.location}}</strong>
+                            <strong>{{item.fields.year}}</strong>
+                            <strong>{{item.fields.conc_ugm3}}</strong>
+                            <strong>{{item.fields.count}}</strong>
+                            (<a>{{item.datasetid}}</a>)
+                        </li>
+                    </ods-result-enumerator>
+                </ul>
+            </ods-dataset-context>
+        </div>
+    </div>
+</div>
+

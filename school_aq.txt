@@ -1,0 +1,155 @@
+
+<div class="container-fluid">
+    <ods-dataset-context context="no2diffusiontubedata"
+                         no2diffusiontubedata-dataset="no2-diffusion-tube-data"
+                         no2diffusiontubedata-parameters="{'disjunctive.location':true,'q':'(siteid=439 or siteid=470 or siteid=503 or siteid=504 or siteid=505 or siteid=506 or siteid=507 or siteid=508 or siteid=509 or siteid=510 or siteid=511 or siteid=512 or siteid=513 or siteid=514 or siteid=515 or siteid=516 or siteid=517 or siteid=518 or siteid=519 or siteid=520 or siteid=521 or siteid=522 or siteid=523 or siteid=524 or siteid=525 or siteid=526 or siteid=527 or siteid=528 or siteid=529 or siteid=530 or siteid=531 or siteid=532 or siteid=533 or siteid=534 or siteid=535 or siteid=536 or siteid=537 or siteid=541 or siteid=542 or siteid=543 or siteid=544 or siteid=545 or siteid=546 or siteid=547 or siteid=548 or siteid=550 or siteid=461) and year=2018','sort':'conc_ugm3'}">
+
+        <div class="row title-row">
+            <h1>Air Quality Monitoring at Bristol Schools: 2018</h1>
+            <p class="lead">A summary of results</p>
+        </div>
+
+        <div class="row">
+            <div class="content-row">
+                <div class="col-xs-12 col-md-6 content-box">  
+                    <h2>Map showing monitored schools</h2>
+                    <ods-map no-refit="true" scroll-wheel-zoom="false" toolbar-fullscreen="true" basemap="jawg.streets" location="12,51.47433,-2.60668">
+                        <ods-map-layer-group>
+                            <ods-map-layer context="no2diffusiontubedata"
+                                           color-numeric-ranges="{'39.9':'#2FFC2E','48.0':'#F73129'}"
+                                           color-undefined="#1B5AA5"
+                                           color-out-of-bounds="#1BA566"
+                                           color-by-field="conc_ugm3"
+                                           color-numeric-range-min="14.91"
+                                           picto="ods-circle"
+                                           show-marker="true"
+                                           display="choropleth"
+                                           shape-opacity="0.5"
+                                           point-opacity="1"
+                                           border-color="#FFFFFF"
+                                           border-opacity="1"
+                                           border-size="1"
+                                           border-pattern="solid"
+                                           caption-picto-color="#E5E5E5"
+                                           title="Air Quality data"
+                                           description="Map of NO2 monitoring at schools"
+                                           size="4"></ods-map-layer>
+                        </ods-map-layer-group>
+                    </ods-map>
+                </div>
+                <div class="col-xs-12 col-md-6 content-box"> 
+                    <h2>Summary and Conclusions</h2>
+                    <ul>
+                        <li>Two schools, out of 47 monitored, exceeded legal limits for the level of nitrogen dioxide - a traffic pollutant</li>
+                        <li>These schools are within a few metres of a busy road</li>
+                        <li>The legal limit for nitrogen dioxide is set as an average figure over a year and is <b>40 &mu;gm<sup>-3</sup></b> (micrograms per metre cubed).</li>
+                        <li>However, children can be exposed to high levels of pollution in the car and at home too</li>
+                        <li>Nitrogen dioxide (NO<sub>2</sub>) has reduced in recent years</li>
+                        <li>To protect your children's health, try to find a route to school that avoids busy roads</li>
+                        <li>Try to help to reduce pollution by walking, cycling, using public transport or car - sharing instead of driving</li>
+                        <li>Read the council's <a href="https://democracy.bristol.gov.uk/mgAi.aspx?ID=17389#mgDocuments" target="_blank">plan to clean up the air in Bristol<i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+                        <li>See more data, charts and maps on our <a href="/pages/air-quality-dashboard-new/map#air-quality-now" target="_blank">Air Quality Dashboard<i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+                    </ul>
+                </div>
+            </div> 
+        </div>
+
+
+        <div class="content-row">
+            <div class="col-xs-12 col-md-6 content-box">  
+                <h2>Schools monitoring project</h2>
+                <p>Late in 2017 BCC decided to implement an air quality monitoring campaign focussing on schools, as a result of concern from parents. In order to monitor in the areas of most need the following criteria were used to determine the schools to monitor.</p>
+                <ul>
+                    <li>School is within the <a href="/explore/dataset/air-quality-management-areas/map/?location=12,51.46092,-2.57316&basemap=jawg.streets" target="_blank">AQMA<i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+                    <li>School is 100m or less from a main road</li>
+                    <li>The centre point of the school was used for this criterion</li>
+                </ul>
+                <p>
+                    A map showing the sites monitored is shown above. You can click on the icons to show the school and the level of nitrogen dioxide.
+                    <b>The two schools shown as red icons are the only ones where air pollution was worse than the legal limits.</b> 
+                    <br />
+                    Monitoring has now ceased at schools where the concentrations of NO<sub>2</sub> are lower than the legal limits.
+
+                </p>
+
+
+            </div>
+            <div class="col-xs-12 col-md-6 content-box">  
+                <h2>Data for the monitored schools</h2>
+                <p>
+                    The data shown below are annual mean concentrations of NO<sub>2</sub> (nitrogen dioxide) in 2018. NO<sub>2</sub> is a traffic pollutant mainly emitted by diesel vehicles so concentrations are higher than normal when the site is close to a main road.
+                    <br />
+                    12 readings are taken in a year. These are averaged and adjusted for bias to give an annual mean value.
+                </p>
+                <ods-table context="no2diffusiontubedata" displayed-fields="siteid, location, conc_ugm3, count"></ods-table>
+            </div>
+        </div>
+        <br />
+          <br />
+        <div class="row">
+            <div class="content-row">
+                <div class="content-box"> 
+                    <h2>Bar charts of air quality</h2>
+                    <p>
+                        The data has been split into three charts so that you can see the schools easily. The two schools where air quality is poor are shown in red. The air quality limit value is <b>40 &mu;gm<sup>-3</sup></b> (micrograms per metre cubed).
+                    </p>
+                    <ods-dataset-context context="no2diffusiontubedata"
+                                         no2diffusiontubedata-dataset="no2-diffusion-tube-data"
+                                         no2diffusiontubedata-parameters="{'q':'(siteid=512 or siteid=525 or siteid=470 or siteid=439 or siteid=550 or siteid=545 or siteid=461 or siteid=515 or siteid=532 or siteid=524 or siteid=529 or siteid=533 or siteid=536 or siteid=527 or siteid=548 or siteid=530 ) and year=2018','timezone':'Europe/London','disjunctive.location':true}">
+                        <ods-chart labels-x-length="23" align-month="true">
+                            <ods-chart-query context="no2diffusiontubedata" field-x="location" maxpoints="0" sort="serie1-1" category-colors="{'Summer hill a420':'#BA022A','Colston girls':'#BA022A'}">
+                                <ods-chart-serie expression-y="conc_ugm3" chart-type="column" function-y="AVG" color="#AAAAAA" scientific-display="true">
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+
+                        <ods-dataset-context context="no2diffusiontubedata" no2diffusiontubedata-dataset="no2-diffusion-tube-data" no2diffusiontubedata-parameters="{'q':'(siteid=528 or siteid=544 or siteid=526 or siteid=537 or siteid=531 or siteid=541 or siteid=511 or siteid=504 or siteid=509 or siteid=521 or siteid=523 or siteid=518   or siteid=513 or siteid=522 or siteid=514 or siteid=508 ) and year=2018','disjunctive.location':true,'timezone':'Europe/London'}">
+                            <ods-chart labels-x-length="23" align-month="true">
+                                <ods-chart-query context="no2diffusiontubedata" field-x="location" maxpoints="0" sort="serie1-1">
+                                    <ods-chart-serie expression-y="conc_ugm3" chart-type="column" function-y="AVG" color="#AAAAAA" scientific-display="true">
+                                    </ods-chart-serie>
+                                </ods-chart-query>
+                            </ods-chart>
+
+                            <ods-dataset-context context="no2diffusiontubedata" no2diffusiontubedata-dataset="no2-diffusion-tube-data" no2diffusiontubedata-parameters="{'q':'(siteid=542 or siteid=546 or siteid=510 or siteid=505 or siteid=507 or siteid=520 or siteid=516 or siteid=543 or siteid=535 or siteid=517 or siteid=503 or siteid=547   or siteid=534 or siteid=519 or siteid=506) and year=2018','disjunctive.location':true,'timezone':'Europe/London'}">
+                                <ods-chart labels-x-length="29" align-month="true">
+                                    <ods-chart-query context="no2diffusiontubedata" field-x="location" maxpoints="0" sort="serie1-1">
+                                        <ods-chart-serie expression-y="conc_ugm3" chart-type="column" function-y="AVG" color="#AAAAAA" scientific-display="true">
+                                        </ods-chart-serie>
+                                    </ods-chart-query>
+                                </ods-chart>
+
+                            </ods-dataset-context>
+                        </ods-dataset-context>
+                    </ods-dataset-context>
+                    <h2>
+                        Continuous air quality measurements at Parson Street School
+                    </h2>
+                    <p>
+                        The measurements shown above are from <a href="/assets/theme_image/dt_closeup.JPG" target="_blank">diffusion tubes<i class="fa fa-external-link" aria-hidden="true"></i>.</a> We also monitor nitrogen dioxide using an automatic instrument at one school - <a href="/explore/embed/dataset/air-quality-monitoring-sites/map/?disjunctive.pollutants&q=siteid%3D215&sort=siteid&location=18,51.43271,-2.60469&basemap=jawg.streets" target="_blank">Parson Street School<i class="fa fa-external-link" aria-hidden="true"></i></a> in Bedminster. The annual mean data from this school are shown below, and indicate that concentrations have fallen in recent years.
+                    </p>
+                    <ods-dataset-context context="airqualitydatacontinuous" airqualitydatacontinuous-dataset="air-quality-data-continuous" airqualitydatacontinuous-parameters="{'sort':'date_time','q':'siteid=215','q.timerange.date_time':'date_time:[2006-01-01T00:00:00Z TO 2018-12-31T23:59:59Z]','timezone':'Europe/London'}">
+                        <ods-chart timescale="year" single-y-axis="true" align-month="true">
+                            <ods-chart-query context="airqualitydatacontinuous" field-x="date_time" maxpoints="0" timescale="year">
+                                <ods-chart-serie expression-y="no2" chart-type="column" function-y="AVG" color="#BA0C12" scientific-display="true" color-thresholds='[{"color":"#BA0C12","value":40},{"color":"#AAAAAA","value":10}]'>
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+
+                    </ods-dataset-context>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row grey-row downloads">
+            <div class="content-row">
+                <h2>Download dataset:</h2> 
+                <a class="myButton" href="{{no2diffusiontubedata.getDownloadURL('csv')}}">CSV file</a> 
+                <a class="myButton" href="{{no2diffusiontubedata.getDownloadURL('json')}}">JSON file</a> 
+                <a class="myButton" href="{{no2diffusiontubedata.getDownloadURL('xls')}}">Excel file</a> 
+            </div> 
+        </div>
+
+    </ods-dataset-context>
+</div>

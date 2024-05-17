@@ -1,0 +1,457 @@
+<div class="container-fluid">
+    <div>
+        <ods-dataset-context
+                             context="airqualitymonitoringsites, noxwide, no2index, pm10index, no2annual"
+                             airqualitymonitoringsites-dataset="air-quality-monitoring-sites"
+                             noxwide-dataset="air-quality-data-continuous"
+                             no2annual-dataset="air-quality-data-continuous"
+                             no2index-dataset="air-quality-data-continuous"
+                             pm10index-dataset="air-quality-data-continuous"
+                             airqualitymonitoringsites-parameters="{'sort':'siteid'}"
+                             airqualitymonitoringsites-urlsync="true"
+                             noxwide-parameters="{'sort':'date_time'}"
+                             no2annual-parameters="{'sort':'date_time'}"
+                             >
+            <!--  noxwide-urlsync="true" -->
+            <div ng-if="!airqualitymonitoringsites.parameters['q']">
+                <div class="row white-block">
+                    <div class="header-subtitle">
+                        Select one of the current air quality monitoring sites
+                    </div> 
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:203">
+                            <ods-geotooltip coords="[51.44174549248616, -2.5599]">
+                                <b>Brislington Depot </b>
+                            </ods-geotooltip>
+                        </a>
+                    </h3>
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:463">
+                            <ods-geotooltip coords="[51.478043411849846, -2.535231102620708]">
+                                <b>Fishponds</b>
+                            </ods-geotooltip>
+                        </a>
+                    </h3>
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:215">
+                            <ods-geotooltip coords="[51.4326742393224, -2.604960]">
+                                <b>Parson Street</b> 
+                            </ods-geotooltip>
+                        </a>
+                    </h3>
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:452">
+                            <ods-geotooltip coords="[51.46282808090297, -2.58455676]">
+                                <b>Bristol St. Pauls (National Defra AURN site)</b> 
+                            </ods-geotooltip>
+                        </a>
+                    </h3>
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:500">
+                            <ods-geotooltip coords="[51.45794827448552, -2.58399068]">
+                                <b>Temple Way (Affiliated to national network)</b>
+                            </ods-geotooltip>
+                        </a>
+                    </h3>
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:501">
+                            <ods-geotooltip coords="[51.455267735390, -2.596650718054]">
+                                <b>Colston Avenue</b>
+                            </ods-geotooltip>
+                        </a> 
+                    </h3>
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:270">
+                            <ods-geotooltip coords="[51.4278638883, -2.563741533]">
+                                <b>Wells Road</b>
+                            </ods-geotooltip>
+                        </a> 
+                    </h3>
+                    <h3>
+                        <a href="/pages/aqcontinuoussites/?q=siteid:672">
+                            <ods-geotooltip coords="[51.4591419715, -2.595432718]">
+                                <b>Marlborough Street</b>
+                            </ods-geotooltip>
+                        </a> 
+                    </h3>
+                </div>
+            </div>
+            <div ods-datetime="now" class="row white-block">
+                <div ng-if="airqualitymonitoringsites.parameters['q']"
+                     class="container-fluid dashboard">
+                    <div ods-results="sites"
+                         ods-results-context="airqualitymonitoringsites"
+                         ods-results-max="1"
+                         ng-repeat="site in sites">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-3 header-img">
+                                <img src="/assets/theme_image/Bristol_City_Council_logo.svg.png" height="300" width="300"/>
+                            </div>
+                            <div class="col-xs-12 col-md-9">
+                                <div class="header-title">
+                                    {{site.fields.location}}
+                                </div>
+                                <div class="header-subtitle">
+                                    Continuous {{site.fields.locationclass}} Site
+                                </div> 
+                                {{noxwide.parameters['q']='siteid:' + (site.fields.siteid);""}}
+                                <!-- set noxwide paratemeters equal to the enumerated value of the site ID derived from the airqualitymonitoring sites linked URL --> 
+                                {{no2index.parameters['q']='date_time>' + (now | momentadd : 'hours' : -3);""}}
+                                {{pm10index.parameters['q']='date_time>' + (now | momentadd : 'hours' : -24);""}}
+                                <!-- the parameters of a separate context specifically set up for the NO2 index are defined in terms of time (above), and in terms of the site below -->
+                                {{no2index.parameters['refine.siteid']= (site.fields.siteid);""}}
+                                {{pm10index.parameters['refine.siteid']= (site.fields.siteid);""}}
+                                <!--  for debugging <ods-table context="no2index"></ods-table> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- the aggregation below uses the separate context set up for the index and is parameterised above -->
+                            <div ods-aggregation="index"
+                                 ods-aggregation-context="no2index"
+                                 ods-aggregation-expression="no2"
+                                 ods-aggregation-function="MAX">
+                                <div ods-aggregation="indexpm10"
+                                     ods-aggregation-context="pm10index"
+                                     ods-aggregation-expression="pm10"
+                                     ods-aggregation-function="AVG">
+
+                                    <div class="row">
+                                        <div class="kpi">
+                                            <!-- get the last 2 hours data - aggregation function is max - so gets the highest. need the last 2 hrs as sometimes there isn't data if just 1hr selected -->
+                                            <div class="kpi-title" ng-if="index">
+                                                <!-- if valid data exists derive and display INdex categories, coloured with CSS classes by ng-if-->
+
+                                                <div class="kpi-value">
+                                                    <div ng-if="index<200">
+                                                        Air Quality Index (pollution) for NO<sub>2</sub> is <b class="good">LOW</b>
+                                                    </div>
+                                                    <div ng-if="index>200 && index215<401">
+                                                        Air Quality Index (pollution) for NO<sub>2</sub> is <b class="medium">MODERATE</b>
+                                                    </div>
+                                                    <div ng-if="index>400 && index215<601">
+                                                        Air Quality Index (pollution) for NO<sub>2</sub> is <b class="bad">HIGH</b>
+                                                    </div>
+                                                    <div ng-if="index>601">
+                                                        Air Quality Index (pollution) for NO<sub>2</sub> is <b class="reallybad">VERY HIGH</b>
+                                                    </div>
+                                                    <div ng-class="{'greenstroke':index<=200,
+                                                                   'orangestroke':index>200 && index<401,
+                                                                   'redstroke':index<=601 && index>400,
+                                                                   'purplestroke':index>600}">
+                                                        <ods-gauge display-mode="bar" value="index" max="600"></ods-gauge>
+                                                        <!-- would be good to remove the percentage display from the gauge - with CSS? -->
+                                                    </div>
+                                                    Hourly mean NO<sub>2</sub> is {{ index | number:0 }} &mu;gm<sup>-3</sup> at {{(now | momentadd : 'hours' : -1) | date: 'HH'}}:00 today
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <hr />
+                                            <br />
+                                            <div class="kpi-title" ng-if="indexpm10">
+                                                <div class="kpi-value">
+                                                    <div ng-if="indexpm10<=50">
+                                                        Air Quality Index (pollution) for PM<sub>10</sub> is <b class="good">LOW</b>
+                                                    </div>
+                                                    <div ng-if="indexpm10>50 && indexpm10<=75">
+                                                        Air Quality Index (pollution) for PM<sub>10</sub> is <b class="medium">MODERATE</b>
+                                                    </div>
+                                                    <div ng-if="indexpm10>75 && indexpm10<=100">
+                                                        Air Quality Index (pollution) for PM<sub>10</sub> is <b class="bad">HIGH or site fault</b>
+                                                    </div>
+                                                    <div ng-if="indexpm10>100">
+                                                        Air Quality Index (pollution) for PM<sub>10</sub> is <b class="reallybad">VERY HIGH or site fault</b>
+                                                    </div>
+                                                    <div ng-class="{'greenstroke':indexpm10<=50,
+                                                                   'orangestroke':indexpm10>50 && indexpm10<=75,
+                                                                   'redstroke':indexpm10<=100 && indexpm10>75,
+                                                                   'purplestroke':indexpm10>100}">
+                                                        <ods-gauge display-mode="bar" value="indexpm10" max="100"></ods-gauge>
+                                                    </div>
+                                                    24 hour mean PM<sub>10</sub> is {{ indexpm10 | number:0 }} &mu;gm<sup>-3</sup> at {{(now | momentadd : 'hours' : -1) | date: 'HH'}}:00 today
+                                                </div>
+                                            </div>
+                                            <!-- <div class="kpi-value bad" ng-if="!indexpm10 && site.fields.siteid==501">
+                                                Site temporarily offline - we are aware.
+                                            </div> -->
+                                            <p><br />You can get <a href="https://uk-air.defra.gov.uk/air-pollution/daqi" target="_blank">information about levels of air pollution and health advice</a> on the Defra website.</p>
+                                        </div>
+                                        <!-- <ods-table context="noxwide" sort="date_time"></ods-table> -->
+                                    </div>  
+                                </div>   
+                            </div>
+                        </div>
+                        <div class="row" >
+                            <div class="row block-section">
+                                <!-- TEXT SECTION -->            
+                                <div class="col-xs-12 col-md-6 block-section-text">
+                                    <h2 class="block-subtitle">
+                                        {{site.fields.location}}
+                                    </h2>
+                                    <!-- {{item.fields.description}}-->
+                                    {{site.fields.description}}
+                                </div>
+                                <!-- MAP SECTION -->            
+                                <div class="col-xs-12 col-md-6">
+                                    <ods-map min-zoom="12"   max-zoom="18">
+                                        <ods-map-layer context="airqualitymonitoringsites"
+                                                       basemap="jawg.streets">
+                                        </ods-map-layer>
+                                    </ods-map>                                   
+                                </div>
+                            </div>
+                            <div class="row block-section">                     
+                                <!-- METADATA TABLE SECTION -->
+                                <div class="col-xs-12 col-md-6">
+                                    <table id="sites">
+                                        <h2 class="block-subtitle" >
+                                            <!-- do some string operations to derive latitude and longitude in nice formats -->
+                                            {{lat = site.fields.geo_point_2d[0].toString();""}}
+                                            {{long = site.fields.geo_point_2d[1].toString();""}}
+                                            {{lats = lat.substring(0,15);""}}
+                                            {{longs = long.substring(0,15);""}}
+                                            {{site.fields.location}} key facts
+                                        </h2>
+                                        <thead>
+                                            <tr>
+                                                <td>Parameter</td>
+                                                <td>Value</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Start of monitoring period
+                                                </td>
+                                                <td>
+                                                    {{site.fields.datestart | date}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    End of monitoring period
+                                                </td>
+                                                <td ng-if="!dateend">
+                                                    The site is still monitoring
+                                                </td>
+                                                <td ng-if="dateend">
+                                                    {{site.fields.dateend | date}}
+                                                </td>
+                                            </tr> 
+                                            <tr>
+                                                <td>
+                                                    Sample distance from kerb
+                                                </td>
+                                                <td>
+                                                    {{site.fields.tube_kerb_distance_m}}m
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Receptor distance from kerb
+                                                </td>
+                                                <td>
+                                                    {{site.fields.rec_kerb_distance_m}}m
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Site is in the AQMA?
+                                                </td>
+                                                <td ng-if="aqma='Yes'">
+                                                    Yes
+                                                </td>
+                                                <td ng-if="!aqma='Yes'">
+                                                    No
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Sample height
+                                                </td>
+                                                <td>
+                                                    {{site.fields.sample_height}}m
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Elevation
+                                                </td>
+                                                <td>
+                                                    {{site.fields.elevation}}m
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Site classification
+                                                </td>
+                                                <td>
+                                                    {{site.fields.locationclass}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Latitude
+                                                </td>
+                                                <td>
+                                                    {{lats}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Longitude
+                                                </td>
+                                                <td>
+                                                    {{longs}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!----------------------------------------- PHOTO SECTION ---------------------------------------------------------->
+                                <div class="col-xs-12 col-md-6 photo">
+                                    <img src="http://maps.bristol.gov.uk/media/airquality/full/{{site.fields.photopath.filename}}"
+                                         alt="Photo of {{site.fields.location}} monitoring site"/>
+                                </div>
+                            </div>
+                            <div class="row block-section">
+                            
+                                <!----------------------------------------- CHART SECTION ------------------------------------------------------------------>
+                                 <div>
+                                    <h2 class="block-subtitle">
+                                        Chart of annual average NO<sub>2</sub> data from {{site.fields.location}} monitoring site
+                                    </h2>
+                                    <!--    ANNUAL MEAN CHART -->
+                                    {{no2annual.parameters['q']='date_time>' + (now | momentadd : 'years' : -5);""}}
+                                    {{no2annual.parameters['refine.siteid']= (site.fields.siteid);""}}
+                                    <!-- Annual Mean Chart-->
+                                    <ods-chart align-month="true"
+                                               single-y-axis="true">
+                                        <ods-chart-query context="no2annual" field-x="date_time" maxpoints="0" timescale="year">
+                                            <ods-chart-serie expression-y="no2" chart-type="column" function-y="AVG" color="#638E5B" scientific-display="true">
+                                            </ods-chart-serie>
+                                            <ods-chart-serie expression-y="40"
+                                                             chart-type="line"
+                                                             function-y="CONSTANT"
+                                                             label-y="Compliance Limit"
+                                                             color="red"
+                                                             scientific-display="true">
+                                            </ods-chart-serie>
+                                        </ods-chart-query>
+                                    </ods-chart>
+                                </div>
+                                    <h2 class="block-subtitle">
+                                    Chart of hourly pollution data from {{site.fields.location}} monitoring site (interactive)
+                                </h2>
+                                <div class="col-md-12 block-section-chart">
+                                    <!--  {{noxwide.parameters.q}}  {{site.fields.siteid}} -->
+                                    <ods-timerange display-time="false"
+                                                   date-format="DD/MM/YYYY"
+                                                   context="noxwide"
+                                                   default-from="{{now | momentadd : 'months' : -3}}"
+                                                   default-to="{{now}}">
+                                    </ods-timerange> 
+                                    <!---------------------------------------------------- HERE STARTS THE CHART-------------------------------------- -->
+                                    <ods-chart single-y-axis="true" align-month="true" single-y-axis-label="ug/m3">
+                                        <ods-chart-query context="noxwide" field-x="date_time" maxpoints="0" timescale="hour"> 
+                                            <ods-chart-serie expression-y="nox"
+                                                             chart-type="line"
+                                                             function-y="AVG"
+                                                             color="#0B72B5"
+                                                             scientific-display="true">
+                                            </ods-chart-serie>
+                                            <ods-chart-serie expression-y="no2"
+                                                             chart-type="line"
+                                                             function-y="AVG"
+                                                             color="#19630A"
+                                                             scientific-display="true">
+                                            </ods-chart-serie>
+                                            <ods-chart-serie expression-y="no"
+                                                             chart-type="line"
+                                                             function-y="AVG"
+                                                             color="#BA0C12"
+                                                             scientific-display="true">
+                                            </ods-chart-serie>
+                                            <ods-chart-serie expression-y="pm10"
+                                                             chart-type="line"
+                                                             function-y="AVG"
+                                                             color="#000000"
+                                                             scientific-display="true">
+                                            </ods-chart-serie>
+                                             <ods-chart-serie expression-y="pm25"
+                                                             chart-type="line"
+                                                             function-y="AVG"
+                                                             color="#D303FC"
+                                                             scientific-display="true">
+                                            </ods-chart-serie>
+                                        </ods-chart-query>
+                                    </ods-chart>
+                                    <h3 class="block-subtitle">
+                                        Click on pollutant names to toggle their display: Note that "spikes" in PM<sub>10</sub> and PM<sub>2.5</sub> in recent data are likely to be instrument faults.
+                                    </h3>
+                                </div>
+                                <div class="row" >
+                                    <div class="row block-section">
+                                        <!-- CHART SECTION -->
+                                        <div class="col-md-12 block-section-table">
+                                            <!-- HERE STARTS THE TABLE -->
+                                            <div>
+                                                <h2 class="block-subtitle">
+                                                    Data table for {{site.fields.location}} monitoring site
+                                                </h2>
+                                               <div ng-if="site.fields.siteid=='203' || site.fields.siteid=='270' || site.fields.siteid=='463' || site.fields.siteid=='672'">
+                                                    <ods-table context="noxwide"
+                                                               sort="-date_time"
+                                                               displayed-fields="location, date_time, nox, no, no2">
+                                                    </ods-table>
+                                                </div>
+                                                <div ng-if="site.fields.siteid=='501' || site.fields.siteid=='500'">
+                                                    <!-- include pm25 field if site is colston avenue -->
+                                                    <ods-table context="noxwide"
+                                                               sort="-date_time"
+                                                               displayed-fields="location, date_time, nox, no, no2, pm10">
+                                                    </ods-table>
+                                                </div>
+                                                 <div ng-if="site.fields.siteid=='215'">
+                                                    <!-- include pm25 field if site is parson st -->
+                                                    <ods-table context="noxwide"
+                                                               sort="-date_time"
+                                                               displayed-fields="location, date_time, nox, no, no2, pm25">
+                                                    </ods-table>
+                                                </div>
+                                                <!-- BCC NOx only sites -->
+                                                
+                                                <div ng-if="site.fields.siteid=='452'">
+                                                    <ods-table context="noxwide"
+                                                               sort="-date_time"
+                                                               displayed-fields="location, date_time, pm10, pm25, o3, nox, no, no2">
+                                                    </ods-table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!---------------------------------------------------- TEXT SECTION ------------------------------------------------>            
+                                        <div class="col-md-12 block-section-text kpi">
+                                            Readings are collected and uploaded to our database hourly. <br />
+                                            The hourly average data are shown here and can be downloaded from the links below.<br />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row downloads white-block">
+                                    <!-- DOWNLOAD BUTTONS    -->
+                                    <p>Download air quality data for the dates selected above:</p> 
+                                    <div class="row download-buttons">
+                                        <a class="myButton" href="{{noxwide.getDownloadURL('csv')}}">CSV file</a> 
+                                        <a class="myButton" href="{{noxwide.getDownloadURL('json')}}">JSON file</a> 
+                                        <a class="myButton" href="{{noxwide.getDownloadURL('xls')}}}">Excel file</a> 
+                                    </div>                                                   
+                                </div>
+                               
+
+                            </div>
+
+                        </div>
+                    </div>        
+                </div>
+            </div> 
+        </ods-dataset-context>
+    </div>
+</div>
