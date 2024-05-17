@@ -1,0 +1,108 @@
+<section>
+    <div class="container">
+        <div class="heading">
+            <h1 class="title">Title of my new page</h1>
+            
+            <p class="subtitle">Subtitle of the page</p>
+            
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam atque commodi cupiditate, deserunt
+                dolores dolorum ducimus ea fugiat non quidem repellat soluta voluptate voluptatem. Illo illum maxime
+                nemo officia velit.</p>
+        </div>
+        <div class="row my-4.5">
+            <div class="col-md-5">
+                <div class="content-box text align-right">
+                    <h3>Evenements publics - OpenAgenda</h3>
+                    <p class="subtitle">Top 20 des <b>départements</b> par nombre d'événements recensés</p>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="content-box tiny-shadow">
+                    
+                    <ods-dataset-context context="foodhygieneratingslep" foodhygieneratingslep-dataset="food-hygiene-ratings-lep">
+    <ods-chart timescale="year" scientific-display="false" align-month="true">
+        <ods-chart-query context="foodhygieneratingslep" field-x="rating_date" maxpoints="0" timescale="year">
+            <ods-chart-serie expression-y="rating_value" chart-type="line" function-y="AVG" color="#6bd4f2" display-values="true" scientific-display="true">
+            </ods-chart-serie>
+        </ods-chart-query>
+    </ods-chart>
+
+</ods-dataset-context>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="heading">
+            <h3 class="title">Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam atque commodi cupiditate, deserunt
+                dolores dolorum ducimus ea fugiat non quidem repellat soluta voluptate voluptatem. Illo illum maxime
+                nemo officia velit.</p>
+        </div>
+        <div class="row my-4.5">
+            <div class="col-md-5 order-md-2">
+                <div class="content-box text align-left">
+                    <h3>Evenements publics - OpenAgenda</h3>
+                    <p class="subtitle">Top 10 des <b>régions</b> par nombre d'événements recensés</p>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="order-md-1 content-box tiny-shadow">
+                    <ods-dataset-context context="evenementspublicsopenagenda"
+                                         evenementspublicsopenagenda-domain="userclub"
+                                         evenementspublicsopenagenda-dataset="evenements-publics-openagenda"
+                                         evenementspublicsopenagenda-parameters="{'disjunctive.tags':true,'disjunctive.placename':true,'disjunctive.city':true}">
+                        <ods-chart class="no-bg" labels-x-length="20" align-month="true">
+                            <ods-chart-query context="evenementspublicsopenagenda" field-x="location_region" maxpoints="10"
+                                             sort="serie1-1"
+                                             category-colors="{'Île-de-France':'#2B3F56','Auvergne-Rhône-Alpes':'#6C7987','Nouvelle-Aquitaine':'#969FAA','Provence-Alpes-Côte d\'Azur':'#C0C5CC','Occitanie':'#2B3F56','Hauts-de-France':'#6C7987','Centre-Val de Loire':'#969FAA','Grand Est':'#C0C5CC','Pays de la Loire':'#2B3F56','Normandie':'#6C7987','Bretagne':'#969FAA','Bourgogne-Franche-Comté':'#C0C5CC','Aquitaine-Limousin-Poitou-Charentes':'#2B3F56','Alsace-Champagne-Ardenne-Lorraine':'#6C7987','Languedoc-Roussillon-Midi-Pyrénées':'#969FAA','Nord-Pas-de-Calais-Picardie':'#C0C5CC','Ile-de-France':'#2B3F56','La Réunion':'#6C7987','Corse':'#969FAA','Guadeloupe':'#C0C5CC'}">
+                                <ods-chart-serie chart-type="treemap" function-y="COUNT"
+                                                 scientific-display="true" label-y="Nombre d'événements">
+                                </ods-chart-serie>
+                            </ods-chart-query>
+                        </ods-chart>
+
+                    </ods-dataset-context>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="heading">
+            <h3 class="title">Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam atque commodi cupiditate, deserunt
+                dolores dolorum ducimus ea fugiat non quidem repellat soluta voluptate voluptatem. Illo illum maxime
+                nemo officia velit.</p>
+        </div>
+        <div class="row my-4.5">
+            <div class="col-md-12">
+                <div class="content-box text align-left">
+                    <h3>Evenements publics - OpenAgenda</h3>
+                    <p class="subtitle">Évolution du nombre d'événements par mois</p>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="content-box tiny-shadow">
+                   
+                    <ods-dataset-context context="foodhygieneratingslep,foodhygieneratingslep0" foodhygieneratingslep-dataset="food-hygiene-ratings-lep" foodhygieneratingslep-parameters="{'sort':'rating_date','disjunctive.business_type':true,'refine.business_type':'Restaurant/Cafe/Canteen'}" foodhygieneratingslep0-dataset="food-hygiene-ratings-lep" foodhygieneratingslep0-parameters="{'sort':'rating_date','disjunctive.business_type':true,'refine.business_type':'Pub/bar/nightclub'}">
+    <ods-map no-refit="true" scroll-wheel-zoom="false" display-control="true" search-box="true" toolbar-fullscreen="true" toolbar-geolocation="true" basemap="jawg.streets" location="10,51.45957,-2.63535">
+        <ods-map-layer-group>
+            <ods-map-layer context="foodhygieneratingslep" color="#6BD4F1" picto="ods-circle" show-marker="true" display="auto" shape-opacity="0.5" point-opacity="1" border-color="#FFFFFF" border-opacity="1" border-size="1" border-pattern="solid" caption="true" caption-picto-color="#6BD4F1" title="Restaurants" size="4" size-min="3" size-max="5" size-function="linear"></ods-map-layer>
+        </ods-map-layer-group>
+        <ods-map-layer-group>
+            <ods-map-layer context="foodhygieneratingslep0" color="#ED749C" picto="ods-circle" show-marker="true" display="auto" shape-opacity="0.5" point-opacity="1" border-color="#FFFFFF" border-opacity="1" border-size="1" border-pattern="solid" caption="true" caption-picto-color="#ED749C" title="Pubs and bars" size="4" size-min="3" size-max="5" size-function="linear"></ods-map-layer>
+        </ods-map-layer-group>
+    </ods-map>
+
+</ods-dataset-context>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
