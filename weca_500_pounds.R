@@ -6,7 +6,7 @@
 # filter out rows with no transno
 
 # Libraries ----
-pacman::p_load(tidyverse, janitor, glue, rvest, lobstr)
+pacman::p_load(tidyverse, janitor, glue, rvest, lobstr, readxl, rio)
 
 # for testing
 filename = "https://www.westofengland-ca.gov.uk/wp-content/uploads/2022/10/Transparency-Report-Q2-for-website.csv"
@@ -20,7 +20,51 @@ page <- try(read_html(main_page))
 if(inherits(page, "try-error")) return()
 
 # Find all links on the page
+
+link_nodes <- html_nodes(page, "a") 
+
+link_text = link_nodes %>% html_text() 
 links <- html_nodes(page, "a") %>% html_attr("href")
+# mask to get just the spend data
+spend_link_mask <- map_lgl(link_text, ~grepl("Quarter", .x))
+
+spend_link_tbl <- tibble(link_text, links)[spend_link_mask,] %>% 
+  mutate(stated_extension = str_extract(link_text, "[A-Z]{3}") %>% 
+           tolower() ,
+         actual_extension = str_extract(links, "\\.[^.]+$") %>% 
+           str_remove("\\."),
+         extensions_match = stated_extension == actual_extension %>% 
+           str_sub(1, 3)) 
+
+rm(links)
+excel_files_tbl <- spend_link_tbl %>% 
+  filter(actual_extension == "xlsx") %>% 
+  mutate(valid_url = if_else(str_starts(links, "http"),
+                             links,
+                             glue("{domain}{links}")),
+         # we need to use rio::import_list to read multiple
+         # sheets from the remote excel files
+         sheets = map(valid_url, ~import_list(.x)),
+         numsheets = map(sheets, length),
+         sheetnames = map(sheets, names) %>% map(str_c, collapse = " :\n "),
+         year_month = str_extract(links, "[0-9]{4}/[0-9]{2}"))
+
+excel_files_tbl %>% 
+  glimpse()
+
+
+sheets <- map(excel_files_tbl, ~import_list(.x)) %>%
+  set_names(excel_files_tbl) %>% 
+  enframe()
+
+ms_link <- "https://www.westofengland-ca.gov.uk/wp-content/uploads/2021/07/Transparency-Report-Q1-for-Website.xlsx"
+
+l <- import_list(ms_link)
+
+
+
+
+
 csv_links <- links[grepl("\\.csv$", links, ignore.case = TRUE)]
 
 csv_links
