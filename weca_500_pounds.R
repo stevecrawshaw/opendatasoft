@@ -61,10 +61,6 @@ ms_link <- "https://www.westofengland-ca.gov.uk/wp-content/uploads/2021/07/Trans
 
 l <- import_list(ms_link)
 
-
-
-
-
 csv_links <- links[grepl("\\.csv$", links, ignore.case = TRUE)]
 
 csv_links
@@ -104,6 +100,9 @@ diagnostics_tbl %>% view()
 # `Ap/Ar ID(T)` ?? appearing in some batches
 # inconsistent names for date and supplier columns
 # inconsistent date formatting in 1st quarter of 2018 - 2 digit years hence use parse_date_time()
+# incorrect naming of file extensions in four files
+# inconsistent numbers and names of columns in excel sheets
+# only excel from 2021
 
 
 # combine all the tibbles into one
