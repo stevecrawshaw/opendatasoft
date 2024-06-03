@@ -106,27 +106,41 @@ diagnostics_tbl %>% view()
 # only excel from 2021
 
 
+# get the stray misnamed csv for Q4 2023
+
+path_misnamed_csv <- "https://www.westofengland-ca.gov.uk/wp-content/uploads/2024/04/Transparency-Report-Q4-For-Website.xlsx"
+
+q4_2023_tbl <- rio::import(path_misnamed_csv, sheet = "in",
+                           col_types = "text") 
+
 # combine all the tibbles into one
 
 all_tbl <- raw_tbl_list |>
   map(~ mutate(.x, across(everything(), as.character))) |>
-  bind_rows()
+  bind_rows() %>% 
+  bind_rows(q4_2023_tbl)
+
+
 
 # Create the final output csv for the £500 spend data
 
 ods_out_tbl <- all_tbl |>
-  # remove columns where everything's missing
-  mutate(across(where(~ is.na(.x) |> all()), ~NULL)) |>
+  janitor::remove_empty(c("cols", "rows")) |>
   mutate(
     # rename columns where inconsistent names have been applied
     BeneficiaryName = coalesce(Supplier, `Supplier Name`),
-    PaymentDate = coalesce(Date, `Doc Date`) |>
+    date_doc = coalesce(Date, `Doc Date`) |>
       parse_date_time(orders = c("dmy")),
+    # some dates are in excel format - the misplaced file
+    excel_date = janitor::excel_numeric_to_date(coalesce(Date, `Doc Date`) %>% as.numeric()),
+    PaymentDate = coalesce(date_doc, excel_date),
     # remove columns which are redundant or anomalous
     Supplier = NULL,
     `Supplier Name` = NULL,
     Date = NULL,
     `Doc Date` = NULL,
+    date_doc = NULL,
+    excel_date = NULL,
     `Ap/Ar ID(T)` = NULL,
     # convert columns to correct types
     Amount = as.numeric(Amount),
@@ -151,6 +165,22 @@ ods_out_tbl <- all_tbl |>
     IrrecoverableVATAmount,
     Purpose
   )
+
+
+
+
+# do some checking to ensure we've got data from all months
+
+ods_out_tbl %>%
+  group_by(year_month = ceiling_date(PaymentDate, unit = "months")) %>%
+  summarise(n = n()) %>% 
+  filter(year_month >= as.POSIXct("2020-01-01")) %>%
+  ggplot(aes(x = year_month, y = n)) +
+  geom_col(fill = "#ed749d") +
+  scale_x_datetime(date_breaks = "6 months") +
+  theme_minimal() 
+
+
 
 # Find the supplier we're interested in
 
