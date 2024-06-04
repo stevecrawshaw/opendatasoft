@@ -6,7 +6,7 @@
 # filter out rows with no transno
 
 # Libraries ----
-pacman::p_load(tidyverse, janitor, glue, rvest, lobstr, readxl, rio, scales)
+pacman::p_load(tidyverse, janitor, glue, rvest, lobstr, readxl, rio, scales, rlist)
 
 # for testing
 # filename <- "https://www.westofengland-ca.gov.uk/wp-content/uploads/2022/10/Transparency-Report-Q2-for-website.csv"
@@ -30,6 +30,8 @@ links <- html_nodes(page, "a") %>% html_attr("href")
 # mask to get just the spend data
 spend_link_mask <- map_lgl(link_text, ~ grepl("Quarter", .x))
 
+# check extension matches
+
 spend_link_tbl <- tibble(link_text, links)[spend_link_mask, ] %>%
   mutate(
     stated_extension = str_extract(link_text, "[A-Z]{3}") %>%
@@ -40,9 +42,9 @@ spend_link_tbl <- tibble(link_text, links)[spend_link_mask, ] %>%
       str_sub(1, 3)
   )
 
-spend_link_tbl %>% 
-  filter(!extensions_match) %>%
-  view()
+# spend_link_tbl %>% 
+#   filter(!extensions_match) %>%
+#   view()
 
 # Get all the excel files, tabulate and introspect
 
@@ -55,7 +57,7 @@ excel_files_tbl <- spend_link_tbl %>%
     ),
     # we need to use rio::import_list to read multiple
     # sheets from the remote excel files
-    sheets = map(valid_url, ~ import_list(.x)),
+    sheets = map(valid_url, ~ import_list(.x, col_types = "text")),
     numsheets = map(sheets, length),
     sheetnames = map(sheets, names) %>% map(str_c, collapse = " :\n "),
     year_month = str_extract(links, "[0-9]{4}/[0-9]{2}")
@@ -63,6 +65,64 @@ excel_files_tbl <- spend_link_tbl %>%
 
 excel_files_tbl %>%
   glimpse()
+
+# extract just the purchase transaction sheets
+
+pc_list <- excel_files_tbl$sheets %>% 
+  as.list() %>% 
+  map(~list.match(.x, "Purchase.+Tran")) %>% 
+  list.filter(~length(.) != 0) %>% 
+  map(unname) %>% 
+  map(~map(.x, clean_names)) 
+  
+
+# bind and clean
+pc_tbl <- pc_list %>% 
+  bind_rows() %>% 
+  mutate(PaymentDate = doc_date %>%
+           as.numeric() %>%
+           excel_numeric_to_date(),
+         PaymentAmount = as.numeric(amount),
+         supplier = NULL,
+         description = str_sub(text, 8, -1) %>% 
+           str_remove(","),
+         doc_date = NULL,
+         amount = NULL,
+         text = NULL,
+         CardTransaction = TRUE) %>% 
+  rename(TransactionNumber = trans_no,
+         Purpose = summary_of_purpose,
+         ServiceCategoryLabel = service_area) %>% 
+  glimpse()
+
+# Get contracts data
+
+contract_list <- excel_files_tbl$sheets %>% 
+  as.list() %>% 
+  map(~list.match(.x, "Contract")) %>% 
+  list.filter(~length(.) != 0) %>% 
+  map(unname) %>% 
+  map(~map(.x, clean_names)) 
+
+contracts_tbl <- contract_list %>% 
+  bind_rows() %>% 
+  mutate(award_value = as.numeric(award_value),
+         contract_start = contract_start %>%
+           as.numeric() %>%
+           excel_numeric_to_date(),
+         contract_end = contract_end %>%
+           as.numeric() %>%
+           excel_numeric_to_date(),
+         renewal = na_if(renewal, "N/A"),
+         extension_option = na_if(extension_option, "N/A")) %>%
+  glimpse()
+
+
+
+
+
+
+# get the £500 spend data from csvs
 
 # Get all the csv files, tabulate and introspect
 csv_links <- links[grepl("\\.csv$", links, ignore.case = TRUE)]
@@ -119,8 +179,6 @@ all_tbl <- raw_tbl_list |>
   map(~ mutate(.x, across(everything(), as.character))) |>
   bind_rows() %>% 
   bind_rows(q4_2023_tbl)
-
-
 
 # Create the final output csv for the £500 spend data
 
