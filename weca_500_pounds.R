@@ -118,10 +118,6 @@ contracts_tbl <- contract_list %>%
   glimpse()
 
 
-
-
-
-
 # get the £500 spend data from csvs
 
 # Get all the csv files, tabulate and introspect

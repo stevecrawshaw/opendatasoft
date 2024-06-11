@@ -6,19 +6,24 @@
     --drawer-background-color: white;
     --boxes-radius: 6px;
 }
+
 .map-drawer-container {
     display: flex;
+    width: auto;
     flex-direction: column-reverse;
     position: relative;
     overflow: hidden;
     height: -webkit-fill-available;
 }
 
+
 /* */
 .map-drawer-container__map {
     position:relative;
     width: -webkit-fill-available;
     height: -webkit-fill-available;
+    min-height: 600px;
+
 }
 .map-drawer-container__info {
     width: var(--drawer-width);
@@ -45,21 +50,25 @@
     top: 0;
     bottom: 0;
     background-color: var(--drawer-background-color);
+    overflow: hidden;
     transition: 0.3s;
 
 }
 .map-drawer-container__drawer__partial {
+    overflow: hidden;
     right: calc(-1 * var(--drawer-width));
     width: var(--drawer-width);
     z-index: 11;
 
 }
 .map-drawer-container__drawer__full {
-    overflow: hidden;
+    overflow: auto;
     right: calc(-1 * var(--map-width));
     width: calc(var(--map-width) - var(--backdrop-width-when-modal-active));
     z-index: 10;
+    margin: 10px;
 }
+
 .map-drawer-container__drawer__close {
     position: absolute;
     top: 0px;
@@ -69,6 +78,7 @@
 /* active state partial drawer */
 .map-drawer-container--active .map-drawer-container__drawer__partial {
     right: 0;
+    overflow: auto;
 }
 
 /* active state full drawer */
@@ -87,6 +97,8 @@
     border: 4px solid;
     padding-left: 20px;
     padding-right: 20px;
+    padding:30px;
+    margin:10px;
 }
 .donotcopy-specific .map-drawer-container__map {
     background-color: #ffffff;
@@ -97,6 +109,9 @@
 /* was lightgreen*/
 .donotcopy-specific .map-drawer-container__drawer__partial {
     background-color: #ffffff;
+    width:auto;
+    max-width:450px;
+    overflow: auto;
 }
 /* was lightpink*/
 .donotcopy-specific .map-drawer-container__drawer__full {
@@ -166,17 +181,14 @@ li {
 }
 
 .table-basic thead th {
+    position: sticky !important;
     color: var(--titles);
     font-weight: 500;
-    /*padding: 13px 3px;
-    top: 0;
-    z-index: 1; */
     top: 0;
     z-index: 2;
     background-color: #ffffff;
     border-bottom: 2px solid #ccc;
     padding: 13px 3px;
-    position: sticky;
 }
 
 
@@ -188,8 +200,6 @@ li {
 .table-basic tbody th {
     font-weight: normal;
     border-top: 1px solid #dee5ef;
-    overflow: auto;
-    
 }
 
 .table-basic tr td {
@@ -201,11 +211,10 @@ li {
 }
 
 .table-container {
-    max-height: 400px; /* Adjust as needed */
+  /*  max-height: 400px;  Adjust as needed */
     overflow-y: auto;
     position: relative;
 }
-
 
 /* Dashboard layout css -----------------------------------*/
 
@@ -213,7 +222,6 @@ body, main {
     margin: 0;
     background-color: #F2F3F8;
 }
-
 
 h2 {
     color: #354753;
@@ -233,8 +241,6 @@ h2 {
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.16);
     border-radius: var(--boxes-radius);
 }
-
-
 
 @keyframes bounce {
     from {
@@ -257,9 +263,10 @@ h2 {
 
 /* */
 .description{
-    height: 350px;
-    overflow-y: auto;
+    max-height: 300px;
+    overflow: auto;
 }
+
 .box-column{
     min-width: 200px;
 }
@@ -267,19 +274,17 @@ h2 {
     display:flex;
     flex-wrap: wrap;
     padding: 0 30px;
-}
-.odswidget-map {
-    height:-webkit-fill-available;
-    min-height: 800px;
+    width: min-content;
 }
 
-.odswidget-map__map {
-    height: 100%;
-    min-height: 800px;
-}
+
+
+
 
 .ods-box{
-    height: 700px;
+    height: -webkit-fill-available;
+    margin: 0;
+        padding:30px
 }
 
 .theme-box-container{
@@ -288,7 +293,7 @@ h2 {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin:20px 0;
+    margin: 0;
 }
 
 .theme-box{
@@ -304,14 +309,21 @@ h2 {
     flex-wrap: wrap;
 }
 
+/*Priority and mesure*/
+/* table */
 .fillwide {
-    width: -webkit-fill-available;
+    width: auto;
+    margin: 2px;
+    height: -webkit-fill-available;
+    overflow: auto;
+    display: flex;
+    justify-content: flex-start;
 }
+/*filters number*/
+.odswidget-facet__category-count {
+    display:none}
 
-dl {
-    height: 500px;
-}
-
+/*List*/
 dt {
     text-align: left;
 }
@@ -319,13 +331,117 @@ dt {
 dd {
     text-align: left;
     padding-left: 20px;
+    margin-bottom:10px;
 }
 
-/*ods-facets {
-    position: sticky;
-}
-*/
+
 
 .area-div {
     height: 650px;
 }
+/*Mobile version */
+.mobile{
+    display:flex
+}
+@media only screen and  (max-width:800px){
+    :root {
+        --drawer-width: auto;
+        --map-width: calc(100% - var(--drawer-width));
+        --backdrop-width-when-modal-active: 75px;
+        --drawer-background-color: white;
+        --boxes-radius: 6px;
+    }
+
+    .map-drawer-container {
+        display: flex;
+    }
+    .mobile{
+    display:none
+}
+    .map-drawer-container__drawer__full{
+            width: -webkit-fill-available;
+
+    }
+}
+
+
+/*MAP */
+
+@media only screen and  (min-width:800px){
+.map-drawer-container__drawer__full {
+display:flex;
+        width: -webkit-fill-available;
+    }
+}
+
+
+.odswidget-map {
+    height:-webkit-fill-available;
+    min-height: 800px;
+}
+.odswidget-map__map {
+    height: 100%;
+    min-height: 800px;
+}
+@media only screen and  (max-height: 600px) {
+    .odswidget-map {
+        height:-webkit-fill-available;
+        min-height:450px
+    }
+
+    .odswidget-map__map {
+        height: 100%;
+        min-height:450px
+
+    }
+}
+
+
+@media only screen and  (max-height: 700px) {
+    .odswidget-map {
+        height:-webkit-fill-available;
+        min-height:550px
+    }
+
+    .odswidget-map__map {
+        height: 100%;
+        min-height:550px
+
+    }
+}
+
+
+@media only screen and(max-height: 850px) {
+    .odswidget-map {
+        height:-webkit-fill-available;
+        min-height: 700px;
+    }
+
+    .odswidget-map__map {
+        height: 100%;
+        min-height: 700px;
+    }
+}
+@media only screen and(max-height: 1000px) {
+    .odswidget-map {
+        height:-webkit-fill-available;
+        min-height: 850px;
+    }
+
+    .odswidget-map__map {
+        height: 100%;
+        min-height: 850px;
+    }
+}
+@media only screen and(max-height: 1200px) {
+    .odswidget-map {
+        height:-webkit-fill-available;
+        min-height: 1050px;
+    }
+
+    .odswidget-map__map {
+        height: 100%;
+        min-height: 1050px;
+    }
+}
+
