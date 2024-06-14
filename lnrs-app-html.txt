@@ -176,14 +176,16 @@
                 <div ng-if="apmg.parameters['refine.level_of_ambition'] || apmg.parameters['refine.land_type'] || apmg.parameters['refine.stakeholder'];"
                      class="fillwide">
                     <!-- code below runs when filter(s) applied -->
+                    <!--The grantarray ods-analysis checks to see if there are grants and turns off the grants column in the table if there are none -->
                     <div class="theme-box-container column fillwide"
                          ods-adv-analysis="grantarray"
                          ods-adv-analysis-context="apmg"
-                         ods-adv-analysis-group-by="grant_id">
+                         ods-adv-analysis-group-by="grant_id"
+                         ng-init="{{grantsExist = grantarray.length > 0}}">
                         <div ods-adv-analysis="measuresgrants"
                              ods-adv-analysis-context="apmg"
                              ods-adv-analysis-group-by="biodiversity_priority, measure"
-                             ods-adv-analysis-order-by="biodiversity_priority"
+                             ods-adv-analysis-order-by="measure"
                              >
                             <div class="table-module">
                                 <div class="table-container">
@@ -193,14 +195,15 @@
                                                 <tr  class="kpi-value">
                                                     <!-- th>Biodiversity Priority</th -->
                                                     <th ods-tooltip="Hover over measures to see the priority">Measure: Action to implement the priority</th>
-                                                    <th ods-tooltip="If blank there is no grant available">Grants</th>
+                                                    <th ng-if="grantsExist"
+                                                        ods-tooltip="If blank there is no grant available">Grants</th>
                                                 </tr>
                                             </thead>
                                             <tr ng-repeat="record in measuresgrants">
                                                 <!-- td>{{ record['biodiversity_priority']}}</td -->
                                                 <td><span ods-tooltip="PRIORITY: {{ record['biodiversity_priority']}}">{{ record['measure']}}</span></td>
                                                 <!--td>{{ record['relevant_map_layer']}}</td -->
-                                                <td>
+                                                <td  ng-if="grantsExist">
                                                     <div ods-adv-analysis="linkgrants"
                                                          ods-adv-analysis-context="apmg"
                                                          ods-adv-analysis-group-by="grant_id, grant_name, url"
