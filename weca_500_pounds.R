@@ -82,20 +82,24 @@ pc_tbl <- pc_list %>%
   mutate(PaymentDate = doc_date %>%
            as.numeric() %>%
            excel_numeric_to_date(),
-         PaymentAmount = as.numeric(amount),
+         Amount = as.numeric(amount),
          supplier = NULL,
          description = str_sub(text, 8, -1) %>% 
            str_remove(","),
+         summary_of_purpose = if_else(is.na(description), 
+                 summary_of_purpose, 
+                 glue("{summary_of_purpose}: {description}")),
          doc_date = NULL,
          amount = NULL,
          text = NULL,
-         CardTransaction = TRUE) %>% 
+         description = NULL,
+         TransactionMethod = "Purchase Card") %>% 
   rename(TransactionNumber = trans_no,
          Purpose = summary_of_purpose,
          ServiceCategoryLabel = service_area) %>% 
   glimpse()
 
-# Get contracts data
+# Get contracts data ----
 
 contract_list <- excel_files_tbl$sheets %>% 
   as.list() %>% 
@@ -118,7 +122,7 @@ contracts_tbl <- contract_list %>%
   glimpse()
 
 
-# get the £500 spend data from csvs
+# get the £500 spend data from csvs ----
 
 # Get all the csv files, tabulate and introspect
 csv_links <- links[grepl("\\.csv$", links, ignore.case = TRUE)]
@@ -178,11 +182,12 @@ all_tbl <- raw_tbl_list |>
 
 # Create the final output csv for the £500 spend data
 
-ods_out_tbl <- all_tbl |>
+spend_500_tbl <- all_tbl |>
   janitor::remove_empty(c("cols", "rows")) |>
   mutate(
     # rename columns where inconsistent names have been applied
-    BeneficiaryName = coalesce(Supplier, `Supplier Name`),
+    BeneficiaryName = coalesce(Supplier, `Supplier Name`) %>% 
+      str_remove_all(",|/"),
     date_doc = coalesce(Date, `Doc Date`) |>
       parse_date_time(orders = c("dmy")),
     # some dates are in excel format - the misplaced file
@@ -200,8 +205,9 @@ ods_out_tbl <- all_tbl |>
     Amount = as.numeric(Amount),
     IrrecoverableVATAmount = as.numeric(`Irrecoverable VAT`),
     `Irrecoverable VAT` = NULL,
-    TransactionNumber = as.integer(TransNo),
-    TransNo = NULL
+    TransactionNumber = TransNo,
+    TransNo = NULL,
+    TransactionMethod = "Spend over £500"
   ) |>
   # filter out rows with no transaction number
   filter(!is.na(TransactionNumber)) |>
@@ -217,15 +223,18 @@ ods_out_tbl <- all_tbl |>
     TransactionNumber,
     Amount,
     IrrecoverableVATAmount,
-    Purpose
+    Purpose,
+    TransactionMethod
   )
 
 
+ods_out_tbl <- spend_500_tbl %>% bind_rows(pc_tbl) %>% glimpse()
 
 
 # do some checking to ensure we've got data from all months
 
 ods_out_tbl %>%
+  filter(TransactionMethod == "Spend over £500") %>%
   group_by(year_month = ceiling_date(PaymentDate, unit = "months")) %>%
   summarise(n = n()) %>% 
   filter(year_month >= as.POSIXct("2020-01-01")) %>%
@@ -239,7 +248,7 @@ ods_out_tbl %>%
 # Find the supplier we're interested in
 
 rowe_payments_tbl <- ods_out_tbl %>%
-  filter(str_detect(BeneficiaryName, "Rowe|rowe")) 
+  filter(str_detect(BeneficiaryName, "Rowe IT")) 
 
 rowe_payments_tbl %>%
   view()
@@ -260,4 +269,6 @@ rowe_chart <- rowe_payments_tbl %>%
 rowe_chart
 
 # write the csv for upload to ODS
-ods_out_tbl |> write_csv("data/weca_500_pounds.csv", na = "")
+ods_out_tbl |> write_csv("data/weca_500_pounds.csv",
+                         na = "")
+warnings()[1]
