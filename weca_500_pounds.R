@@ -13,6 +13,13 @@ pacman::p_load(tidyverse, janitor, glue, rvest, lobstr, readxl, rio, scales, rli
 
 domain <- "https://www.westofengland-ca.gov.uk"
 main_page <- "https://www.westofengland-ca.gov.uk/about-us/democracy-funding-transparency/financial-disclosures/"
+
+# helper function
+date_from_char <- function(date_str) {
+ date_str %>% 
+    as.numeric() %>% 
+    excel_numeric_to_date()
+}
 # Try to read the HTML content of the page
 
 page <- try(read_html(main_page))
@@ -112,15 +119,27 @@ contracts_tbl <- contract_list %>%
   bind_rows() %>% 
   mutate(award_value = as.numeric(award_value),
          contract_start = contract_start %>%
-           as.numeric() %>%
-           excel_numeric_to_date(),
+           date_from_char(),
          contract_end = contract_end %>%
-           as.numeric() %>%
-           excel_numeric_to_date(),
+           date_from_char(),
+         date_awarded = date_awarded %>% 
+           date_from_char(),
          renewal = na_if(renewal, "N/A"),
-         extension_option = na_if(extension_option, "N/A")) %>%
-  glimpse()
-
+         extension_option = na_if(extension_option, "N/A"),
+         procurement_route = tolower(procurement_route),
+         procurement_route = case_when(
+           procurement_route == "direct" ~ "direct award",
+           procurement_route == "psf framework" ~ "framework: psf",
+           procurement_route == "ccs framework" ~ "framework: ccs",
+           procurement_route == "restricted" ~ "restricted tender",
+           procurement_route == "bloom nepo framework" ~ "framework: bloom nepo",
+           procurement_route == "ypo framework" ~ "framework: ypo",
+           procurement_route == "framework (psf)" ~ "framework: psf",
+           procurement_route == "pcr tender" ~ "tender: pcr",
+           procurement_route == "framework (other)" ~ "framework: other",
+           procurement_route == "direct award (exemption)" ~ "direct award: exemption",
+           .default = procurement_route) %>% 
+           str_to_sentence())
 
 # get the £500 spend data from csvs ----
 
@@ -271,4 +290,9 @@ rowe_chart
 # write the csv for upload to ODS
 ods_out_tbl |> write_csv("data/weca_500_pounds.csv",
                          na = "")
+
+
+contracts_tbl %>% write_csv("data/ods-weca-contracts-tbl.csv",
+                            na = "")
+
 warnings()[1]
