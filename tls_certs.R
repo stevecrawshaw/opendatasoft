@@ -57,6 +57,8 @@ cat(response_body_string(response))
 
 # passing the cacert.pem from requests library doesn't work on the installed version of curl 8.2.1
 
+# This also applies to PowerBI, which seems to use curl (for CSV and probably others)
+
 # 
 # I have done some testing, and I think the problem is that the R libraries are essentially calling curl to fetch the data. This seems to include readr::read_*  httr::GET() httr2::request() and utils::download.file() - and probably others.
 # 
