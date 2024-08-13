@@ -1,4 +1,8 @@
-pacman::p_load(fastverse, tidyverse, janitor, glue, rvest, readxl, rio, httr2, openssl, curl)
+pacman::p_load(fastverse, tidyverse, janitor, glue, rvest, readxl, rio, httr2, openssl, curl, rio, RCurl)
+
+# The Solution
+# 
+# https://stackoverflow.com/questions/64147821/error-running-weathercan-package-fatal-ssl-tls-alert-e-g-handshake-failed
 
 csv_url_weca <- "https://opendata.westofengland-ca.gov.uk/api/explore/v2.1/catalog/datasets/lep-epc-domestic-point/exports/csv?lang=en&refine=property_type%3A%22Park%20home%22&facet=facet(name%3D%22property_type%22%2C%20disjunctive%3Dtrue)&timezone=Europe%2FLondon&use_labels=true&delimiter=%2C"
 
@@ -8,7 +12,14 @@ csv_url_ods <- "https://westofenglandca.opendatasoft.com/api/explore/v2.1/catalo
 
 test_dt <- fread(csv_url_weca) #fails with ssl error
 
+read_csv(csv_url_weca)
+
 download.file(url = csv_url_weca, destfile = "data/test.csv") # fails
+
+download.file(url = csv_url_weca, destfile = "data/test.csv", method = "auto") # fails
+
+
+test_rio <- rio::import(csv_url_weca) # fails
 
 
 response <- request(csv_url_weca) %>% 
@@ -20,6 +31,20 @@ resp_body_string(response) %>%
 
 con <- curl::curl(url = csv_url_weca) # fails
 readLines(con)
+
+
+myCsv <- getURL(csv_url_weca)
+
+temporaryFile <- tempfile()
+con <- file(temporaryFile, open = "w")
+cat(myCsv, file = con) 
+close(con)
+
+read.csv(temporaryFile)
+
+
+
+
 
 # do some ssl testing
 
