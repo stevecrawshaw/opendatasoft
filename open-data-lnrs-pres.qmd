@@ -1,0 +1,118 @@
+---
+title: "Open Data and Local Nature Recovery Strategy"
+subtitle: "Supporting Investment in Nature"
+author: "Steve Crawshaw"
+institute: "West of England Combined Authority"
+embed-resources: false
+preview-links: false
+format: 
+  revealjs:
+    theme:
+    - default
+    - ../clean.scss
+---
+
+
+## Content {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- LNRS Intro
+- Open Data
+  - Supporting partners and directorates
+  - Transparency
+  - Project - specific applications
+- LNRS app - requirements
+- Building the LNRS app
+
+::: {.notes}
+we will go fast
+questions at end, in chat, 20 mins
+:::
+
+## LNRS: Overview {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- ‘New, England-wide system of spatial strategies that will establish priorities - map proposals for specific actions to drive nature’s recovery and provide - environmental benefits’
+- ~50 strategies across England that will map delivery of the national Nature Recovery Network
+
+## LNRS: Overview {background-image="plots/weca_ppt_image_sized_3.png"}
+- Each LNRS:
+    - Will direct net gain funding and have a broader role in the planning system
+    - May be used to prioritise activities within parts of the new ELM Scheme
+    - Will inform the targeting of nature-based solutions
+    - Will support cross-sectoral alignment of environmental policy and funds
+    - Public Authorities must *have regard* to any relevant local nature recovery     strategy
+
+## Why Open Data? {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- Helps us share data resources with our residents and partners
+- Delivers our commitments to transparency and digital plan
+- A foundation for building apps to add value to data products
+
+## The Opendatasoft platform {background-image="plots/weca_ppt_image_sized_3.png"}
+
+[MCA Open Data Platform](https://westofenglandca.opendatasoft.com/pages/homepage/)
+
+::: {.notes}
+3000 customers
+Capable and performant
+Strong API
+Strong visualisations
+:::
+
+## LNRS Application: Requirmeents {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- Translate the strategy into actions that landowners can take to invest in nature recovery.
+- Place - based insights into biodiversity priorities and measures to deliver them.
+- Menu of measures (actions) and grants to fund them.
+- Simple, fast and available on a range of devices
+- Ready for submission of LNRS
+- Showcase the use of the ODP
+
+::: {.notes}
+
+:::
+
+
+## Source Data {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- Spreadsheet
+- Areas, priorities, measures, grants
+- Grant data online ~300 grants
+- Data cleaning 
+- Build data model
+- ~700 lines of R code
+
+
+::: {.notes}
+
+:::
+
+## Building the app {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- Map - driven
+  - QGIS processing of area polygon vertices
+- Relational vs. flat model for main table
+- Refactoring R code to construct flat table ~11K records
+- Load data onto ODP
+- Write code to create the app
+  - HTML - building blocks for the web
+  - Angular JS - control the logic of the clickable elements
+  - ODS widgets - modular components to access data (maps, queries)
+  - CSS - make it look nice
+
+
+## Challenges {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- Understanding the data model and responding to client requirements
+- New widgets which implement SQL
+- CSS - obscure and unintuitive
+- Refactoring code and data model post consultation
+- Developing solution for changing source data
+  
+::: {.notes}
+
+:::
+
+## LNRS App demo {background-image="plots/weca_ppt_image_sized_3.png"}
+
+[![](plots/lnrs-app-screenshot.jpeg)](https://westofenglandca.opendatasoft.com/pages/lnrs-application/)
+
