@@ -26,22 +26,47 @@
                      ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name']}">
                 </div>
                 <h2 ng-if="areasgroupedtbl.parameters['refine.area_name'] == undefined">
-                    Local Nature Recovery Strategy: Select a Sub Area to see improvement measures and grants
+                    Local Nature Recovery Strategy: Select a Sub Area to see improvement measures and grants 
+                    <!--a ods-tooltip="short video" href="https://app.arcade.software/share/WDk0jbGqrBGTbja6zs11" target="_blank">(learn how)</a -->
                 </h2>
+                <ods-pop-in
+                            name="intro-pop-in"
+                            title=""
+                            display-after="1"
+                            display-only-once="false"
+                            >
+                    <br>
+                    <div style="text-align: center;">
+                        <h2>
+                           LNRS Application 
+                        </h2>
+                        <br>
+                        Watch a 
+                        <a href="https://app.arcade.software/share/WDk0jbGqrBGTbja6zs11" target="_blank">short video </a>
+                        to learn how to use it. <br>
+                        <br>
+                        Or go <a href="" ng-click="hidePopIn()">straight to the app.</a>    
+                    </div>
+                </ods-pop-in>
                 <ods-map scroll-wheel-zoom="true"
                          location="10,51.47716,-2.63609"
                          basemap="jawg.light"
                          toolbar-drawing="false"
+                         toolbar-fullscreen="false"
                          search-box="true">
-
                     <ods-map-layer context = "focusareas"
-                                   shape-opacity="0.2"
-                                   color="#83de9b"
+                                   shape-opacity="0.3"
+                                   color="#2b83ba"
+                                   caption="true"
+                                   caption-title="Focus Areas - additional benefit"
                                    exclude-from-refit="true">
                     </ods-map-layer>
                     <ods-map-layer context="areasgroupedtbl"
                                    display="raw"
-                                   shape-opacity="0.2"
+                                   shape-opacity="0.1"
+                                   color="#fee08b"
+                                   border-opacity="0.3"
+                                   border-color="grey"
                                    caption="false"
                                    refine-on-click-context="[areasgroupedtbl, areafundingschemestbl, apmg]"
                                    refine-on-click-areasgroupedtbl-context-field="area_name"
@@ -163,7 +188,7 @@
                                 <ods-facet name="core_supplementary"
                                            title="Status"
                                            disjunctive="true"
-                                           ods-tooltip="Core means essential"><div ng-non-bindable>{{category.name}}</div>
+                                           ods-tooltip="'Core' measures relate to key habitats and species; 'Core (BNG)' measures receive 15% BNG uplift in mapped focus areas"><div ng-non-bindable>{{category.name}}</div>
                                 </ods-facet>
                             </div> 
                             <div class="column box-column"> 
