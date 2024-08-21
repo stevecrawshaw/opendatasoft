@@ -16,15 +16,26 @@ postcodes[!postcode_not_utf8]
 
 base_url <- "https://api.postcodes.io/postcodes"
 
-chunk <- function(x, n) (mapply(function(a, b) (x[a:b]), seq.int(from=1, to=length(x), by=n), pmin(seq.int(from=1, to=length(x), by=n)+(n-1), length(x)), SIMPLIFY=FALSE))
+# need to chunk the postcodes in batches of 100
+# for the API
+chunk <- function(x, n) {
+  mapply(function(a, b) (x[a:b]),
+         seq.int(from=1, to=length(x), by=n),
+         pmin(
+           seq.int(from=1, to=length(x), by=n)+(n-1),
+           length(x)),
+         SIMPLIFY=FALSE)
+  }
 
 jsonise <- function(a_chunk){
+# create a named list of postcodes
   a_chunk |> 
   list() |> 
   set_names("postcodes")
 }
 
 flatten_to_df <- function(response){
+# rectangle that bad boy
  response |> 
   resp_body_json() |> 
   pluck("result") |> 
