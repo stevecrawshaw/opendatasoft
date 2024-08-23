@@ -55,17 +55,17 @@
                          toolbar-fullscreen="false"
                          search-box="true">
                     <ods-map-layer context = "focusareas"
-                                   shape-opacity="0.3"
-                                   color="#2b83ba"
+                                   shape-opacity="0.5"
+                                   color="#93117F"
                                    caption="true"
-                                   caption-title="Focus Areas - additional benefit"
+                                   caption-title="Focus Areas for nature recovery"
                                    exclude-from-refit="true">
                     </ods-map-layer>
                     <ods-map-layer context="areasgroupedtbl"
                                    display="raw"
-                                   shape-opacity="0.1"
-                                   color="#fee08b"
-                                   border-opacity="0.3"
+                                   shape-opacity="0.4"
+                                   color="#ED9899"
+                                   border-opacity="0.6"
                                    border-color="grey"
                                    caption="false"
                                    refine-on-click-context="[areasgroupedtbl, areafundingschemestbl, apmg]"
