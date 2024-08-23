@@ -57,7 +57,10 @@ url_list = [f'{base_url}{catalog_datasets_endpoint}/{dataset_id}{export_endpoint
             in enumerate(datasets_id)]
 url_list
 #%%
+url_list_parquet = [f'{base_url}{catalog_datasets_endpoint}/{dataset_id}/exports/parquet' for dataset_id in datasets_id]
+#%%
 all_valid_urls = all([is_valid_url(url) for url in url_list])
+all_valid_parquet_urls = all([is_valid_url(url) for url in url_list_parquet])
 #%%
 def download_ods(url_list: list[str],
                  save_folder: str,
@@ -71,7 +74,7 @@ def download_ods(url_list: list[str],
         for i, url in enumerate(url_list):
             print(f"Downloading {url}")
             r = requests.get(url, params = cred_param)
-            with open(save_folder + datasets_id[i] + '.' + export_format[i], 'wb') as f:
+            with open(f'{save_folder}{datasets_id[i]}.{export_format[i]}', 'wb') as f:
                 f.write(r.content)
         return True
 #%%
@@ -83,4 +86,38 @@ download_ods(ul, save_folder, all_valid_urls, di, cred_param)
 
 #%%
 # Download all datasets
-download_ods(url_list, save_folder, all_valid_urls, datasets_id, cred_param)
+#download_ods(url_list, save_folder, all_valid_urls, datasets_id, cred_param)
+
+#%%
+# try parquet
+
+#%%
+
+def download_ods_parquet(url_list: list[str],
+                 save_folder: str,
+                 valid_urls: bool,
+                 datasets_id: list[str],
+                 geo_data: list[bool],
+                 cred_param: dict) -> bool: 
+   if not valid_urls:
+       print("Some urls are not valid. Please check the urls.")
+       return False
+   else:
+        geo_label = ['_geo' if geo else '_tab' for geo in geo_data]
+        for i, url in enumerate(url_list):
+            print(f"Downloading {url}")
+            r = requests.get(url, params = cred_param)
+            with open(f'{save_folder}{datasets_id[i]}{geo_label[i]}.parquet', 'wb') as f:
+                f.write(r.content)
+        return True
+   
+   #%%
+
+download_ods_parquet(url_list_parquet,
+                     save_folder,
+                     all_valid_parquet_urls,
+                     datasets_id,
+                     geo_data,
+                     cred_param)
+
+   #%%
