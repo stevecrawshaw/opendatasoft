@@ -85,13 +85,8 @@ di = datasets_id[0:2]
 download_ods(ul, save_folder, all_valid_urls, di, cred_param)
 
 #%%
-# Download all datasets
+# Download all datasets - varying the format if geo data - deprecated in favour of parquet
 #download_ods(url_list, save_folder, all_valid_urls, datasets_id, cred_param)
-
-#%%
-# try parquet
-
-#%%
 
 def download_ods_parquet(url_list: list[str],
                  save_folder: str,
