@@ -3,7 +3,7 @@
                      areasgroupedtbl-dataset="lnrs-sub-areas-data"
                      areafundingschemestbl-dataset="lnrs-area-funding-schemes-tbl-testing"
                      apmg-dataset="area-measures-tbl"
-                     focusareas-dataset="lnrs-areas-pi"
+                     focusareas-dataset="focus-areas-gridded"
                      wecaboundary-dataset="weca-boundary-line">
     <!-- was areas-tbl -->
     <!--This is what it was apmg-dataset="areas-priorities-measures-grants-tbl" but problems with not including missing measures which had no grants -->
@@ -38,7 +38,7 @@
                     <br>
                     <div style="text-align: center;">
                         <h2>
-                           LNRS Application 
+                            LNRS Application 
                         </h2>
                         <br>
                         Watch a 
@@ -50,7 +50,7 @@
                 </ods-pop-in>
                 <ods-map scroll-wheel-zoom="true"
                          location="10,51.47716,-2.63609"
-                         basemap="jawg.light"
+                         basemap="mapbox.streets-satellite"
                          toolbar-drawing="false"
                          toolbar-fullscreen="false"
                          search-box="true">
@@ -58,6 +58,7 @@
                                    shape-opacity="0.5"
                                    color="#93117F"
                                    caption="true"
+                                   border-size=0
                                    caption-title="Focus Areas for nature recovery"
                                    exclude-from-refit="true">
                     </ods-map-layer>
@@ -163,6 +164,10 @@
                          ng-click="drawer.status = !drawer.status">
                         Priorities and Measures
                     </div>
+                    <!--div class="ods-button"
+                         ng-click="species-drawer.status = !species-drawer.status">
+                        Species
+                    </div -->
                 </div>
             </div>
             <div class="map-drawer-container__drawer map-drawer-container__drawer__full" ng-if="drawer.status">

@@ -14,8 +14,6 @@ postcode_not_utf8 <- postcodes|>
 
 postcodes[!postcode_not_utf8]
 
-base_url <- "https://api.postcodes.io/postcodes"
-
 # need to chunk the postcodes in batches of 100
 # for the API
 chunk <- function(x, n) {
