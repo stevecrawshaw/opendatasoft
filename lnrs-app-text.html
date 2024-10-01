@@ -1,127 +1,68 @@
 <!-- template here https://codelibrary.opendatasoft.com/page-templates/map-refine/#code-use-a-map-as-a-selector-and-display-results-on-the-side-css-content-->
-<ods-dataset-context context="areasgroupedtbl, areafundingschemestbl, apmg, focusareas, wecaboundary, lnrsspeciesarea"
-                     areasgroupedtbl-dataset="lnrs-sub-areas-data"
+<ods-dataset-context context="areafundingschemestbl, apmg, areasonly"
                      areafundingschemestbl-dataset="lnrs-area-funding-schemes-tbl-testing"
                      apmg-dataset="area-measures-tbl"
-                     focusareas-dataset="focus-areas-gridded"
-                     wecaboundary-dataset="weca-boundary-line"
-                     lnrsspeciesarea-dataset="species-area-tbl">
+                     areasonly-dataset="areas-tbl"
+                     ng-init="areasonly.parameters['refine.area_name']=undefined">
     <div class="donotcopy-specific"
          ng-init="donotcopy = {'simulaterefineonclick' : false}">
         <div class="map-drawer-container"
-             ng-class="{'map-drawer-container--active': areasgroupedtbl.parameters['refine.area_name'],
-                       'map-drawer-container--active-full': drawer.status || speciesdrawer.status}"
-             ng-init="drawer = {'status':false}; speciesdrawer = {'status':false};">
+             ng-init="drawer = {'status':false}"
+             ng-class="{'map-drawer-container--active': areasonly.parameters['refine.area_name'],
+                       'map-drawer-container--active-full': drawer.status}">
             <!--  this was in the dive before ng-class -->
             <div class="map-drawer-container__map">
                 <div class="map-drawer-container__backdrop"
-                     ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
+                     ng-click="areasonly.parameters['refine.area_name']=undefined;
                                apmg.parameters['refine.core_supplementary'] = undefined;
                                apmg.parameters['refine.measure_type'] = undefined;
                                apmg.parameters['refine.stakeholder'] = undefined;
                                drawer.status = false;"
-                     ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name']}">
+                     ng-class="{'map-drawer-container__backdrop--active': areasonly.parameters['refine.area_name'].length>0}">
                 </div>
-                <h2 ng-if="areasgroupedtbl.parameters['refine.area_name'] == undefined">
+                <h2 ng-if="!areasonly.parameters['refine.area_name'].length>0">
                     Local Nature Recovery Toolkit: Select a Sub Area to see potential measures for nature recovery 
                 </h2>
-                <ods-pop-in
-                            name="intro-pop-in"
-                            title=""
-                            display-after="1"
-                            display-only-once="false"
-                            >
-                    <br>
-                    <div style="text-align: center;">
-                        <h2>
-                            LNRS Application 
-                        </h2>
-                        <br>
-                        Watch a 
-                        <a href="https://app.arcade.software/share/WDk0jbGqrBGTbja6zs11" target="_blank">short video </a>
-                        to learn how to use it. <br>
-                        <br>
-                        Or go <a href="" ng-click="hidePopIn()">straight to the app.</a>    
+                <div class="center-container">
+                    <div ods-results="items"
+                         ods-results-context="areasonly"
+                         ods-results-max="100">
+                        <label>
+                            <ods-select
+                                        disabled="false"
+                                        selected-values="areasonly.parameters['refine.area_name']"
+                                        multiple="false"
+                                        options="items"
+                                        label-modifier="fields.area_name"
+                                        value-modifier="fields.area_name"
+                                        placeholder="Select a Sub - Area">
+                            </ods-select>
+                        </label>
+                        {{apmg.parameters['refine.area_name'] = areasonly.parameters['refine.area_name'];""}}
+                        {{areafundingschemestbl.parameters['refine.area_name'] = areasonly.parameters['refine.area_name'];""}}
                     </div>
-                </ods-pop-in>
-                <ods-map scroll-wheel-zoom="true"
-                         location="10,51.47716,-2.63609"
-                         basemap="mapbox.streets-satellite"
-                         toolbar-drawing="false"
-                         toolbar-fullscreen="false"
-                         search-box="true">
-                    <ods-map-layer context = "focusareas"
-                                   shape-opacity="0.5"
-                                   color="#93117F"
-                                   caption="true"
-                                   border-size=0
-                                   caption-title="Focus Areas for nature recovery"
-                                   exclude-from-refit="true">
-                    </ods-map-layer>
-                    <ods-map-layer context="areasgroupedtbl"
-                                   display="raw"
-                                   shape-opacity="0.4"
-                                   color="#ED9899"
-                                   border-opacity="0.6"
-                                   border-color="grey"
-                                   caption="false"
-                                   refine-on-click-context="[areasgroupedtbl, areafundingschemestbl, apmg]"
-                                   refine-on-click-areasgroupedtbl-context-field="area_name"
-                                   refine-on-click-areasgroupedtbl-map-field="area_name"
-                                   refine-on-click-areasgroupedtbl-replace-refine="true"
-                                   refine-on-click-apmg-context-field="area_name"
-                                   refine-on-click-apmg-map-field="area_name"
-                                   refine-on-click-apmg-replace-refine="true"
-                                   refine-on-click-areafundingschemestbl-context-field="area_name"
-                                   refine-on-click-areafundingschemestbl-map-field="area_name"
-                                   refine-on-click-areafundingschemestbl-replace-refine="true"
-                                   >
-                    </ods-map-layer>
-                    <ods-map-layer context = "wecaboundary"
-                                   line-width="2"
-                                   color="#222222"
-                                   caption="false"
-                                   tooltip-disabled="false"
-                                   exclude-from-refit="true">
-                    </ods-map-layer>
-
-                </ods-map>
+                </div>
                 <!--ng-click="donotcopy.simulaterefineonclick = false" \ drawer.status = false -->
             </div>
+
             <div class="map-drawer-container__drawer map-drawer-container__drawer__partial" 
-                 ng-if="areasgroupedtbl.parameters['refine.area_name']"
+                 ng-if="areasonly.parameters['refine.area_name'].length>0"
                  ng-class="{mobile:drawer.status}">
                 <div class="map-drawer-container__drawer__close"
-                     ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
-                               apmg.parameters['refine.core_supplementary'] = undefined;
-                               apmg.parameters['refine.measure_type'] = undefined;
-                               apmg.parameters['refine.stakeholder'] = undefined;
-                               drawer.status = false;">
+                     ng-click="drawer.status = false;
+                               areasonly.parameters['refine.area_name']=undefined;
+                               subarea= undefined">
                     <!-- close the partial map drawer with the X top right -->
                     <i class="fa fa-times"></i>
                 </div>
                 <div ods-adv-analysis="area"
-                     ods-adv-analysis-context="areasgroupedtbl"
+                     ods-adv-analysis-context="areasonly"
                      ods-adv-analysis-select="area_name, area_description, area_link"
                      ods-adv-analysis-limit="1">
-                    <!-- Select One of the areas - there can be multiple polygons with the same ID -->
                     <h2>
                         Sub Area: {{area[0].area_name}}
                     </h2>
                     <dl>
-                        <!-- <dt>Name</dt>
-                        <dd>
-                            <span class="area-text">
-                                <a ng-href="{{area[0].area_link}}"
-                                   target="_blank"
-                                   ods-tooltip="Area Guidance">
-                                    {{area[0].area_name}}
-                                    <i class="fa fa-external-link"
-                                       aria-hidden="true">
-                                    </i>
-                                </a>
-                            </span>
-                        </dd> -->
                         <dt>Description</dt>
                         <dd class="description"
                             ng-style="{'white-space': 'pre-line'}">
@@ -156,66 +97,24 @@
                             </div>
                         </dd>
                     </dl>
-                    <div class="button-container">
-                        <div class="ods-button"
-                             ng-click="drawer.status = !drawer.status">
-                            Priorities and Measures
-                        </div>
-                        <div class="ods-button"
-                             ng-click="speciesdrawer.status = !speciesdrawer.status;
-                                       drawer.status = false;
-                                       lnrsspeciesarea.parameters['refine.area_name']=area[0].area_name">
-                            Priority Species
-                        </div>
+                    <div class="ods-button"
+                         ng-click="drawer.status = !drawer.status">
+                        Priorities and Measures
                     </div>
+                    <!--div class="ods-button"
+                         ng-click="species-drawer.status = !species-drawer.status">
+                        Species
+                    </div -->
                 </div>
             </div>
-
-            <!-- start species -->
-            <div class="map-drawer-container__drawer  map-drawer-container__drawer__full" ng-if="speciesdrawer.status">
-                <div class="map-drawer-container__drawer__close"
-                     ng-click="speciesdrawer.status = false;">
-                    <!-- close the partial map drawer with the X top right -->
-                    <i class="fa fa-times"></i>
-                </div>
-
-                <div class="theme-box-container"> 
-                    <!-- Table from here https://codelibrary.opendatasoft.com/components/table-module/ consider the use of table with detailed panel when we have photos -->
-                    <div class="table-module">
-                        <table class="table-basic"
-                               ods-results="species"
-                               ods-results-context="lnrsspeciesarea"
-                               ods-results-max="51">
-                            <thead>
-                                <tr>
-                                    <th>Common name</th>
-                                    <th>Scientific name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="specie in species">
-                                    <th scope="row">
-                                        <a ng-href="{{ specie.fields.gbif_species_url }}" target="_blank">
-                                            {{ specie.fields.common_name | capitalize }}
-                                        </a>
-                                    </th>
-                                    <td>
-                                        {{ specie.fields.scientific_name }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- end species -->
 
             <div class="map-drawer-container__drawer map-drawer-container__drawer__full" ng-if="drawer.status">
                 <div class="map-drawer-container__drawer__close"
                      ng-click="apmg.parameters['refine.core_supplementary'] = undefined;
                                apmg.parameters['refine.measure_type'] = undefined;
                                apmg.parameters['refine.stakeholder'] = undefined;
-                               drawer.status = false;">
+                               drawer.status = false;
+                               ">
                     <!-- close the partial map drawer with the X top right -->
                     <i class="fa fa-times"></i>
                 </div>
@@ -263,8 +162,7 @@
                         <div ods-adv-analysis="measuresgrants"
                              ods-adv-analysis-context="apmg"
                              ods-adv-analysis-group-by="priority_id, biodiversity_priority, measure, measure_id, link_to_further_guidance"
-                             ods-adv-analysis-order-by="priority_id"
-                             >
+                             ods-adv-analysis-order-by="priority_id">
                             <div class="table-module">
                                 <div class="table-container">
                                     <table class="table-basic">
@@ -301,7 +199,6 @@
                                                         <a ng-repeat="link in linkgrants"
                                                            ng-href="{{ link.url }}"
                                                            target="_blank"
-
                                                            ods-tooltip="{{link.grant_name}}">
                                                             {{link.grant_id}} <br>
                                                         </a>

@@ -342,6 +342,10 @@ dd {
     margin-bottom:10px;
 }
 
+.center-container {
+    width: 30%;
+    margin: 50px auto 0 auto;
+}
 
 
 .area-div {
@@ -371,15 +375,6 @@ dd {
 
     }
 }
-.button-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .ods-button {
-        margin-bottom: 10px; /* Adds some space between the buttons */
-    }
-
 
 
 /*MAP */
