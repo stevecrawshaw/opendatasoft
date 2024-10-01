@@ -1,0 +1,66 @@
+---
+title: "Local Nature Recovery Strategy"
+author: "West of England Combined Authority"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r libraries, include = FALSE}
+pacman::p_load(tidyverse, httr2, janitor, glue, gt, gtExtras)
+
+```
+
+
+```{r set_params, include = FALSE}
+
+hostname <- "https://westofenglandca.opendatasoft.com"
+path1 <- "api/explore/v2.1"
+path2 <- "catalog/datasets"
+dataset <- "area-measures-tbl"
+endpoint = "exports/csv"
+select <- "area_id,area_name,area_description,measure,measure_type,biodiversity_priority,theme,stakeholder,core_supplementary"
+# limit <- 0
+offset <- 0
+# can't use the group_by clause as it fails to group the area_description so use exports endpoint with csv
+
+```
+
+```{r run_api}
+
+response <- request(hostname) |> 
+  req_url_path_append(path1, path2, dataset, endpoint) |>
+  req_url_query("select" = select,
+                # "group_by" = select,
+                "limit" = limit,
+                "offset" = offset ) |>
+  req_perform()
+
+base_tbl <- response |> 
+  resp_body_string() |>
+  read_csv2()
+  
+```
+
+```{r make_gt_table}
+gt_base_tbl <- base_tbl |>
+  filter(area_id == 1) |> 
+  # mutate(area = paste(area_name,
+  #                     area_description,
+  #                     collapse = ":\n"),
+  #        meas = paste(measure_type,
+  #                     measure, 
+  #                     collapse = ":\n")) |> 
+  group_by(area_name, area_description, theme, biodiversity_priority, measure)
+  #          ) |>
+  # summarise(stakeholder = paste(stakeholder, collapse = "\n"),
+  #           meas = paste(measure, collapse = "\n\n"))
+
+```
+
+```{r gt_table}
+gt_base_tbl |> 
+  gt(row_group_as_column = TRUE)
+  
+```
+

@@ -1,9 +1,9 @@
 ---
 title: "Open Data and Local Nature Recovery Strategy"
-subtitle: "Supporting Investment in Nature"
+subtitle: "Democratising Data"
 author: "Steve Crawshaw"
 institute: "West of England Combined Authority"
-embed-resources: false
+embed-resources: true
 preview-links: false
 format: 
   revealjs:
@@ -15,37 +15,26 @@ format:
 
 ## Content {background-image="plots/weca_ppt_image_sized_3.png"}
 
-- LNRS Intro
 - Open Data
-  - Supporting partners and directorates
-  - Transparency
-  - Project - specific applications
-- LNRS app - requirements
-- Building the LNRS app
+  1. Project - specific applications
+      - LNRS Intro
+      - LNRS app - requirements
+      - Building the LNRS app
+  2. Transparency
+  3. Supporting partners and business areas
+- Conclusions
+- Questions
 
 ::: {.notes}
 we will go fast
 questions at end, in chat, 20 mins
 :::
 
-## LNRS: Overview {background-image="plots/weca_ppt_image_sized_3.png"}
-
-- ‘New, England-wide system of spatial strategies that will establish priorities - map proposals for specific actions to drive nature’s recovery and provide - environmental benefits’
-- ~50 strategies across England that will map delivery of the national Nature Recovery Network
-
-## LNRS: Overview {background-image="plots/weca_ppt_image_sized_3.png"}
-- Each LNRS:
-    - Will direct net gain funding and have a broader role in the planning system
-    - May be used to prioritise activities within parts of the new ELM Scheme
-    - Will inform the targeting of nature-based solutions
-    - Will support cross-sectoral alignment of environmental policy and funds
-    - Public Authorities must *have regard* to any relevant local nature recovery     strategy
-
 ## Why Open Data? {background-image="plots/weca_ppt_image_sized_3.png"}
 
 - Helps us share data resources with our residents and partners
 - Delivers our commitments to transparency and digital plan
-- A foundation for building apps to add value to data products
+- A foundation for building apps to add value to data
 
 ## The Opendatasoft platform {background-image="plots/weca_ppt_image_sized_3.png"}
 
@@ -58,13 +47,28 @@ Strong API
 Strong visualisations
 :::
 
-## LNRS Application: Requirmeents {background-image="plots/weca_ppt_image_sized_3.png"}
+## LNRS: Overview {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- ‘New, England-wide system of spatial strategies that will establish priorities - map proposals for specific actions to drive nature’s recovery and provide - environmental benefits’
+- ~50 strategies across England that will map delivery of the national Nature Recovery Network
+
+## LNRS: Overview {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- Direct net gain funding and have a broader role in the planning system
+- Prioritise activities within parts of the new ELM Scheme
+- Inform the targeting of nature-based solutions
+- Support cross-sectoral alignment of environmental policy and funds
+- Public Authorities must *have regard* to any relevant LNRS
+
+
+
+## LNRS Application: Requirements {background-image="plots/weca_ppt_image_sized_3.png"}
 
 - Translate the strategy into actions that landowners can take to invest in nature recovery.
 - Place - based insights into biodiversity priorities and measures to deliver them.
 - Menu of measures (actions) and grants to fund them.
 - Simple, fast and available on a range of devices
-- Ready for submission of LNRS
+- Ready for submission of LNRS (Nov 24)
 - Showcase the use of the ODP
 
 ::: {.notes}
@@ -90,9 +94,8 @@ Strong visualisations
 
 - Map - driven
   - QGIS processing of area polygon vertices
-- Relational vs. flat model for main table
-- Refactoring R code to construct flat table ~11K records
-- Load data onto ODP
+- R code to construct flat table ~9K records
+- Load data
 - Write code to create the app
   - HTML - building blocks for the web
   - Angular JS - control the logic of the clickable elements
@@ -100,7 +103,7 @@ Strong visualisations
   - CSS - make it look nice
 
 
-## Challenges {background-image="plots/weca_ppt_image_sized_3.png"}
+## Challenges {background-image="plots/weca_ppt_image_sized_3.png" visibility="hidden"}
 
 - Understanding the data model and responding to client requirements
 - New widgets which implement SQL
@@ -114,5 +117,33 @@ Strong visualisations
 
 ## LNRS App demo {background-image="plots/weca_ppt_image_sized_3.png"}
 
-[![](plots/lnrs-app-screenshot.jpeg)](https://westofenglandca.opendatasoft.com/pages/lnrs-application/)
+- <a href="https://opendata.westofengland-ca.gov.uk/pages/lnrs-application/?headless=true/" target="_blank">LNRS Application</a>
 
+## Transparency {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- <a href="https://opendata.westofengland-ca.gov.uk/explore/dataset/financial-disclosure-spend/table/?disjunctive.purpose&disjunctive.servicecategorylabel&disjunctive.beneficiaryname&sort=paymentdate" target="_blank">Spend over £500</a>
+- Legal requirement for Local Government
+- Previously implemented with individual files
+- Data quality problems
+
+## Supporting Partners {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- <a href="https://opendata.westofengland-ca.gov.uk/explore/dataset/city-nature-challenge-bristol/map/?disjunctive.quality_grade&disjunctive.license&location=14,51.43558,-2.54531&basemap=jawg.streets" target="_blank">City Nature Challenge</a>
+- Annual event with Bristol Natural History Consortium
+- Public engagement with Citizen Science
+- Republishing iNaturalist data in accessible, tailored format
+
+## Supporting Business Areas {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- <a href="https://opendata.westofengland-ca.gov.uk/explore/dataset/geocoded_assets/custom/?disjunctive.category&disjunctive.sector&disjunctive.parliamentary_constituency_2024&disjunctive.admin_district" target="_blank">Research and Economic Assets</a>
+- <a href="https://opendata.westofengland-ca.gov.uk/explore/dataset/lep-epc-domestic-point/analyze/?disjunctive.property_type&disjunctive.tenure&disjunctive.walls_energy_eff&disjunctive.roof_energy_eff&disjunctive.mainheat_description&disjunctive.mainheat_energy_eff&disjunctive.mainheat_env_eff&disjunctive.main_fuel&disjunctive.construction_age_band&disjunctive.current_energy_rating&disjunctive.built_form&disjunctive.ladnm&dataChart=eyJxdWVyaWVzIjpbeyJjaGFydHMiOlt7InR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQ09VTlQiLCJ5QXhpcyI6InJvd25hbWUiLCJzY2llbnRpZmljRGlzcGxheSI6dHJ1ZSwiY29sb3IiOiJyYW5nZS1jdXN0b20ifV0sInhBeGlzIjoiY3VycmVudF9lbmVyZ3lfcmF0aW5nIiwibWF4cG9pbnRzIjoiIiwidGltZXNjYWxlIjoiIiwic29ydCI6IiIsInNlcmllc0JyZWFrZG93biI6ImxhZG5tIiwiY29uZmlnIjp7ImRhdGFzZXQiOiJsZXAtZXBjLWRvbWVzdGljLXBvaW50Iiwib3B0aW9ucyI6eyJkaXNqdW5jdGl2ZS5wcm9wZXJ0eV90eXBlIjp0cnVlLCJkaXNqdW5jdGl2ZS50ZW51cmUiOnRydWUsImRpc2p1bmN0aXZlLndhbGxzX2VuZXJneV9lZmYiOnRydWUsImRpc2p1bmN0aXZlLnJvb2ZfZW5lcmd5X2VmZiI6dHJ1ZSwiZGlzanVuY3RpdmUubWFpbmhlYXRfZGVzY3JpcHRpb24iOnRydWUsImRpc2p1bmN0aXZlLm1haW5oZWF0X2VuZXJneV9lZmYiOnRydWUsImRpc2p1bmN0aXZlLm1haW5oZWF0X2Vudl9lZmYiOnRydWUsImRpc2p1bmN0aXZlLm1haW5fZnVlbCI6dHJ1ZSwiZGlzanVuY3RpdmUuY29uc3RydWN0aW9uX2FnZV9iYW5kIjp0cnVlLCJkaXNqdW5jdGl2ZS5jdXJyZW50X2VuZXJneV9yYXRpbmciOnRydWUsImRpc2p1bmN0aXZlLmJ1aWx0X2Zvcm0iOnRydWUsImRpc2p1bmN0aXZlLmxhZG5tIjp0cnVlfX19XSwiZGlzcGxheUxlZ2VuZCI6dHJ1ZSwiYWxpZ25Nb250aCI6dHJ1ZSwidGltZXNjYWxlIjoiIn0%3D" target="_blank">EPC - Energy ratings of properties</a>
+- <a href="https://opendata.westofengland-ca.gov.uk/explore/dataset/nomis-tenure-ods/percent-rented/?disjunctive.ladnm&location=10,51.4647,-2.54745&basemap=jawg.streets" target="_blank">Housing tenure</a>
+
+## Conclusions {background-image="plots/weca_ppt_image_sized_3.png"}
+
+- The Open Data Platform is:
+  - A data store and platform for app development
+  - A key asset for LNRS, Digital Plan, Net Zero (and more..)
+  - Data infrastructure for the MCA and partners
+  - A regional resource to democratise data
+- What are your data sharing needs?
