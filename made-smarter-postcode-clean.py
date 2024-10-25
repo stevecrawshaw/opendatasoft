@@ -1,52 +1,9 @@
 #%%
-
 import polars as pl
 import duckdb
 from janitor.polars import clean_names
 import polars.selectors as cs
-
 #%%
-def import_clean_postcodes(file_path: str,
-                           sheet_name: str,
-                           type_name: str):
-    
-    raw_df = pl.read_excel(file_path, sheet_name=sheet_name)
-        
-    clean_df = (
-        raw_df
-        .clean_names()
-        .with_columns(cs.contains("postcode")
-        .str
-        .replace_all(" ", "")
-        .str
-        .to_uppercase()
-        .alias("postcode"))
-        .with_columns(pl.col("postcode").str.slice(-3).alias("postcode_end"))
-        .with_columns(
-            pl.when(pl.col("postcode").str.len_chars() == 7)
-            .then(pl.col("postcode").str.slice(0, 4))
-            .otherwise(pl.col("postcode").str.slice(0, 3))
-            .alias("postcode_start")
-        )
-        .with_columns(
-            pl.concat_str([pl.col("postcode_start"),
-                        pl.col("postcode_end")],
-                        separator=" ")
-                        .alias("postcode_clean")
-
-    )
-    .filter(pl.col("postcode_clean").str
-            .contains("^(?:(?:[A-Z]{1,2}[0-9][0-9]?[A-Z]?[ ]?[0-9][A-Z]{2})|(?:[A-Z]{1}[0-9]{1,2}[ ]?[0-9][A-Z]{2}))$"))
-            .group_by("postcode_clean").len()
-            .rename({"len": "count"})
-    .with_columns(type = pl.lit(type_name))       
-    .select(pl.col(["postcode_clean", "count", "type"]))
-    )
-    return clean_df
-#%%
-
-#%%
-
 def get_sheet(file_path: str, sheet_name: str) -> pl.DataFrame:
     return (pl
             .read_excel(file_path, sheet_name = sheet_name)
@@ -105,33 +62,35 @@ def clean_postcode(df: pl.DataFrame, postcode_col: str) -> pl.DataFrame:
                           .str
                           .contains("^(?:(?:[A-Z]{1,2}[0-9][0-9]?[A-Z]?[ ]?[0-9][A-Z]{2})|(?:[A-Z]{1}[0-9]{1,2}[ ]?[0-9][A-Z]{2}))$")
                           .alias("valid_pc"))
-            .drop(["postcode_start", "postcode_end", "postcode"])
+            .drop(["postcode_start", "postcode_end", "postcode", postcode_col])
    )
 
 #%%
 
 df_applicant =  get_sheet(file_path = "data/Made Smarter postcodes.xlsx",
                           sheet_name = "Full MS applicant list")   
-
+#%%
+df_onboarded = get_sheet(file_path = "data/Made Smarter postcodes.xlsx",
+                                      sheet_name = "Onboarded MS businesses")
 #%%
 
-df_applicant_clean = clean_postcode(df_applicant,
+df_applicant_clean = (clean_postcode(df_applicant,
                                     postcode_col = None)
-#%%
-
-df_applicant = import_clean_postcodes(file_path = "data/Made Smarter postcodes.xlsx",
-                            sheet_name = "Full MS applicant list",
-                            type_name = "Applicant")
-
-df_onboarded = import_clean_postcodes(file_path = "data/Made Smarter postcodes.xlsx",
-                                      sheet_name = "Onboarded MS businesses",
-                                      type_name="Onboarded")
+                                    .with_columns(type = pl.lit("Applicant")))   
+                                    
+df_onboarded_clean = (clean_postcode(df_onboarded,
+                                    postcode_col = None)
+                                    .with_columns(type = pl.lit("Onboarded")))    
 
 #%%
-
-df_made_smarter_all_df = pl.concat([df_applicant, df_onboarded],
+df_made_smarter_all_df = (pl.concat([df_applicant_clean, df_onboarded_clean],
                                    how = "vertical")
-
+                                   .filter(pl.col("valid_pc"))
+                                   .group_by("postcode_clean", "type")
+                                   .len("count")
+                                   .sort("count", descending = True))
+#%%
+df_made_smarter_all_df.glimpse()
 #%%
 con = duckdb.connect("../weca_cesap/data/postcodes.duckdb")
 
@@ -160,3 +119,4 @@ made_smarter_ods_df = (all_postcodes
 made_smarter_ods_df.write_csv("data/made_smarter_ods.csv")
 #%%
 con.close()
+# %%
