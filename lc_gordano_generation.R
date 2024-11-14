@@ -11,13 +11,13 @@ column_names = c("year",
 gen_sheets <- sheets |> 
   keep(~ .x %>% str_detect("generation"))
 site_names <- gen_sheets |> 
-  map_chr(~ .x %>% str_remove("generation") %>% make_clean_names())
+  map_chr(~ .x %>% str_remove("generation") %>% str_trim(side = "both"))
 
 gen_data <- gen_sheets |> 
   map(~ read_xlsx("data/2024 Oct LCG Community Energy DataSheet.xlsx", .x, skip = 5)) |> 
   set_names(site_names) |> 
   map(~ .x |> set_names(column_names)) |> 
-  bind_rows()
+  bind_rows(.id = "site_name")
 
 make_last_day_date <- function(the_year, month){
   year = as.character(the_year)
@@ -31,11 +31,13 @@ make_last_day_date <- function(the_year, month){
 
 clean_gen_data <- gen_data |> 
   fill(year, .direction = "down") |> 
-  mutate(date = make_last_day_date(year, month))
+  mutate(date = make_last_day_date(year, month)) |> 
+  pivot_longer(cols = c(actual_kwh, forecast_kwh),
+               names_to = "kwh_type",
+               values_to = "kwh") 
 
 
-  clean_names() |> 
-  mutate(across(c(actual_kwh, forecast_kwh), as.numeric),
-         across(c(year, month), as.integer),
-         year = 2024) |> 
-  select(-month)
+clean_gen_data |>
+  ggplot(aes(x = date, y = kwh, color = kwh_type)) +
+  geom_line(lwd = 1) +
+  facet_wrap(~ site_name, scales = "free_y")  
