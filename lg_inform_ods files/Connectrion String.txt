@@ -1,0 +1,1 @@
+https://webservices.esd.org.uk/data.table?value.valueType=raw&metricType=13382&area=CombinedAuthorities_WestMidlands&period=latest%3A10&rowGrouping=area&summary.summaryType=mean&summary.summaryFor=area&summary.area=AllLaInCountry_England&summary2.summaryType=mean&summary2.summaryFor=area&summary2.area=CombinedAuthorities_WestMidlands&ignoreMissing=true&ApplicationKey=

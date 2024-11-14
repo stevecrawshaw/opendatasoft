@@ -1,0 +1,94 @@
+<!--Variables Start-->
+<div ng-init="
+              maphigh = '8,48,107';
+              maplow = '198,219,239';
+              decimalprec = '1';
+              ">
+    <!--Variables End-->
+
+    <!--B'ham vs England vs WMCA chart-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ods-box">
+                <h2 class="title">
+                    Birmingham compared to the mean for England and the West Midlands
+                    <span class="title-info">
+                        (not interactive)
+                    </span>
+                </h2>
+
+                <ods-dataset-context context="bhamcomp" bhamcomp-dataset="{{ ctx.dataset.datasetid }}" bhamcomp-parameters="{'disjunctive.areaidentifier':true,'disjunctive.arealabel':true,'refine.arealabel':['Mean for All English authorities','Mean for West Midlands combined authority','Birmingham']}">
+                    <ods-chart scientific-display="false" align-month="true">
+                        <ods-chart-query context="bhamcomp" field-x="date" maxpoints="0" timescale=
+                                         {{ctx.dataset.fields[2].annotations[2].args[0]}} series-breakdown="arealabel" category-colors="{'Birmingham':'#864192','Mean for All English authorities':'#FCAF17','Mean for West Midlands combined authority':'#DD2B60','Coventry':'#F15A22','Dudley':'#00B9F2','Sandwell':'#85ADAE','Solihull':'#98C564','Walsall':'#b15928','Wolverhampton':'#fb9a99'}">
+                            <ods-chart-serie expression-y="value" chart-type="line" function-y="SUM" label-y="{{ctx.dataset.basic_metas['additional-metadata']['value-type']}}" color="range-custom" display-units="true" display-values="true" scientific-display="true">
+                            </ods-chart-serie>
+                        </ods-chart-query>
+                    </ods-chart>
+
+                </ods-dataset-context>
+            </div>
+        </div>
+    </div>
+
+    <!--All LA's chart-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ods-box">
+                <h2 class="title">
+                    Period by area
+                </h2>
+                <ods-chart scientific-display="false" align-month="true">
+                    <ods-chart-query context="ctx" field-x="date" maxpoints="0" timescale=
+                                     {{ctx.dataset.fields[2].annotations[2].args[0]}} series-breakdown="arealabel" category-colors="{'Birmingham':'#864192','Mean for All English authorities':'#FCAF17','Mean for West Midlands combined authority':'#DD2B60','Coventry':'#F15A22','Dudley':'#00B9F2','Sandwell':'#85ADAE','Solihull':'#98C564','Walsall':'#b15928','Wolverhampton':'#fb9a99'}">
+                        <ods-chart-serie expression-y="value" chart-type="line" function-y="SUM" label-y="{{ctx.dataset.basic_metas['additional-metadata']['value-type']}}" color="range-custom" display-units="true" scientific-display="true">
+                        </ods-chart-serie>
+                    </ods-chart-query>
+                </ods-chart>
+            </div>
+        </div>
+    </div>
+
+    <!--MAP-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ods-box">
+                <h2 class="title">
+                    Map of WMCA
+                    <span class="title-info">
+                        (select an individual period in filters to view)
+                    </span>
+                </h2>
+                <div ods-color-gradient="colorgradient"
+                     ods-color-gradient-context="ctx"
+                     ods-color-gradient-x="value"
+                     ods-color-gradient-serie="AVG(value)"
+                     ods-color-gradient-high="rgb({{maphigh}})";
+                     ods-color-gradient-low="rgb({{maplow}})"
+                     ods-color-gradient-nb-classes="5">
+
+                    <div class="map-container">
+                        <ods-map basemap="jawg.streets" style="height:550px" scroll-wheel-zoom="false" toolbar-Geolocation="false">
+                            <ods-map-layer context="ctx"
+                                           color-categories="colorgradient['colors']"
+                                           color-by-field="value"
+                                           color-categories-other="lightgrey"
+                                           display="categories"
+                                           shape-opacity="0.95"
+                                           title="{{ctx.dataset.metas.title}}"
+                                           >
+                            </ods-map-layer>
+                        </ods-map>
+                    </div>
+                    <ods-legend class="legend-horizontal"
+                                title="{{ctx.dataset.metas.title}}"
+                                subtitle="{{ctx.dataset.basic_metas['additional-metadata']['value-type']}}"
+                                color-gradient="colorgradient"
+                                display="steps"
+                                no-value-color="lightgrey"
+                                decimal-precision="{{decimalprec}}"></ods-legend>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

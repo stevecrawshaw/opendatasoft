@@ -1,0 +1,15 @@
+Attached are the 3 things you need.
+
+ 
+
+Connection String: You replace the metric number with the one you want and you will no doubt want to change the comparator groups to your own region. Also at the end you paste your own connection token.
+
+ 
+
+CSS: As is should work
+
+ 
+
+HTML: For the custom view. Tweak the area labels and titles to match what you want. There are also a few other bits which pull from Admin metadata which you may not have but you can hopefully figure out the JSON structure for these or hardcode them. My aim was to drive as much via meta data as possible. We have additional fields for polarity, type (percentage, count, number of persons etc) and period type (financial year, calendar year etc). All taken from LG Inform who offer a big download list with all this in.
+
+ 
