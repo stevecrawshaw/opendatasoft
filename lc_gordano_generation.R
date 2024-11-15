@@ -7,7 +7,6 @@ column_names = c("year",
                  "actual_kwh",
                  "forecast_kwh")
 
-
 gen_sheets <- sheets |> 
   keep(~ .x %>% str_detect("generation"))
 site_names <- gen_sheets |> 
@@ -31,13 +30,32 @@ make_last_day_date <- function(the_year, month){
 
 clean_gen_data <- gen_data |> 
   fill(year, .direction = "down") |> 
-  mutate(date = make_last_day_date(year, month)) |> 
+  mutate(date = make_last_day_date(year, month),
+         organisation = "Low Carbon Gordano") |> 
+  relocate(organisation, site_name, date, year, month, actual_kwh, forecast_kwh)
+
+
+nice_kwh <- function(kwh_type){
+  kwh_type |> 
+    str_replace("_", " ") |> 
+    str_to_sentence() |> 
+    str_replace("kwh", "kWh")
+}
+
+
+energy_gen_time_series <- clean_gen_data |> 
   pivot_longer(cols = c(actual_kwh, forecast_kwh),
                names_to = "kwh_type",
-               values_to = "kwh") 
-
-
-clean_gen_data |>
+               values_to = "kwh") |>
+  mutate(kwh_type = map_chr(kwh_type, nice_kwh)) |>
   ggplot(aes(x = date, y = kwh, color = kwh_type)) +
   geom_line(lwd = 1) +
-  facet_wrap(~ site_name, scales = "free_y")  
+  facet_wrap(~ site_name, scales = "free_y")  +
+  labs(title = "Low Carbon Gordano Energy Generation",
+       x = "Date",
+       y = "kWh",
+       color = "kWh Type") +
+  theme_minimal()
+
+
+ggsave("plots/LCG_energy_gen_time_series.png", energy_gen_time_series, width = 10, height = 7, bg = "white")
