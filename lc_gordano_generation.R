@@ -34,6 +34,8 @@ clean_gen_data <- gen_data |>
          organisation = "Low Carbon Gordano") |> 
   relocate(organisation, site_name, date, year, month, actual_kwh, forecast_kwh)
 
+clean_gen_data |> glimpse()
+
 
 nice_kwh <- function(kwh_type){
   kwh_type |> 
@@ -56,6 +58,6 @@ energy_gen_time_series <- clean_gen_data |>
        y = "kWh",
        color = "kWh Type") +
   theme_minimal()
-
+energy_gen_time_series
 
 ggsave("plots/LCG_energy_gen_time_series.png", energy_gen_time_series, width = 10, height = 7, bg = "white")
