@@ -1,11 +1,12 @@
 <!-- template here https://codelibrary.opendatasoft.com/page-templates/map-refine/#code-use-a-map-as-a-selector-and-display-results-on-the-side-css-content-->
-<ods-dataset-context context="areasgroupedtbl, areafundingschemestbl, apmg, focusareas, wecaboundary, lnrsspeciesarea"
+<ods-dataset-context context="areasgroupedtbl, areafundingschemestbl, apmg, focusareas, wecaboundary, lnrsspeciesarea, sssi"
                      areasgroupedtbl-dataset="lnrs-sub-areas-data"
                      areafundingschemestbl-dataset="lnrs-area-funding-schemes-tbl-testing"
                      apmg-dataset="area-measures-tbl"
                      focusareas-dataset="focus-areas-gridded"
                      wecaboundary-dataset="weca-boundary-line"
-                     lnrsspeciesarea-dataset="species-area-tbl">
+                     lnrsspeciesarea-dataset="species-area-tbl"
+                     sssi-dataset="sites-of-special-scientific-interest">
     <div class="donotcopy-specific"
          ng-init="donotcopy = {'simulaterefineonclick' : false}">
         <div class="map-drawer-container"
@@ -22,9 +23,20 @@
                                drawer.status = false;"
                      ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name']}">
                 </div>
-                <h2 ng-if="areasgroupedtbl.parameters['refine.area_name'] == undefined">
-                    Local Nature Recovery Toolkit: Select a Sub Area to see potential measures for nature recovery 
-                </h2>
+                <div ng-if="areasgroupedtbl.parameters['refine.area_name'] == undefined">
+                    <h2>
+                        Local Nature Recovery Toolkit: Select a Sub Area to see potential measures for nature recovery 
+                    </h2>
+                    <h3>
+                        <a href="https://experience.arcgis.com/experience/55ca9c7688e04336b86c01c2403d403c"
+                           target="_blank">
+                            View mapped measures for nature recovery
+                            <i class="fa fa-external-link"
+                               aria-hidden="true">
+                            </i>
+                        </a> 
+                    </h3>
+                </div>
                 <ods-pop-in
                             name="intro-pop-in"
                             title=""
@@ -34,14 +46,14 @@
                     <br>
                     <div style="text-align: center;">
                         <h2>
-                            LNRS Application 
+                            LNRS Toolkit 
                         </h2>
                         <br>
                         Watch a 
                         <a href="https://app.arcade.software/share/WDk0jbGqrBGTbja6zs11" target="_blank">short video </a>
                         to learn how to use it. <br>
                         <br>
-                        Or go <a href="" ng-click="hidePopIn()">straight to the app.</a>    
+                        Or go <a href="" ng-click="hidePopIn()">straight to the toolkit.</a>    
                     </div>
                 </ods-pop-in>
                 <ods-map scroll-wheel-zoom="true"
@@ -53,9 +65,17 @@
                     <ods-map-layer context = "focusareas"
                                    shape-opacity="0.5"
                                    color="#93117F"
-                                   caption="true"
+                                   caption="false"
                                    border-size=0
                                    caption-title="Focus Areas for nature recovery"
+                                   exclude-from-refit="true">
+                    </ods-map-layer>
+                    <ods-map-layer context = "sssi"
+                                   shape-opacity="0.5"
+                                   color="#b38e2b"
+                                   caption="false"
+                                   border-size=0
+                                   caption-title="SSSI"
                                    exclude-from-refit="true">
                     </ods-map-layer>
                     <ods-map-layer context="areasgroupedtbl"
@@ -75,6 +95,7 @@
                                    refine-on-click-areafundingschemestbl-context-field="area_name"
                                    refine-on-click-areafundingschemestbl-map-field="area_name"
                                    refine-on-click-areafundingschemestbl-replace-refine="true"
+                                   exclude-from-refit="true"
                                    >
                     </ods-map-layer>
                     <ods-map-layer context = "wecaboundary"
@@ -85,9 +106,28 @@
                                    exclude-from-refit="true">
                     </ods-map-layer>
 
+                    <div class="map-legend">
+                        <div ng-if="!drawer.status">
+                            <div>
+                                <i class="fa fa-square focusareapurple" aria-hidden="true"> </i>
+                                <strong ods-tooltip="Areas where action to recover nature will have the biggest impact">
+                                    Focus Areas for Nature Recovery
+                                </strong>    
+                            </div>
+                            <div>
+                                <i class="fa fa-square sssiyellow" aria-hidden="true"> </i>
+                                <strong ods-tooltip="Sites of Special Scientific Interest">
+                                    SSSI
+                                </strong>    
+                            </div>
+
+                        </div>
+                    </div>
                 </ods-map>
+
                 <!--ng-click="donotcopy.simulaterefineonclick = false" \ drawer.status = false -->
             </div>
+
             <div class="map-drawer-container__drawer map-drawer-container__drawer__partial" 
                  ng-if="areasgroupedtbl.parameters['refine.area_name']"
                  ng-class="{mobile:drawer.status}">
