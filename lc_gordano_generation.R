@@ -36,7 +36,6 @@ clean_gen_data <- gen_data |>
 
 clean_gen_data |> glimpse()
 
-
 nice_kwh <- function(kwh_type){
   kwh_type |> 
     str_replace("_", " ") |> 
@@ -61,3 +60,7 @@ energy_gen_time_series <- clean_gen_data |>
 energy_gen_time_series
 
 ggsave("plots/LCG_energy_gen_time_series.png", energy_gen_time_series, width = 10, height = 7, bg = "white")
+
+
+clean_gen_data |> 
+  write_csv("data/lc_gordano_gen_data.csv", na = "")
