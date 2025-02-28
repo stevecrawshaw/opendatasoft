@@ -84,10 +84,15 @@ fh_clean_tbl <- food_hygiene_tbl %>%
          across(.cols = c("longitude", "latitude"),
                 as.double),
          rating_date = as.Date(rating_date),
-         geo_point_2d = glue("{latitude}, {longitude}")) %>%
+         geo_point_2d = if_else((is.na(latitude) | is.na(longitude)), NA_character_, glue("{latitude}, {longitude}"))) %>%
   relocate(
     business_name, business_type, address_line1, address_line2, address_line3, address_line4, post_code, rating_date, hygiene, structural, confidence_in_management, rating_date, rating_value, new_rating_pending, local_authority_name, everything()
-  ) 
+  ) |> 
+  filter(rating_date > as.Date("2014-01-01") | is.na(rating_date)) |> 
+  mutate(rating_value = as.integer(rating_value))
+
+unique(fh_clean_tbl$rating_value)
+
 
 fh_clean_tbl %>% 
   write_delim(file = "data/food_hygiene_woe.csv", delim = ";", na = "")

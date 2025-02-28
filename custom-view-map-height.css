@@ -1,0 +1,8 @@
+.odswidget-map {
+    height:-webkit-fill-available;
+    min-height: 600px;
+}
+.odswidget-map__map {
+    height: 100%;
+    min-height: 600px;
+}
