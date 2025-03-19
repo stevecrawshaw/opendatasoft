@@ -1,6 +1,6 @@
 duckdb
 
-ATTACH 'water.duckdb' AS w;
+ATTACH 'data/water.duckdb' AS w;
 USE w;
 
 INSTALL SPATIAL;
