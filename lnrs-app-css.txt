@@ -7,6 +7,10 @@
     --boxes-radius: 6px;
 }
 
+.odswidget-media-gallery {
+    min-width:700px;
+width:max-content}
+
 .map-drawer-container {
     display: flex;
     width: auto;
@@ -172,6 +176,7 @@ li {
 /* Table Module Basic
 ========================================================================== */
 .table-module {
+    flex: 1; /* Takes up available space */
     height: -webkit-fill-available;
     min-height: 300px;
     overflow-y: auto;
@@ -285,10 +290,6 @@ h2 {
     width: min-content;
 }
 
-
-
-
-
 .ods-box{
     height: -webkit-fill-available;
     margin: 0;
@@ -302,6 +303,15 @@ h2 {
     justify-content: center;
     flex-direction: column;
     margin: 0;
+}
+
+.theme-box-container-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-direction: row; /* Change from column to row */
+    margin: 0;
+    justify-content: space-between; /* This will give equal spacing */
 }
 
 .theme-box{
@@ -380,6 +390,9 @@ dd {
         margin-bottom: 10px; /* Adds some space between the buttons */
     }
 
+ods-slideshow {
+    flex: 0 0 500px; /* This keeps the slideshow at 500px width */
+}
 
 
 /*MAP */
@@ -418,6 +431,20 @@ display:flex;
     height: 100%;
     min-height: 800px;
 }
+
+.ods-slideshow__image-wrapper {
+    position: relative;
+    background-color: #fff !important;
+}
+
+ods-media-gallery {
+    flex: 1;
+    min-height: 500px;
+    width: 100%;
+    display: block;
+    overflow: auto;
+}
+
 @media only screen and  (max-height: 600px) {
     .odswidget-map {
         height:-webkit-fill-available;
@@ -477,6 +504,17 @@ display:flex;
     .odswidget-map__map {
         height: 100%;
         min-height: 1050px;
+    }
+}
+/* Responsive layout for mobile screens */
+@media (max-width: 768px) {
+    .theme-box-container {
+        flex-direction: column;
+    }
+    
+    ods-slideshow {
+        width: 100% !important;
+        flex: none;
     }
 }
 
