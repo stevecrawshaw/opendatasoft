@@ -1,0 +1,187 @@
+<!-- template here https://codelibrary.opendatasoft.com/page-templates/map-refine/#code-use-a-map-as-a-selector-and-display-results-on-the-side-css-content-->
+<div class="container-fluid">
+    <ods-dataset-context context="areasgroupedtbl, areameasurestbl"
+                         areasgroupedtbl-dataset="areas-grouped-tbl"
+                         areameasurestbl-dataset=area-measures-long-tbl>
+        <div class="ods-box donotcopy-specific"
+             ng-init="donotcopy = { 'simulaterefineonclick' : false}">
+            <div class="map-drawer-container"
+                 ng-class="{
+                           'map-drawer-container--active': areasgroupedtbl.parameters['refine.area_name'],
+                           'map-drawer-container--active-full': drawer.status}"
+                 ng-init="drawer = {'status':false}">
+                <div class="map-drawer-container__map">
+                    <div class="map-drawer-container__backdrop"
+                         ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
+                                   drawer.status = false"
+                         ng-class="{'map-drawer-container__backdrop--active': areasgroupedtbl.parameters['refine.area_name'] }">
+                    </div>
+                    <div ng-if="!areasgroupedtbl.parameters['refine.area_name']">
+                        <h1>
+                            Local Nature Recovery Strategy: Select a Focus Area
+                        </h1>
+                    </div>
+                    <ods-map scroll-wheel-zoom="true"
+                             location="10,51.47716,-2.63609"
+                             basemap="jawg.streets">
+                        <ods-map-layer context="areasgroupedtbl"
+                                       display="raw"
+                                       shape-opacity="0.4"
+                                       caption="false"
+                                       refine-on-click-context="[areasgroupedtbl, areameasurestbl]"
+                                       refine-on-click-areasgroupedtbl-context-field="area_name"
+                                       refine-on-click-areasgroupedtbl-map-field="area_name"
+                                       refine-on-click-areasgroupedtbl-replace-refine="true"
+                                       refine-on-click-areameasurestbl-context-field="area_name"
+                                       refine-on-click-areameasurestbl-map-field="area_name"
+                                       refine-on-click-areameasurestbl-replace-refine="true">
+                        </ods-map-layer>
+                    </ods-map>
+                    <div class="ods-button"
+                         ng-click="donotcopy.simulaterefineonclick = true">Reset map</div>
+                </div>
+                <div class="map-drawer-container__info">
+                    <h2>
+                        West of England Nature Recovery
+                        <br>
+                    </h2>
+                    <strong> Click a focus area to filter improvement measures by land type, stakeholder and ambition.</strong>
+                </div>
+                <div class="map-drawer-container__drawer map-drawer-container__drawer__partial">
+                    <div class="map-drawer-container__drawer__close"
+                         ng-click="areasgroupedtbl.parameters['refine.area_name'] = undefined;
+                                   drawer.status = false">
+                        <i class="fa fa-times"></i>
+                    </div>
+                    <h2>
+                        Focus Area
+                        <!-- <ods-table context="areasgroupedtbl"></ods-table> -->
+                        <!-- {{areasgroupedtbl.parameters['refine.area_name']}}-->
+                    </h2>
+                    <h5>
+                        <div ods-adv-analysis="area"
+                             ods-adv-analysis-context="areasgroupedtbl"
+                             ods-adv-analysis-select="area_name, area_description, area_link"
+                             ods-adv-analysis-limit="1">
+                            <!--{{area.area_name}} -->
+                            <!-- {{areasgroupedtbl}}-->
+                            <!-- {{area}} -->
+                            <div class="table-module facet-text">
+                                <table class="table-basic">
+                                    <tbody>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td><strong>{{area[0].area_name}}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Description</td>
+                                            <td>{{area[0].area_description | shortSummary: 400}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Links</td>
+                                            <td>{{area[0].area_link}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </h5>
+                    <div class="ods-button"
+                         ng-click="drawer.status = !drawer.status">
+                        Priorities and Measures
+                    </div>
+                </div>
+                <div class="map-drawer-container__drawer map-drawer-container__drawer__full">
+                    <ods-facets context="areameasurestbl"> 
+                        <div class="container">
+                            <div class="column"> 
+                                <p class="kpi-value">
+                                    Land Type
+                                </p>
+                                <ods-facet name="land_type">
+                                    <div ng-non-bindable>
+                                        {{category.name}}
+                                    </div>
+                                </ods-facet>
+                            </div>
+                            <div class="column">
+                                <p class="kpi-value">
+                                    Level of Ambition
+                                </p>
+                                <ods-facet name="level_of_ambition"
+                                           disjunctive="true">
+                                    <div ng-non-bindable>
+                                        {{category.name}}
+                                    </div>
+                                </ods-facet>
+                            </div> 
+                            <div class="column"> 
+                                <p class="kpi-value">
+                                    Stakeholder
+                                </p>
+                                <ods-facet name="stakeholder">
+                                    <div ng-non-bindable>
+                                        {{category.name}}
+                                    </div>
+                                </ods-facet>
+                            </div> 
+                        </div>
+                    </ods-facets>    
+                    <div>
+                        <h3>
+                            Biodiversity themes, priorities and measures    
+                        </h3>
+
+                        <div ng-if="areameasurestbl.parameters['refine.level_of_ambition'] || areameasurestbl.parameters['refine.land_type'] || areameasurestbl.parameters['refine.stakeholder']">
+
+                            <div ods-adv-analysis="themes"
+                                 ods-adv-analysis-context="areameasurestbl"
+                                 ods-adv-analysis-select="theme"
+                                 ods-adv-analysis-group-by="theme">
+                                <!--{{area.area_name}} -->
+                                <!-- {{areasgroupedtbl}}-->
+                                <!-- {{area}} -->
+                                 <div> <strong>Themes</strong>
+                                    <ul>
+                                        <li ng-repeat="item in themes"> {{item.theme}}</li>
+                                    </ul>
+                                    
+                                </div>
+                            </div> 
+                            <div ods-adv-analysis="priorities"
+                                 ods-adv-analysis-context="areameasurestbl"
+                                 ods-adv-analysis-select="biodiversity_priority"
+                                 ods-adv-analysis-group-by="biodiversity_priority">
+                                <!--{{area.area_name}} -->
+                                <!-- {{areasgroupedtbl}}-->
+                                <!-- {{area}} 
+                                {{priorities[0].biodiversity_priority}}
+                                {{priorities[1].biodiversity_priority}}-->
+                                
+                                <div> <strong>Priorities</strong>
+                                    <ul>
+                                        <li ng-repeat="item in priorities"> {{item.biodiversity_priority}}</li>
+                                    </ul>
+                                    
+                                </div>
+
+                               
+                            </div> 
+                            <div ods-results="items" ods-results-context="areameasurestbl">
+                                <strong>Measures</strong>
+                                There are {{areameasurestbl.nhits}} Measures for these stakeholders, land types and ambition levels 
+                               
+                                <ul>
+                                    <li ng-repeat="item in items"> {{item.fields.measure}}</li>
+                                </ul>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ods-dataset-context>
+</div>
