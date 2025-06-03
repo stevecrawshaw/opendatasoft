@@ -9,7 +9,7 @@
 
 .odswidget-media-gallery {
     min-width:700px;
-width:max-content}
+    width:max-content}
 
 .map-drawer-container {
     display: flex;
@@ -207,7 +207,7 @@ li {
 }
 
 .table-container {
-  /*  max-height: 400px;  Adjust as needed */
+    /*  max-height: 400px;  Adjust as needed */
     overflow-y: auto;
     position: relative;
 }
@@ -271,7 +271,7 @@ h2 {
 .ods-box{
     height: -webkit-fill-available;
     margin: 0;
-        padding:30px
+    padding:30px
 }
 
 .theme-box-container{
@@ -408,10 +408,10 @@ dd {
         display: flex;
     }
     .mobile{
-    display:none
-}
+        display:none
+    }
     .map-drawer-container__drawer__full{
-            width: -webkit-fill-available;
+        width: -webkit-fill-available;
 
     }
 }
@@ -422,10 +422,10 @@ dd {
     align-items: center; /* This will center the button horizontally */
 }
 
-    .ods-button {
-        margin-bottom: 10px; /* Adds some space between the buttons */
-        text-align: center;
-    }
+.ods-button {
+    margin-bottom: 10px; /* Adds some space between the buttons */
+    text-align: center;
+}
 
 ods-slideshow {
     flex: 0 0 500px; /* This keeps the slideshow at 500px width */
@@ -461,8 +461,8 @@ ods-slideshow {
 /*MAP */
 
 @media only screen and  (min-width:800px){
-.map-drawer-container__drawer__full {
-display:flex;
+    .map-drawer-container__drawer__full {
+        display:flex;
         width: -webkit-fill-available;
     }
 }
@@ -512,7 +512,7 @@ ods-media-gallery {
         min-height:450px
     }
 
-.odswidget-map__map {
+    .odswidget-map__map {
         height: 100%;
         min-height:450px
 
@@ -520,12 +520,12 @@ ods-media-gallery {
 }
 
 
-.slanted-link {
+.slanted-link, .odswidget-select-button {
     margin-top: 18px;
     display: inline-block;
-  width: auto;
-  flex: 0 0 auto;
-  white-space: nowrap;
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
     background: linear-gradient(to right, #d9edd9 50%, #ffffff 50%);
     background-size: 200% 100%;
     background-position: right bottom;
@@ -542,13 +542,18 @@ ods-media-gallery {
     margin-right: 12px; 
     margin-bottom: 12px;
     transition: background-position 0.2s ease-in-out, border-color 0.2s ease-in-out;
-  }
+}
 
 .slanted-link:hover {
     background-position: left bottom;
     border-color: #13301b;
     text-decoration: none !important;
-  }
+}
+
+.odswidget-select-input-container {
+    border: 0px;
+}
+
 
 /* Style for the smaller buttons in the area links part  */
 
@@ -610,7 +615,7 @@ ods-media-gallery {
     .theme-box-container {
         flex-direction: column;
     }
-    
+
     ods-slideshow {
         width: 100% !important;
         flex: none;

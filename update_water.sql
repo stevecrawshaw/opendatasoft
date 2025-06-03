@@ -36,11 +36,15 @@ bod biological_oxygen_demand,
 cod chemical_oxygen_demand,
 sussolids suspended_solids
 
-FROM read_xlsx("data/qry_2025_reporting April.xlsx",
+FROM read_xlsx("data/qry_2025_reporting May.xlsx",
 sheet = "qry_2025_reporting", range = "A1:AB15000", header = true)
 WHERE siteid IS NOT NULL;
 
 SELECT * FROM update_tbl LIMIT 2;
+
+ATTACH 'https://github.com/stevecrawshaw/vs-code-setup/raw/refs/heads/main/m.db' AS m;
+
+SELECT * FROM m.glimpse(update_tbl);
 
 COPY (FROM update_tbl)
 TO 'data/swq_meas_fact.csv' WITH (HEADER true, delimiter ',');
