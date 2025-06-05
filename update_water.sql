@@ -48,3 +48,6 @@ SELECT * FROM m.glimpse(update_tbl);
 
 COPY (FROM update_tbl)
 TO 'data/swq_meas_fact.csv' WITH (HEADER true, delimiter ',');
+
+--------------------**********************************----------------------
+-- don't forget to update the table view in the visualisations tab of ODS when you update dataset

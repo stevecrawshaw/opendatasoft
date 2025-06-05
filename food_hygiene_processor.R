@@ -1,8 +1,11 @@
 pacman::p_load(tidyverse,
                glue,
                janitor,
-               xml2
+               xml2, sf
                )
+
+lep_boundary <- st_read("https://opendata.westofengland-ca.gov.uk/api/explore/v2.1/catalog/datasets/lep-boundary/exports/geojson?lang=en&timezone=Europe%2FLondon") %>% 
+  st_transform(crs = 4326)
 
 # Extract food establishment ratings data from the FSA
 # Clean and prepare for loading to ODS platform
@@ -89,10 +92,23 @@ fh_clean_tbl <- food_hygiene_tbl %>%
     business_name, business_type, address_line1, address_line2, address_line3, address_line4, post_code, rating_date, hygiene, structural, confidence_in_management, rating_date, rating_value, new_rating_pending, local_authority_name, everything()
   ) |> 
   filter(rating_date > as.Date("2014-01-01") | is.na(rating_date)) |> 
-  mutate(rating_value = as.integer(rating_value))
+  mutate(rating_value = as.integer(rating_value)) |> 
+  rownames_to_column("id")
+
+# make a list of id's that are in LEP to filter out
+# anomalous locations
+fh_clean_lep_ids <- 
+  fh_clean_tbl %>%
+  filter(!is.na(latitude) & !is.na(longitude)) %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326, remove = FALSE) %>%
+  st_intersection(lep_boundary) |> 
+  pull(id)
+  
 
 unique(fh_clean_tbl$rating_value)
 
 
-fh_clean_tbl %>% 
-  write_delim(file = "data/food_hygiene_woe.csv", delim = ";", na = "")
+
+fh_clean_tbl |> 
+  filter(id %in% fh_clean_lep_ids | is.na(latitude)) |> 
+write_delim(file = "data/food_hygiene_woe.csv", delim = ";", na = "")

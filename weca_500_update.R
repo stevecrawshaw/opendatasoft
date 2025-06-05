@@ -1,22 +1,27 @@
-pacman::p_load(tidyverse, janitor, glue, fs)
+pacman::p_load(tidyverse, janitor, glue, fs, arrow, readxl)
 
-source_path <- "data/weca_500_pounds.csv"
-update_path <- "data/financial_disclosures_update/Third-quarter-October-2024-December-2024(in).csv"
+ods_source <- "https://opendata.westofengland-ca.gov.uk/api/explore/v2.1/catalog/datasets/financial-disclosure-spend/exports/parquet?lang=en&timezone=Europe%2FLondon"
+
+update_path <- "data/financial_disclosures_update/Fourth-Quarter-January-2025-March-2025-XLS-1-1.xlsx"
+
+source_tbl <- arrow::read_parquet(ods_source) 
+
+update_tbl <- read_xlsx(update_path, sheet = "Transparency Report")
 
 
-source_tbl <- read_csv(source_path)
-update_tbl <- read_csv(update_path)
-
-archive_path <- fs::path_file(update_path) |> path_ext_remove()
+archive_path <- fs::path_file(update_path) |> 
+  path_ext_remove()
 
 rename_function <- function(source_name){
   nm <- tolower(source_name)
 case_when(
   str_detect(nm, "purpose") ~ "Purpose",
   str_detect(nm, "service") ~ "ServiceCategoryLabel",
-  str_detect(nm, "supplier") ~ "BeneficiaryName",
+  str_detect(nm, "supplier|beneficiary") ~ "BeneficiaryName",
   str_detect(nm, "date") ~ "PaymentDate",
+  str_detect(nm, "method") ~ "TransactionMethod",
   str_detect(nm, "rans") ~ "TransactionNumber",
+  str_detect(nm, "irrecoverable") ~ "IrrecoverableVATAmount",
   str_detect(nm, "amount") ~ "Amount",
   .default = "rename_failed"
   )
@@ -46,11 +51,21 @@ make_date_format <- function(update_tbl){
 
 df <- make_date_format(update_tbl)
 
+source_renamed_tbl <- 
+  source_tbl |>
+  set_names(rename_function) |> glimpse()
+
+names(update_tbl)
+
+
 updated_tbl <- update_tbl %>% 
   set_names(rename_function) %>% 
-  mutate(TransactionMethod = "Spend over £500",
-         PaymentDate = as.Date(PaymentDate, format = df)) %>% 
-  bind_rows(source_tbl)
+  filter(!is.na(TransactionNumber)) %>%
+  mutate(TransactionNumber = as.character(TransactionNumber),
+         TransactionMethod = "Spend over £500",
+         PaymentDate = as.Date(`PaymentDate`, format = "%d/%m/%Y") ) %>%
+  bind_rows(source_renamed_tbl) |> 
+  arrange(desc(PaymentDate))
   
 rowcheck = nrow(updated_tbl) == nrow(update_tbl) + nrow(source_tbl)
 
