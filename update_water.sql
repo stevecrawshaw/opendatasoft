@@ -36,9 +36,10 @@ bod biological_oxygen_demand,
 cod chemical_oxygen_demand,
 sussolids suspended_solids
 
-FROM read_xlsx("data/qry_2025_reporting June.xlsx",
+FROM read_xlsx("data/qry_2025_reporting July.xlsx",
 sheet = "qry_2025_reporting", range = "A1:AB15000", header = true)
-WHERE siteid IS NOT NULL;
+WHERE siteid IS NOT NULL
+ORDER BY "date" DESC;
 
 SELECT * FROM update_tbl LIMIT 2;
 

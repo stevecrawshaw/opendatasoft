@@ -54,3 +54,4 @@ images/
 open-data-lnrs-pres_files/
 .venv/
 *.pyc
+downloads/
