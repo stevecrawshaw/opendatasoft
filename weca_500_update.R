@@ -2,7 +2,7 @@ pacman::p_load(tidyverse, janitor, glue, fs, arrow, readxl)
 
 ods_source <- "https://opendata.westofengland-ca.gov.uk/api/explore/v2.1/catalog/datasets/financial-disclosure-spend/exports/parquet?lang=en&timezone=Europe%2FLondon"
 
-update_path <- "data/financial_disclosures_update/First-Quarter-April-2025-June-2025-XLS.xlsx"
+update_path <- "data/financial_disclosures_update/Second-Quarter-July-2025-September-2025-XLS.xlsx"
 
 source_tbl <- arrow::read_parquet(ods_source)
 
@@ -79,12 +79,10 @@ updated_tbl <- update_tbl %>%
 (all_checks_pass <- any(c(colcheck, namecheck, renamecheck)))
 
 if (all_checks_pass) {
-  write.csv(
+  write_excel_csv(
     updated_tbl,
     "data/weca_500_pounds.csv",
-    na = "",
-    fileEncoding = "UTF-8",
-    row.names = FALSE
+    na = ""
   )
   write_csv(
     source_tbl,
