@@ -1,0 +1,18 @@
+
+======================================================================
+VALIDATION SUMMARY
+======================================================================
+
+Tests Passed: 4/5
+
+  ✓ PASS   All Pages Categorized
+  ✓ PASS   No Lost Examples
+  ✓ PASS   Directive Coverage
+  ✗ FAIL   Cross-References Valid
+  ✓ PASS   File Sizes Reasonable
+
+⚠ SOME TESTS FAILED
+
+Please review failed tests and address issues.
+
+======================================================================
