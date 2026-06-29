@@ -1,0 +1,97 @@
+======================================================================
+TOKEN EFFICIENCY ANALYSIS REPORT
+======================================================================
+
+Generated: 2025-11-17 08:07:17
+
+----------------------------------------------------------------------
+
+OVERALL METRICS
+----------------------------------------------------------------------
+
+Original Documentation:
+  Size: 4644.2 KB (4,755,657 bytes)
+  Estimated tokens: 1,188,402
+  Lines: 116,395
+
+Generated Layers (Total):
+  Size: 310.0 KB (317,406 bytes)
+  Estimated tokens: 78,946
+  Number of layers: 5
+
+Reduction Achieved:
+  Size reduction: 4334.2 KB (93.3%)
+  Token reduction: 1,109,456 tokens (93.4%)
+  Compression ratio: 15.0:1
+
+----------------------------------------------------------------------
+
+LAYER BREAKDOWN
+----------------------------------------------------------------------
+
+Layer                     Size (KB)    Tokens       % of Total  
+----------------------------------------------------------------------
+api-patterns.md           32.0         8,150        10.3        
+components.md             84.9         21,565       27.3        
+generators.md             35.1         8,870        11.2        
+index.md                  14.6         3,674        4.7         
+tags.md                   143.3        36,687       46.5        
+
+----------------------------------------------------------------------
+
+PER-QUERY EFFICIENCY
+----------------------------------------------------------------------
+
+Average token reduction per query: 96.4%
+
+Scenario Breakdown:
+
+  UI Component Query:
+    Example: How do I create a switch toggle?
+    Layers: index.md, components.md
+    Tokens: 25,239
+    Reduction: 97.9% vs loading full original
+
+  Map Visualization Query:
+    Example: How do I create a map with markers?
+    Layers: index.md, generators.md, tags.md
+    Tokens: 49,231
+    Reduction: 95.9% vs loading full original
+
+  Dashboard Query:
+    Example: Create a dashboard with KPIs and charts
+    Layers: index.md, generators.md, tags.md
+    Tokens: 49,231
+    Reduction: 95.9% vs loading full original
+
+  Directive Lookup:
+    Example: What does ods-dataset-context do?
+    Layers: index.md, tags.md
+    Tokens: 40,361
+    Reduction: 96.6% vs loading full original
+
+  API Integration:
+    Example: How to integrate Waze traffic data?
+    Layers: index.md, api-patterns.md
+    Tokens: 11,824
+    Reduction: 99.0% vs loading full original
+
+  Comprehensive Query:
+    Example: Build dashboard with map, filters, and API data
+    Layers: api-patterns.md, components.md, generators.md, index.md, tags.md
+    Tokens: 78,946
+    Reduction: 93.4% vs loading full original
+
+----------------------------------------------------------------------
+
+PERFORMANCE SUMMARY
+----------------------------------------------------------------------
+
+✓ Overall size reduction: 93.3%
+✓ Overall token reduction: 93.4%
+✓ Average per-query reduction: 96.4%
+✓ Compression ratio: 15.0:1
+
+✓ Target achieved! (≥85% reduction target)
+
+======================================================================
