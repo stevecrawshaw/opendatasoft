@@ -1,0 +1,150 @@
+<html lang="en">
+
+<!--
+     The <ods-catalog-context> allows other widgets in this page to access the catalog of datasets in this platform.
+     Check the ods-widgets documentation to learn more about ods-catalog-context.
+-->
+<ods-catalog-context context="catalog">
+    <!-- Header Image
+      Check the .home-header class to change the background image
+    -->
+
+
+       <!-- NEW Slanted content header -->
+    <section class="angled-overlay-section">
+        <div class="angled-overlay-wrapper">
+          <img src="/assets/theme_image/environment.jpeg" alt="Background image" class="angled-bg-image" />
+          <div class="angled-text-overlay">
+            <div class="angled-text-content">
+              <h4 class="angled-subtitle">West of England<br><span>Open Data Portal</span></h4>
+              <h2>A comprehensive portal offering open data on various aspects of the West of England.</h2>
+              <p><a href="/explore/" class="slanted-link">Explore catalog</a> <a href="#searchbox" class="slanted-link">Search for data</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+
+    <!-- Catalog Search Box -->
+    <section class="container">
+        <!-- Search box card -->
+        <div class="search-card" id="searchbox">
+            <h2 class="search-card-title">
+                What data are you looking for?
+            </h2>
+            <div class="search-card-container">
+
+                <ods-catalog-search
+                                    class-name="'my-search-box'"
+                                    label="'Search here'">
+                </ods-catalog-search>
+                <!-- ods-searchbox class="search-card-searchbox"
+                               form-id="search-form"
+                               translate="placeholder"
+                               placeholder="Search for a dataset">
+                </ods-searchbox >
+                <button type="submit" form="search-form" class="search-card-submit-button">
+                    Search
+                </button -->
+            </div>
+        </div>
+    </section>
+    <!-- Image cards with links -->
+    <section class="container image-card-section">
+        <h2 class="home-subtitle">Our region's data</h2>
+        <div class="row">
+
+          <div class="col-md-4">
+            <div class="image-card">
+              <a href="/explore/?sort=modified&refine.theme=Nature" class="image-card-link">
+                <div class="image-card-image-wrapper">
+                  <img src="/assets/theme_image/nature-recovery.jpeg" alt="Nature recovery in the West of England">
+                  <div class="image-card-overlay"></div>
+                </div>
+                <div class="image-content">
+                  <h3 class="image-title">Nature Recovery</h3>
+                </div>
+              </a>
+              <p class="image-description">Deliver new habitats for wildlife and invest in nature</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="image-card">
+              <a href="/explore/?sort=modified&refine.theme=Economy+and+Business" class="image-card-link">
+                <div class="image-card-image-wrapper">
+                  <img src="/assets/theme_image/business-skills.jpeg" alt="West of England business and economic activity">
+                  <div class="image-card-overlay"></div>
+                </div>
+                <div class="image-content">
+                  <h3 class="image-title">Economy</h3>
+                </div>
+              </a>
+              <p class="image-description">Support businesses to grow sustainably</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="image-card">
+              <a href="/explore/?sort=modified&refine.keyword=Net+zero" class="image-card-link">
+                <div class="image-card-image-wrapper">
+                  <img src="/assets/theme_image/net-zero-energy.jpeg" alt="Net zero energy initiatives in the West of England">
+                  <div class="image-card-overlay"></div>
+                </div>
+                <div class="image-content">
+                  <h3 class="image-title">Net Zero</h3>
+                </div>
+              </a>
+              <p class="image-description">Drive action to reduce emissions</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+
+    <section class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Most Popular Datasets -->
+                <h2 class="home-subtitle">
+                    Most popular data
+                </h2>
+                <ods-most-popular-datasets context="catalog"></ods-most-popular-datasets>
+            </div>
+            <div class="col-md-6">
+                <!-- Last modified datasets -->
+                <h2 class="home-subtitle">
+                    Last updated data
+                </h2>
+                <ods-last-datasets-feed context="catalog"></ods-last-datasets-feed>
+            </div>
+        </div>
+    </section>
+
+    <section class="slanted-section">
+        <div class="slanted-container">
+          <div class="slanted-image">
+            <img src="https://link.assetfile.io/1TR0eg4Vr3tRTrBAIL0lPB/WE4837+SW+map_v2.jpg" alt="Map of region">
+          </div>
+          <div class="slanted-content">
+            <h3>The West of England Mayoral Combined Authority</h3>
+            <p>The Open Data Portal is managed by the <a href="https://www.westofengland-ca.gov.uk/" target="_blank">West of England Mayoral Combined Authority</a>. The Mayoral Combined Authority makes decisions that directly benefit our region, our residents and our economy. As a Mayoral Combined Authority, we have significant powers and funding to tackle everyday challenges in the West of England. The Mayoral Combined Authority's work covers most aspects of daily life, including homes, transport, skills, jobs and support for businesses.</p>
+
+          </div>
+        </div>
+      </section>
+
+</ods-catalog-context>
+
+
+
+
+
+</html>
