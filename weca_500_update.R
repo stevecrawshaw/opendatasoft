@@ -2,11 +2,11 @@ pacman::p_load(tidyverse, janitor, glue, fs, arrow, readxl)
 
 ods_source <- "https://opendata.westofengland-ca.gov.uk/api/explore/v2.1/catalog/datasets/financial-disclosure-spend/exports/parquet?lang=en&timezone=Europe%2FLondon"
 
-update_path <- "data/financial_disclosures_update/Third-Quarter-October-2025-December-2025-XLS.xlsx"
+update_path <- "data/financial_disclosures_update/Transparency-Report-Q1-for-website-1.xlsx"
 
 source_tbl <- arrow::read_parquet(ods_source)
 
-update_tbl <- read_xlsx(update_path, sheet = "Transparency Report")
+update_tbl <- read_xlsx(update_path, sheet = "in")
 
 
 archive_path <- fs::path_file(update_path) |>
@@ -70,11 +70,11 @@ updated_tbl <- update_tbl %>%
   rename_with(rename_function)
 
 
-(colcheck = ncol(updated_tbl) == ncol(source_tbl))
+(colcheck <- ncol(updated_tbl) == ncol(source_tbl))
 
-(renamecheck = !any(str_detect(names(updated_tbl), "rename")))
+(renamecheck <- !any(str_detect(names(updated_tbl), "rename")))
 
-(namecheck = all(rename_function(names(source_tbl)) %in% names((updated_tbl))))
+(namecheck <- all(rename_function(names(source_tbl)) %in% names((updated_tbl))))
 
 (all_checks_pass <- any(c(colcheck, namecheck, renamecheck)))
 
